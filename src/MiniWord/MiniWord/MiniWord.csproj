@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFrameworks>net45;netstandard2.0;net5.0</TargetFrameworks>
+		<Version>0.1.0</Version>
+	</PropertyGroup>
+	<PropertyGroup>
+		<AssemblyName>MiniWord</AssemblyName>
+		<Title>MiniWord</Title>
+		<Product>MiniWord</Product>
+		<PackageTags>excel;xlsx;csv;micro-helper;mini;openxml;helper;</PackageTags>
+		<Description>
+		</Description>
+		<Authors>LIN,WEI-HAN</Authors>
+		<PackageId>MiniWord</PackageId>
+		<Copyright>LIN,WEI-HAN, 2022 onwards</Copyright>
+		<NeutralLanguage>en</NeutralLanguage>
+		<license>https://raw.githubusercontent.com/mini-software/MiniWord/master/LICENSE</license>
+		<RootNamespace>MiniSoftware</RootNamespace>
+		<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+		<PackageProjectUrl>https://github.com/mini-software/MiniWord</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/mini-software/MiniWord</RepositoryUrl>
+		<!--<PackageIcon>icon.png</PackageIcon>-->
+		<PackageReleaseNotes>Please Check [Release Notes](https://github.com/mini-software/MiniWord/tree/master/docs)</PackageReleaseNotes>
+		<RepositoryType>Github</RepositoryType>
+	</PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="DocumentFormat.OpenXml" Version="2.18.0" />
+	</ItemGroup>
+</Project>

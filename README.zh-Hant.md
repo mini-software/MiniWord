@@ -15,17 +15,18 @@
 ---
 
 <div align="center">
- Your <a href="https://github.com/mini-software/MiniWord">Star</a> and <a href="https://miniexcel.github.io">Donate</a> can make MiniWord better 
+ 您的 <a href="https://github.com/mini-software/MiniWord">Star</a> 和 <a href="https://miniexcel.github.io">赞助</a> 可以让 MiniWord 走更远
 </div>
+
 
 ---
 
 
-### Introduction
+### 介绍
 
-MiniWord is simple .NET Word Template tool, you can use like react/angular/vue string format like "{{tag}}" to dynamic input .net data.
+MiniWord 简单 Word 模版导出+填充数据工具。
 
-### Basic Template Export
+### 基本模版导出
 
 ```csharp
 			var value = new Dictionary<string, object>()
@@ -40,10 +41,10 @@ MiniWord is simple .NET Word Template tool, you can use like react/angular/vue s
 			MiniSoftware.MiniWord.SaveAsByTemplate(path, templatePath, value);
 ```
 
-Template:
+模版:
 
 ![image-20220912165113527](C:\Users\Wei\AppData\Roaming\Typora\typora-user-images\image-20220912165113527.png)
 
-Output:
+结果:
 
 ![image](https://user-images.githubusercontent.com/12729184/189612248-dd9381de-bbb8-4c72-adec-ac8982f60f96.png)
