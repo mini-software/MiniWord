@@ -1,10 +1,10 @@
 <div align="center">
 <p><a href="https://www.nuget.org/packages/MiniWord"><img src="https://img.shields.io/nuget/v/MiniWord.svg" alt="NuGet"></a>  <a href="https://www.nuget.org/packages/MiniWord"><img src="https://img.shields.io/nuget/dt/MiniWord.svg" alt=""></a>  
-<a href="https://ci.appveyor.com/project/mini-software/MiniWord/branch/master"><img src="https://ci.appveyor.com/api/projects/status/b2vustrwsuqx45f4/branch/master?svg=true" alt="Build status"></a>
-<a href="https://gitee.com/dotnetchina/MiniWord"><img src="https://gitee.com/dotnetchina/MiniWord/badge/star.svg" alt="star"></a> <a href="https://github.com/mini-software/MiniWord" rel="nofollow"><img src="https://img.shields.io/github/stars/mini-software/MiniWord?logo=github" alt="GitHub stars"></a> 
+<a href="https://github.com/mini-software/MiniWord" rel="nofollow"><img src="https://img.shields.io/github/stars/mini-software/MiniWord?logo=github" alt="GitHub stars"></a> 
 <a href="https://www.nuget.org/packages/MiniWord"><img src="https://img.shields.io/badge/.NET-%3E%3D%204.5-red.svg" alt="version"></a>
 </p>
 </div>
+
 
 ---
 
@@ -23,7 +23,7 @@
 
 ### Introduction
 
-MiniWord is simple .NET Word Template tool, you can use like react/angular/vue string format like "{{tag}}" to dynamic input .net data.
+MiniWord is an easy and effective .NET Word Template library.
 
 ### Basic Template Export
 
@@ -42,7 +42,7 @@ MiniWord is simple .NET Word Template tool, you can use like react/angular/vue s
 
 Template:
 
-![image-20220912165113527](C:\Users\Wei\AppData\Roaming\Typora\typora-user-images\image-20220912165113527.png)
+![image](https://user-images.githubusercontent.com/12729184/189614577-ac22d47c-30d5-4db5-9299-09f07211f1bf.png)
 
 Output:
 
