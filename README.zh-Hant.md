@@ -17,8 +17,6 @@
 <div align="center">
  您的 <a href="https://github.com/mini-software/MiniWord">Star</a> 和 <a href="https://miniexcel.github.io">贊助</a> 可以讓 MiniWord 走更遠
 </div>
-
-
 ---
 
 
