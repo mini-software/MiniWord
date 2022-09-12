@@ -30,8 +30,8 @@ MiniWord is an easy and effective .NET Word Template library.
 ```csharp
 			var value = new Dictionary<string, object>()
 			{
-                ["Company_Name"] = "MiniSofteware",
-                ["Name"] = "Jack",
+				["Company_Name"] = "MiniSofteware",
+				["Name"] = "Jack",
 				["CreateDate"] = new DateTime(2021, 01, 01),
 				["VIP"] = true,
 				["Points"] = 123,

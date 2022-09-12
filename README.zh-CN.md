@@ -34,8 +34,8 @@ MiniWord 简单 Word 模版导出+填充数据工具。
 ```csharp
 			var value = new Dictionary<string, object>()
 			{
-                ["Company_Name"] = "MiniSofteware",
-                ["Name"] = "Jack",
+				["Company_Name"] = "MiniSofteware",
+				["Name"] = "Jack",
 				["CreateDate"] = new DateTime(2021, 01, 01),
 				["VIP"] = true,
 				["Points"] = 123,
