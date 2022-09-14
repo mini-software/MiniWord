@@ -14,13 +14,13 @@
 		<PackageId>MiniWord</PackageId>
 		<Copyright>LIN,WEI-HAN, 2022 onwards</Copyright>
 		<NeutralLanguage>en</NeutralLanguage>
-		<license>https://raw.githubusercontent.com/mini-software/MiniWord/master/LICENSE</license>
+		<license>https://raw.githubusercontent.com/mini-software/MiniWord/main/LICENSE</license>
 		<RootNamespace>MiniSoftware</RootNamespace>
 		<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
 		<PackageProjectUrl>https://github.com/mini-software/MiniWord</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/mini-software/MiniWord</RepositoryUrl>
 		<PackageIcon>icon.png</PackageIcon>
-		<PackageReleaseNotes>Please Check [Release Notes](https://github.com/mini-software/MiniWord/tree/master/release)</PackageReleaseNotes>
+		<PackageReleaseNotes>Please Check [Release Notes](https://github.com/mini-software/MiniWord/tree/main/release-note)</PackageReleaseNotes>
 		<RepositoryType>Github</RepositoryType>
 	</PropertyGroup>
 	<ItemGroup>

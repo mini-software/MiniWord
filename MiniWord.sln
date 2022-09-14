@@ -14,11 +14,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{4EAD1BCD-0
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MiniWordTests", "tests\MiniWordTests\MiniWordTests.csproj", "{7CB52636-4C20-4FE8-8C69-F794ABBB86A6}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "release", "release", "{BEA78871-F09C-47A6-98D0-1ED6E0E8476D}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "release-note", "release-note", "{BEA78871-F09C-47A6-98D0-1ED6E0E8476D}"
 	ProjectSection(SolutionItems) = preProject
-		release\README.md = release\README.md
-		release\README.zh-CN.md = release\README.zh-CN.md
-		release\README.zh-Hant.md = release\README.zh-Hant.md
+		release-note\README.md = release-note\README.md
+		release-note\README.zh-CN.md = release-note\README.zh-CN.md
+		release-note\README.zh-Hant.md = release-note\README.zh-Hant.md
 	EndProjectSection
 EndProject
 Global
