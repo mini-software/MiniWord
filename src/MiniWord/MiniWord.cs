@@ -12,12 +12,12 @@
 	{
 		static void ReplaceTag(this OpenXmlElement xmlElement, WordprocessingDocument docx, Dictionary<string, object> tags)
 		{
-			var paragraphs = xmlElement.Descendants<Paragraph>().ToArray();
+			var paragraphs = xmlElement.Descendants<Paragraph>();
 			foreach (var p in paragraphs)
 			{
 				var innerXmlSb = p.InnerXml;
 				foreach (var tag in tags)
-					innerXmlSb = Regex.Replace(innerXmlSb, @"\{\{(?:(?!\{\{|}}).)*" + tag.Key + ".*?}}", tags[tag.Key]?.ToString(), RegexOptions.Singleline | RegexOptions.IgnorePatternWhitespace | RegexOptions.CultureInvariant);
+					innerXmlSb = Regex.Replace(innerXmlSb, @"((\{\{(?:(?!\{\{|}}).)*>)|\{\{)" + tag.Key + @"(}}|<.*?}})", tags[tag.Key]?.ToString(), RegexOptions.Singleline | RegexOptions.IgnorePatternWhitespace | RegexOptions.CultureInvariant);
 				p.InnerXml = innerXmlSb;
 			}
 		}

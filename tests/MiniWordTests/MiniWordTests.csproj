@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\MiniWord\MiniWord\MiniWord.csproj" />
+    <ProjectReference Include="..\..\src\MiniWord\MiniWord.csproj" />
   </ItemGroup>
 
 </Project>
