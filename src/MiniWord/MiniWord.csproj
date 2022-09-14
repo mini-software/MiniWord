@@ -8,7 +8,8 @@
 		<Title>MiniWord</Title>
 		<Product>MiniWord</Product>
 		<PackageTags>word;template;micro-helper;mini;openxml;helper;</PackageTags>
-		<Description>MiniWord is an easy and effective .NET Word Template library.
+		<Description>
+			MiniWord is an easy and effective .NET Word Template library.
 		</Description>
 		<Authors>LIN,WEI-HAN</Authors>
 		<PackageId>MiniWord</PackageId>
@@ -27,6 +28,9 @@
 		<None Update="icon.png">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
+	</ItemGroup>
+	<ItemGroup>
+		<None Include="icon.png" Pack="true" PackagePath="\" />
 	</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="DocumentFormat.OpenXml" Version="2.18.0" />
