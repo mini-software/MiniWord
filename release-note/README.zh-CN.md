@@ -22,6 +22,9 @@
 
 ---
 
+### 0.1.1
+- [Bug] 修正 Fuzzy Regex replace similar key
+
 
 ### 0.1.0
 - 基本 template 导出

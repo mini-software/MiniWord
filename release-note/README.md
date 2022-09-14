@@ -22,9 +22,11 @@
 
 ---
 
+### 0.1.1
+- [Bug] Fix Fuzzy Regex replace similar key
 
 ### 0.1.0
-- basic template export
+- [Feature] basic template export
 
 ### 0.0.0
 - Init
