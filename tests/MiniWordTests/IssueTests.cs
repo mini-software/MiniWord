@@ -33,8 +33,8 @@ namespace MiniWordTests
             MiniWord.SaveAsByTemplate(path, templatePath, value);
             //Console.WriteLine(path);
             var xml = Helpers.GetZipFileContent(path, "word/document.xml");
-            Assert.False(xml.Contains("Jack Demo APP Account Data"));
-            Assert.True(xml.Contains("MiniSofteware Demo APP Account Data"));
+            Assert.DoesNotContain("Jack Demo APP Account Data", xml);
+            Assert.Contains("MiniSofteware Demo APP Account Data", xml);
         }
 
         /// <summary>

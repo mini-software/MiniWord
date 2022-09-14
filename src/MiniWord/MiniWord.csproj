@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<TargetFrameworks>net45;netstandard2.0;net5.0</TargetFrameworks>
-		<Version>0.1.0</Version>
+		<Version>0.1.1</Version>
 	</PropertyGroup>
 	<PropertyGroup>
 		<AssemblyName>MiniWord</AssemblyName>
@@ -19,8 +19,8 @@
 		<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
 		<PackageProjectUrl>https://github.com/mini-software/MiniWord</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/mini-software/MiniWord</RepositoryUrl>
-		<!--<PackageIcon>icon.png</PackageIcon>-->
-		<PackageReleaseNotes>Please Check [Release Notes](https://github.com/mini-software/MiniWord/tree/master/docs)</PackageReleaseNotes>
+		<PackageIcon>icon.png</PackageIcon>
+		<PackageReleaseNotes>Please Check [Release Notes](https://github.com/mini-software/MiniWord/tree/master/release)</PackageReleaseNotes>
 		<RepositoryType>Github</RepositoryType>
 	</PropertyGroup>
 	<ItemGroup>
