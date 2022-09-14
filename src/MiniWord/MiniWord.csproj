@@ -7,8 +7,8 @@
 		<AssemblyName>MiniWord</AssemblyName>
 		<Title>MiniWord</Title>
 		<Product>MiniWord</Product>
-		<PackageTags>excel;xlsx;csv;micro-helper;mini;openxml;helper;</PackageTags>
-		<Description>
+		<PackageTags>word;template;micro-helper;mini;openxml;helper;</PackageTags>
+		<Description>MiniWord is an easy and effective .NET Word Template library.
 		</Description>
 		<Authors>LIN,WEI-HAN</Authors>
 		<PackageId>MiniWord</PackageId>
@@ -23,6 +23,11 @@
 		<PackageReleaseNotes>Please Check [Release Notes](https://github.com/mini-software/MiniWord/tree/master/release)</PackageReleaseNotes>
 		<RepositoryType>Github</RepositoryType>
 	</PropertyGroup>
+	<ItemGroup>
+		<None Update="icon.png">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="DocumentFormat.OpenXml" Version="2.18.0" />
 	</ItemGroup>
