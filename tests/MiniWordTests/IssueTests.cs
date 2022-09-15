@@ -14,12 +14,36 @@ namespace MiniWordTests
     public class IssueTests
     {
         /// <summary>
+        /// [Support image · Issue #3 · mini-software/MiniWord](https://github.com/mini-software/MiniWord/issues/3)
+        /// </summary>
+        [Fact]
+        public void TestIssue3()
+        {
+            var path = PathHelper.GetTempFilePath();
+            var templatePath = PathHelper.GetFile("TestBasicImage.docx");
+            var value = new Dictionary<string, object>()
+            {
+                ["Name"] = "Jack",
+                ["Company_Name"] = "MiniSofteware",
+                ["CreateDate"] = new DateTime(2021, 01, 01),
+                ["VIP"] = true,
+                ["Points"] = 123,
+                ["APP"] = "Demo APP",
+                ["Logo"] = new MiniWordPicture() { Path= @"D:\git\MiniWord\src\MiniWord\icon.png" ,Width= 392000L, Height= 392000L }
+            };
+            MiniWord.SaveAsByTemplate(path, templatePath, value);
+            //Console.WriteLine(path);
+            var xml = Helpers.GetZipFileContent(path, "word/document.xml");
+            Assert.Contains("<w:drawing>", xml);
+        }
+
+        /// <summary>
         /// [Fuzzy Regex replace similar key · Issue #5 · mini-software/MiniWord](https://github.com/mini-software/MiniWord/issues/5)
         /// </summary>
         [Fact]
         public void TestIssue5()
         {
-            var path = PathHelper.GetTempPath();
+            var path = PathHelper.GetTempFilePath();
             var templatePath = PathHelper.GetFile("TestBasicFill.docx");
             var value = new Dictionary<string, object>()
             {
