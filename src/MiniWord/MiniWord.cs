@@ -51,12 +51,14 @@
 									}
 
 									var mainPart = docx.MainDocumentPart;
-                                    var imagePart = mainPart.AddImagePart(ImagePartType.Png);//TODO: jpg..
+
+									var imagePart = mainPart.AddImagePart(pic.GetImagePartType);
                                     using (var stream = new MemoryStream(l_Data))
                                     {
                                         imagePart.FeedData(stream);
                                         AddPicture(run, mainPart.GetIdOfPart(imagePart), pic);
-                                    }
+
+									}
 									t.Remove();
                                 }
                                 else
@@ -76,7 +78,7 @@
 			var element =
 				 new Drawing(
 					 new DW.Inline(
-						 new DW.Extent() { Cx = pic.Width, Cy = pic.Height },
+						 new DW.Extent() { Cx = pic.Cx, Cy = pic.Cy },
 						 new DW.EffectExtent()
 						 {
 							 LeftEdge = 0L,
@@ -98,7 +100,7 @@
 										 new PIC.NonVisualDrawingProperties()
 										 {
 											 Id = (UInt32Value)0U,
-											 Name = $"New Bitmap Image{Guid.NewGuid().ToString()}.png"
+											 Name = $"Image {Guid.NewGuid().ToString()}.{pic.Extension}"
 										 },
 										 new PIC.NonVisualPictureDrawingProperties()),
 									 new PIC.BlipFill(
@@ -120,7 +122,7 @@
 									 new PIC.ShapeProperties(
 										 new A.Transform2D(
 											 new A.Offset() { X = 0L, Y = 0L },
-											 new A.Extents() { Cx = pic.Width, Cy = pic.Height }),
+											 new A.Extents() { Cx = pic.Cx, Cy = pic.Cy }),
 										 new A.PresetGeometry(
 											 new A.AdjustValueList()
 										 )

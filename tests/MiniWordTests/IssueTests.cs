@@ -29,7 +29,7 @@ namespace MiniWordTests
                 ["VIP"] = true,
                 ["Points"] = 123,
                 ["APP"] = "Demo APP",
-                ["Logo"] = new MiniWordPicture() { Path= @"D:\git\MiniWord\src\MiniWord\icon.png" ,Width= 392000L, Height= 392000L }
+                ["Logo"] = new MiniWordPicture() { Path= PathHelper.GetFile("TestBasicImage.png"), Width= 400, Height= 400 }
             };
             MiniWord.SaveAsByTemplate(path, templatePath, value);
             //Console.WriteLine(path);
