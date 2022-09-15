@@ -28,16 +28,16 @@ MiniWord is an easy and effective .NET Word Template library.
 ### Basic Template Export
 
 ```csharp
-			var value = new Dictionary<string, object>()
-			{
-				["Company_Name"] = "MiniSofteware",
-				["Name"] = "Jack",
-				["CreateDate"] = new DateTime(2021, 01, 01),
-				["VIP"] = true,
-				["Points"] = 123,
-				["APP"] = "Demo APP",
-			};
-			MiniSoftware.MiniWord.SaveAsByTemplate(path, templatePath, value);
+var value = new Dictionary<string, object>()
+{
+	["Company_Name"] = "MiniSofteware",
+	["Name"] = "Jack",
+	["CreateDate"] = new DateTime(2021, 01, 01),
+	["VIP"] = true,
+	["Points"] = 123,
+	["APP"] = "Demo APP",
+};
+MiniWord.SaveAsByTemplate(path, templatePath, value);
 ```
 
 Template:

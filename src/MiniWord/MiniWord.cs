@@ -17,7 +17,9 @@
 			{
 				var innerXmlSb = p.InnerXml;
 				foreach (var tag in tags)
+                {
 					innerXmlSb = Regex.Replace(innerXmlSb, @"((\{\{(?:(?!\{\{|}}).)*>)|\{\{)" + tag.Key + @"(}}|<.*?}})", tags[tag.Key]?.ToString(), RegexOptions.Singleline | RegexOptions.IgnorePatternWhitespace | RegexOptions.CultureInvariant);
+                }
 				p.InnerXml = innerXmlSb;
 			}
 		}

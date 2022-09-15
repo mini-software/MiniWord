@@ -27,16 +27,16 @@ MiniWord 簡單 Word 模版導出+填充數據工具。
 ### 基本模版導出
 
 ```csharp
-			var value = new Dictionary<string, object>()
-			{
-				["Company_Name"] = "MiniSofteware",
-				["Name"] = "Jack",
-				["CreateDate"] = new DateTime(2021, 01, 01),
-				["VIP"] = true,
-				["Points"] = 123,
-				["APP"] = "Demo APP",
-			};
-			MiniSoftware.MiniWord.SaveAsByTemplate(path, templatePath, value);
+var value = new Dictionary<string, object>()
+{
+	["Company_Name"] = "MiniSofteware",
+	["Name"] = "Jack",
+	["CreateDate"] = new DateTime(2021, 01, 01),
+	["VIP"] = true,
+	["Points"] = 123,
+	["APP"] = "Demo APP",
+};
+MiniWord.SaveAsByTemplate(path, templatePath, value);
 ```
 
 模版:
