@@ -13,6 +13,35 @@ namespace MiniWordTests
 {
     public class IssueTests
     {
+        /// <summary>
+        /// [System.InvalidOperationException: 'The parent of this element is null.' · Issue #12 · mini-software/MiniWord](https://github.com/mini-software/MiniWord/issues/12)
+        /// </summary>
+        [Fact]
+        public void TestIssue12()
+        {
+            var path = PathHelper.GetTempFilePath();
+            var templatePath = PathHelper.GetFile("TestBasicFill.docx");
+            var value = new Dictionary<string, object>()
+            {
+                ["Company_Name"] = "MiniSofteware\n",
+                ["Name"] = "Jack",
+                ["CreateDate"] = new DateTime(2021, 01, 01),
+                ["VIP"] = true,
+                ["Points"] = 123,
+                ["APP"] = "Demo APP\r",
+            };
+            MiniWord.SaveAsByTemplate(path, templatePath, value);
+            var xml = Helpers.GetZipFileContent(path, "word/document.xml");
+            Assert.Contains(@"      <w:r>
+        <w:t>MiniSofteware</w:t>
+        <w:br />
+        <w:t></w:t>
+        <w:br />
+        <w:t> Demo APP
+ Account Data</w:t>
+      </w:r>", xml);
+        }
+
         [Fact]
         public void TestIssueDemo03()
         {
@@ -142,7 +171,7 @@ ever since the 1500s, when an unknown printer took.
         [Fact]
         public void TestIssue4()
         {
-			var path = PathHelper.GetTempPath();
+			var path = PathHelper.GetTempFilePath();
             var templatePath = PathHelper.GetFile("TestBasicFill.docx");
 			var value = new Dictionary<string, object>()
 			{
@@ -154,7 +183,6 @@ ever since the 1500s, when an unknown printer took.
 				["APP"] = "Demo APP",
 			};
 			MiniWord.SaveAsByTemplate(path, templatePath, value);
-			Console.WriteLine(path);
 		}
     }
 

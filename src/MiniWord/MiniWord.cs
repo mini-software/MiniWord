@@ -83,23 +83,31 @@
                                 }
                                 else
                                 {
-									var newText = tag.Value?.ToString();
-									var splits = Regex.Split(newText, "(<[a-zA-Z/].*?>|\n)");
-									var currentT = t;
-									var isFirst = true;
-									foreach (var v in splits)
-									{
-										var newT = t.CloneNode(true) as Text;
-										newT.Text = t.Text.Replace($"{{{{{tag.Key}}}}}", v?.ToString());
-										if (isFirst)
-											isFirst = false;
-										else
-											run.Append(new Break());
-										run.Append(newT);
-										currentT = newT;
-									}
-									t.Remove();
+									t.Text = t.Text.Replace($"{{{{{tag.Key}}}}}", tag.Value?.ToString());
 								}
+							}
+						}
+
+						// add breakline
+                        {
+							var newText = t.Text;
+							var splits = Regex.Split(newText, "(<[a-zA-Z/].*?>|\n)");
+							var currentT = t;
+							var isFirst = true;
+                            if (splits.Length > 1)
+                            {
+								foreach (var v in splits)
+								{
+									var newT = t.CloneNode(true) as Text;
+									newT.Text = v?.ToString();
+									if (isFirst)
+										isFirst = false;
+									else
+										run.Append(new Break());
+									run.Append(newT);
+									currentT = newT;
+								}
+								t.Remove();
 							}
 						}
 					}
