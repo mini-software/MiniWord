@@ -32,9 +32,8 @@ namespace MiniWordTests
             };
             MiniWord.SaveAsByTemplate(path, templatePath, value);
             var xml = Helpers.GetZipFileContent(path, "word/document.xml");
-            Assert.Contains(@"<w:r>
-        <w:t>MiniSofteware</w:t>
-        <w:br />", xml);
+            Assert.Contains(@"<w:t>MiniSofteware", xml);
+            Assert.Contains(@"<w:br />", xml);
         }
 
         [Fact]
