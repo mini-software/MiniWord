@@ -14,6 +14,41 @@ namespace MiniWordTests
     public class IssueTests
     {
         /// <summary>
+        /// [support array list string to generate multiple row · Issue #11 · mini-software/MiniWord]
+        /// (https://github.com/mini-software/MiniWord/issues/11)
+        /// </summary>
+        [Fact]
+        public void TestIssue11()
+        {
+            {
+                var path = PathHelper.GetTempFilePath();
+                var templatePath = PathHelper.GetFile("TestIssue11.docx");
+                var value = new Dictionary<string, object>()
+                {
+                    ["managers"] = new[] { "Jack", "Alan" },
+                    ["employees"] = new[] { "Mike", "Henry" },
+                };
+                MiniWord.SaveAsByTemplate(path, templatePath, value);
+                var xml = Helpers.GetZipFileContent(path, "word/document.xml");
+                Assert.Contains("Jack", xml);
+            }
+            {
+                var path = PathHelper.GetTempFilePath();
+                var templatePath = PathHelper.GetFile("TestIssue11.docx");
+                var value = new Dictionary<string, object>()
+                {
+                    ["managers"] = new List<string> { "Jack", "Alan" },
+                    ["employees"] = new List<string> { "Mike", "Henry" },
+                };
+                MiniWord.SaveAsByTemplate(path, templatePath, value);
+                var xml = Helpers.GetZipFileContent(path, "word/document.xml");
+                Assert.Contains("Jack", xml);
+            }
+        }
+
+
+
+        /// <summary>
         /// [Support image · Issue #3 · mini-software/MiniWord](https://github.com/mini-software/MiniWord/issues/3)
         /// </summary>
         [Fact]
@@ -23,16 +58,9 @@ namespace MiniWordTests
             var templatePath = PathHelper.GetFile("TestBasicImage.docx");
             var value = new Dictionary<string, object>()
             {
-                ["Name"] = "Jack",
-                ["Company_Name"] = "MiniSofteware",
-                ["CreateDate"] = new DateTime(2021, 01, 01),
-                ["VIP"] = true,
-                ["Points"] = 123,
-                ["APP"] = "Demo APP",
-                ["Logo"] = new MiniWordPicture() { Path= PathHelper.GetFile("TestBasicImage.png"), Width= 400, Height= 400 }
+                ["Logo"] = new MiniWordPicture() { Path= PathHelper.GetFile("DemoLogo.png"), Width= 180, Height= 180 }
             };
             MiniWord.SaveAsByTemplate(path, templatePath, value);
-            //Console.WriteLine(path);
             var xml = Helpers.GetZipFileContent(path, "word/document.xml");
             Assert.Contains("<w:drawing>", xml);
         }

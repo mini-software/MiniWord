@@ -4,6 +4,7 @@
     using DocumentFormat.OpenXml.Packaging;
     using DocumentFormat.OpenXml.Wordprocessing;
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
@@ -37,7 +38,25 @@
 							var isMatch = t.Text.Contains($"{{{{{tag.Key}}}}}");
 							if (isMatch)
                             {
-                                if (tag.Value is MiniWordPicture)
+								if (tag.Value is string[] || tag.Value is IList<string> || tag.Value is List<string>)
+                                {
+									var vs = tag.Value as IEnumerable;
+									var currentT = t;
+									var isFirst = true;
+                                    foreach (var v in vs)
+                                    {	
+										var newT = t.CloneNode(false) as Text;
+										if(isFirst)
+											isFirst = false;
+										else
+											run.Append(new Break());
+										run.Append(newT);
+										currentT = newT;
+										newT.Text = t.Text.Replace($"{{{{{tag.Key}}}}}", v?.ToString());
+									}
+									t.Remove();
+                                }
+                                else if (tag.Value is MiniWordPicture)
                                 {
 									var pic = (MiniWordPicture)tag.Value;
 									byte[] l_Data = null;
