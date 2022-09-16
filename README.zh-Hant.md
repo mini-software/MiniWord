@@ -9,6 +9,12 @@
 ---
 
 <div align="center">
+<p><strong><a href="README.md">English</a> | <a href="README.zh-CN.md">简体中文</a> | <a href="README.zh-Hant.md">繁體中文</a></strong></p>
+</div>
+
+---
+
+<div align="center">
  您的 <a href="https://github.com/mini-software/MiniWord">Star</a> 和 <a href="https://miniexcel.github.io">贊助</a> 可以讓 MiniWord 走更遠
 </div>
 
