@@ -28,18 +28,13 @@ namespace MiniWordTests
                 ["CreateDate"] = new DateTime(2021, 01, 01),
                 ["VIP"] = true,
                 ["Points"] = 123,
-                ["APP"] = "Demo APP\r",
+                ["APP"] = "Demo APP\n",
             };
             MiniWord.SaveAsByTemplate(path, templatePath, value);
             var xml = Helpers.GetZipFileContent(path, "word/document.xml");
             Assert.Contains(@"<w:r>
         <w:t>MiniSofteware</w:t>
-        <w:br />
-        <w:t></w:t>
-        <w:br />
-        <w:t> Demo APP
- Account Data</w:t>
-      </w:r>", xml);
+        <w:br />", xml);
         }
 
         [Fact]
