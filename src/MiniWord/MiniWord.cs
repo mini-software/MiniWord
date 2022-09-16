@@ -139,24 +139,24 @@
 				 });
 			appendElement.Append((element));
 		}
-		public static void SaveAsByTemplate(string path, string templatePath, object value)
+		public static void SaveAsByTemplate(string path, string templatePath, Dictionary<string,object> value)
 		{
 			using (var stream = File.Create(path))
 				SaveAsByTemplate(stream, templatePath, value);
 		}
 
-		public static void SaveAsByTemplate(string path, byte[] templateBytes, object value)
+		public static void SaveAsByTemplate(string path, byte[] templateBytes, Dictionary<string, object> value)
 		{
 			using (var stream = File.Create(path))
 				SaveAsByTemplate(stream, templateBytes, value);
 		}
 
-		public static void SaveAsByTemplate(this Stream stream, string templatePath, object value)
+		public static void SaveAsByTemplate(this Stream stream, string templatePath, Dictionary<string, object> value)
 		{
 			SaveAsByTemplateImpl(stream, GetBytes(templatePath), value);
 		}
 
-		public static void SaveAsByTemplate(this Stream stream, byte[] templateBytes, object value)
+		public static void SaveAsByTemplate(this Stream stream, byte[] templateBytes, Dictionary<string, object> value)
 		{
 			SaveAsByTemplateImpl(stream, templateBytes, value);
 		}
@@ -169,9 +169,9 @@
 				return ms.ToArray();
 			}
 		}
-		private static void SaveAsByTemplateImpl(Stream stream, byte[] template, object data)
+		private static void SaveAsByTemplateImpl(Stream stream, byte[] template, Dictionary<string, object> data)
 		{
-			var value = data as Dictionary<string, object>; //TODO:
+			var value = data ; //TODO: support dynamic and poco value
 			byte[] bytes = null;
 			using (var ms = new MemoryStream())
 			{
