@@ -22,7 +22,18 @@
 
 ---
 
+
+
+### 0.2.0
+
+- [Feature] support array list string to generate multiple row #11
+- [Feature] support image #10 #3
+- [Feature] image support to custom width and height #8
+- [Feature] support multiple breakline 
+- [Optimize] Remove xmlns declaration #7
+
 ### 0.1.1
+
 - [Bug] Fix Fuzzy Regex replace similar key
 
 ### 0.1.0

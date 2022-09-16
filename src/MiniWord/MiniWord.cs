@@ -17,7 +17,7 @@
 	{
 		static void ReplaceTag(this OpenXmlElement xmlElement, WordprocessingDocument docx, Dictionary<string, object> tags)
 		{
-			var paragraphs = xmlElement.Descendants<Paragraph>();
+			
 			// Avoid not standard string format e.g. {{<t>tag</t>}}
 			foreach (var tag in tags)
             {
@@ -26,6 +26,7 @@
 				xmlElement.InnerXml = Regex.Replace(xmlElement.InnerXml, regexStr, $"{{{{{tag.Key?.ToString()}}}}}", RegexOptions.Singleline | RegexOptions.IgnorePatternWhitespace | RegexOptions.CultureInvariant);
 			}
 			//return;
+			var paragraphs = xmlElement.Descendants<Paragraph>();
 			foreach (var p in paragraphs)
 			{
 				var runs = p.Descendants<Run>();
@@ -45,16 +46,16 @@
 									var isFirst = true;
                                     foreach (var v in vs)
                                     {	
-										var newT = t.CloneNode(false) as Text;
+										var newT = t.CloneNode(true) as Text;
+										newT.Text = t.Text.Replace($"{{{{{tag.Key}}}}}", v?.ToString());
 										if(isFirst)
 											isFirst = false;
 										else
 											run.Append(new Break());
 										run.Append(newT);
 										currentT = newT;
-										newT.Text = t.Text.Replace($"{{{{{tag.Key}}}}}", v?.ToString());
 									}
-									t.Remove();
+                                    t.Remove();
                                 }
                                 else if (tag.Value is MiniWordPicture)
                                 {
@@ -82,7 +83,22 @@
                                 }
                                 else
                                 {
-									t.Text = t.Text.Replace($"{{{{{tag.Key}}}}}", tag.Value?.ToString());
+									var newText = tag.Value?.ToString();
+									var splits = Regex.Split(newText, "(<[a-zA-Z/].*?>|\n)");
+									var currentT = t;
+									var isFirst = true;
+									foreach (var v in splits)
+									{
+										var newT = t.CloneNode(true) as Text;
+										newT.Text = t.Text.Replace($"{{{{{tag.Key}}}}}", v?.ToString());
+										if (isFirst)
+											isFirst = false;
+										else
+											run.Append(new Break());
+										run.Append(newT);
+										currentT = newT;
+									}
+									t.Remove();
 								}
 							}
 						}

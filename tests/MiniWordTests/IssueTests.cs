@@ -1,4 +1,4 @@
-using MiniSoftware;
+﻿using MiniSoftware;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -13,8 +13,55 @@ namespace MiniWordTests
 {
     public class IssueTests
     {
+        [Fact]
+        public void TestIssueDemo03()
+        {
+            var path = PathHelper.GetTempFilePath();
+            var templatePath = PathHelper.GetFile("TestDemo02.docx");
+            var value = new Dictionary<string, object>()
+            {
+                ["FullName"] = "Julian Anderson",
+                ["Title"] = "IT Manager",
+                ["Phone"] = "+86 1234567890",
+                ["Mail"] = "shps95100@gmail.com",
+                ["Education"] = "Michigan State University | From Aug 2013 to May 2015",
+                ["Major"] = "Computer Science",
+                ["Favorites"] = "Music、Programing、Design",
+                ["Skills"] = new[] { "- Photoshop", "- InDesign", "- MS Office", "- HTML 5", "- CSS 3" },
+                ["Address"] = "1234, White Home, Road-12/ABC Street-13, New York, USA, 12345",
+                ["AboutMe"] = "Hi, I’m Julian Anderson dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled the industry's standard dummy.",
+                ["BH"] = "1993-09-26",
+                ["Experiences"] = @"# SENIOR UI/UX DEVELOPER & DESIGNER
+◼ The Matrix Media Limited | From May 2013 to May 2015
+Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took.
+
+◼ JUNIOR UI/UX DEVELOPER & DESIGNER
+Linux OS Interface Limited | From Jan 2010 to Feb 2013
+Lorem Ipsum has been the industry's standard dummy text 
+ever since the 1500s, when an unknown printer took.
+
+◼ TEAM LEADER & CORE GRAPHIC DESIGNER
+Apple OS Interface Limited | From Jan 2008 to Feb 2010
+Lorem Ipsum has been the industry's standard dummy text 
+ever since the 1500s, when an unknown printer took.
+
+◼ JUNIOR UI/UX DEVELOPER & DESIGNER
+Apple OS Interface Limited | From Jan 2008 to Feb 2010
+Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took.
+
+◼ JUNIOR UI/UX DEVELOPER & DESIGNER
+Apple OS Interface Limited | From Jan 2008 to Feb 2010
+Lorem Ipsum has been the industry's standard dummy text 
+ever since the 1500s, when an unknown printer took.
+",
+                ["Image"] = new MiniWordPicture() { Path = PathHelper.GetFile("demo01.png"), Width = 160, Height = 90 },
+            };
+            MiniWord.SaveAsByTemplate(path, templatePath, value);
+            //System.Diagnostics.Process.Start("explorer.exe", path);
+        }
+
         /// <summary>
-        /// [support array list string to generate multiple row � Issue #11 � mini-software/MiniWord]
+        /// [support array list string to generate multiple row · Issue #11 · mini-software/MiniWord]
         /// (https://github.com/mini-software/MiniWord/issues/11)
         /// </summary>
         [Fact]
@@ -49,7 +96,7 @@ namespace MiniWordTests
 
 
         /// <summary>
-        /// [Support image � Issue #3 � mini-software/MiniWord](https://github.com/mini-software/MiniWord/issues/3)
+        /// [Support image · Issue #3 · mini-software/MiniWord](https://github.com/mini-software/MiniWord/issues/3)
         /// </summary>
         [Fact]
         public void TestIssue3()
@@ -66,7 +113,7 @@ namespace MiniWordTests
         }
 
         /// <summary>
-        /// [Fuzzy Regex replace similar key � Issue #5 � mini-software/MiniWord](https://github.com/mini-software/MiniWord/issues/5)
+        /// [Fuzzy Regex replace similar key · Issue #5 · mini-software/MiniWord](https://github.com/mini-software/MiniWord/issues/5)
         /// </summary>
         [Fact]
         public void TestIssue5()
@@ -90,7 +137,7 @@ namespace MiniWordTests
         }
 
         /// <summary>
-        /// [Paragraph replace by tag � Issue #4 � mini-software/MiniWord](https://github.com/mini-software/MiniWord/issues/4)
+        /// [Paragraph replace by tag · Issue #4 · mini-software/MiniWord](https://github.com/mini-software/MiniWord/issues/4)
         /// </summary>
         [Fact]
         public void TestIssue4()

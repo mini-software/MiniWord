@@ -9,41 +9,85 @@
 ---
 
 <div align="center">
-<p><strong><a href="README.md">English</a> | <a href="README.zh-CN.md">简体中文</a> | <a href="README.zh-Hant.md">繁體中文</a></strong></p>
+ Your <a href="https://github.com/mini-software/MiniWord">Star</a> and <a href="https://miniexcel.github.io">dotnate</a> can make MiniWord better
 </div>
 
 ---
 
-<div align="center">
- Your <a href="https://github.com/mini-software/MiniWord">Star</a> and <a href="https://miniexcel.github.io">Donate</a> can make MiniWord better 
-</div>
-
----
-
-
-### Introduction
+## Introduction
 
 MiniWord is an easy and effective .NET Word Template library.
 
-### Basic Template Export
+![image](https://user-images.githubusercontent.com/12729184/190674408-12c03f86-31ea-4132-bb31-e2a793f8c40f.png)
+
+
+
+## Tags
+
+### Text
+
+##### Example
 
 ```csharp
 var value = new Dictionary<string, object>()
 {
-	["Company_Name"] = "MiniSofteware",
-	["Name"] = "Jack",
-	["CreateDate"] = new DateTime(2021, 01, 01),
-	["VIP"] = true,
-	["Points"] = 123,
-	["APP"] = "Demo APP",
+    ["Name"] = "Jack",
+    ["Company_Name"] = "MiniSofteware",
+    ["CreateDate"] = new DateTime(2021, 01, 01),
+    ["VIP"] = true,
+    ["Points"] = 123,
+    ["APP"] = "Demo APP",
 };
 MiniWord.SaveAsByTemplate(path, templatePath, value);
 ```
 
-Template:
+##### Result
 
-![image](https://user-images.githubusercontent.com/12729184/189614577-ac22d47c-30d5-4db5-9299-09f07211f1bf.png)
+![image](https://user-images.githubusercontent.com/12729184/190646113-04182d43-6b04-441d-911b-68de6af18039.png)
 
-Output:
+### Image
 
-![image](https://user-images.githubusercontent.com/12729184/189612248-dd9381de-bbb8-4c72-adec-ac8982f60f96.png)
+标签值为 `MiniWordPicture` 类别
+
+##### Example
+
+```csharp
+var value = new Dictionary<string, object>()
+{
+    ["Logo"] = new MiniWordPicture() { Path= PathHelper.GetFile("DemoLogo.png"), Width= 180, Height= 180 }
+};
+MiniWord.SaveAsByTemplate(path, templatePath, value);
+```
+
+
+
+##### Template
+
+![image](https://user-images.githubusercontent.com/12729184/190647953-6f9da393-e666-4658-a56d-b3a7f13c0ea1.png)
+
+##### Result
+
+![image](https://user-images.githubusercontent.com/12729184/190648179-30258d82-723d-4266-b711-43f132d1842d.png)
+
+### List
+
+tag value is `string[]` or `IList<string>` type
+
+##### Example
+
+```csharp
+var value = new Dictionary<string, object>()
+{
+    ["managers"] = new[] { "Jack" ,"Alan"},
+    ["employees"] = new[] { "Mike" ,"Henry"},
+};
+MiniWord.SaveAsByTemplate(path, templatePath, value);
+```
+
+Template
+
+![image](https://user-images.githubusercontent.com/12729184/190645513-230c54f3-d38f-47af-b844-0c8c1eff2f52.png)
+
+##### Result
+
+![image](https://user-images.githubusercontent.com/12729184/190645704-1f6405e9-71e3-45b9-aa99-2ba52e5e1519.png)
