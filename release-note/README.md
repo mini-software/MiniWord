@@ -24,6 +24,12 @@
 
 
 
+### 0.2.1
+
+- [Bug] fixed mutiple tag System.InvalidOperationException: 'The parent of this element is null.' #13
+
+
+
 ### 0.2.0
 
 - [Feature] support array list string to generate multiple row #11

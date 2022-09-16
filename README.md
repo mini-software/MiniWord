@@ -96,3 +96,11 @@ Template
 ##### Result
 
 ![image](https://user-images.githubusercontent.com/12729184/190645704-1f6405e9-71e3-45b9-aa99-2ba52e5e1519.png)
+
+## Questions 
+
+### {{Tag}} doesn't work
+
+Suggest to recopy and paste `{{tag}}` , sometime type tag in word`{{}}`will split to <w:t>{</w:t><w:t>{<w:/t><w:t>Tag</w:t><w:t>}</w:t><w:t>}<w:/t>` like image:
+
+![image](https://user-images.githubusercontent.com/12729184/190683025-fbf1bfa3-a34a-4af9-a8d3-30c6807d229c.png)
