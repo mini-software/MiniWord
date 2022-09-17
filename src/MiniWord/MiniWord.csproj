@@ -8,8 +8,7 @@
 		<Title>MiniWord</Title>
 		<Product>MiniWord</Product>
 		<PackageTags>word;template;micro-helper;mini;openxml;helper;</PackageTags>
-		<Description>
-			MiniWord is an easy and effective .NET Word Template library.
+		<Description>.NET Word(docx) exporting template engine without COM+ and interop (support Linux and Mac)
 		</Description>
 		<Authors>LIN,WEI-HAN</Authors>
 		<PackageId>MiniWord</PackageId>

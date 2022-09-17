@@ -19,7 +19,7 @@
 
 ---
 
-## QQ群 : 813100564
+## QQ群 : [813100564](https://qm.qq.com/cgi-bin/qm/qr?k=3OkxuL14sXhJsUimWK8wx_Hf28Wl49QE&jump_from=webapi)
 
 ----
 

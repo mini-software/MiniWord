@@ -13,6 +13,26 @@ namespace MiniWordTests
 {
     public class IssueTests
     {
+        /// <summary>
+        /// [Split template string like `<w:t>{</w:t><w:t>{<w:/t><w:t>Tag</w:t><w:t>}</w:t><w:t>}<w:/t>` problem · Issue #17 · mini-software/MiniWord]
+        /// (https://github.com/mini-software/MiniWord/issues/17)
+        /// </summary>
+        [Fact]
+        public void TestIssue17()
+        {
+            var path = PathHelper.GetTempFilePath();
+            var templatePath = PathHelper.GetFile("TestIssue17.docx");
+            var value = new Dictionary<string, object>()
+            {
+                ["Content"] = "Test",
+                ["Content2"] = "Test2",
+            };
+            MiniWord.SaveAsByTemplate(path, templatePath, value);
+            var xml = Helpers.GetZipFileContent(path, "word/document.xml");
+            Assert.Contains(@"<w:t>Test", xml);
+            Assert.Contains(@"<w:t>Test2", xml);
+        }
+
 
         /// <summary>
         /// [Support table generate · Issue #13 · mini-software/MiniWord]
