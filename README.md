@@ -23,7 +23,7 @@
 
 MiniWord is an easy and effective .NET Word Template library.
 
-![image](https://user-images.githubusercontent.com/12729184/190833432-9150094e-1db6-4216-b0fd-177c60800776.png)
+![image](https://user-images.githubusercontent.com/12729184/190835307-6cd87982-b5f3-4a79-9682-bdd1cc02a4ea.png)
 
 
 
@@ -113,6 +113,6 @@ Template
 
 ### {{Tag}} doesn't work
 
-Suggest to recopy and paste `{{tag}}` , sometime type tag in word`{{}}`will split to <w:t>{</w:t><w:t>{<w:/t><w:t>Tag</w:t><w:t>}</w:t><w:t>}<w:/t>` like image:
+Suggest to recopy and paste `{{tag}}` , sometime type tag in word`{{}}`will split to `<w:t>{</w:t><w:t>{<w:/t><w:t>Tag</w:t><w:t>}</w:t><w:t>}<w:/t>` like image:
 
 ![image](https://user-images.githubusercontent.com/12729184/190683025-fbf1bfa3-a34a-4af9-a8d3-30c6807d229c.png)

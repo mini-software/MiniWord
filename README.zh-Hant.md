@@ -25,7 +25,7 @@
 
 MiniWord .NET Word模板引擎，藉由Word模板和數據簡單、快速生成文件。
 
-![image](https://user-images.githubusercontent.com/12729184/190833432-9150094e-1db6-4216-b0fd-177c60800776.png)
+![image](https://user-images.githubusercontent.com/12729184/190835307-6cd87982-b5f3-4a79-9682-bdd1cc02a4ea.png)
 
 
 
@@ -120,6 +120,6 @@ MiniWord.SaveAsByTemplate(path, templatePath, value);
 
 ### 模版字串沒有生效
 
-建議 `{{tag}}` 複製重新整串複製貼上，有時打字 word 在底層`{{}}`會被切開變成`<w:t>{</w:t><w:t>{<w:/t><w:t>Tag</w:t><w:t>}</w:t><w:t>}<w:/t>`如圖片
+建議 `{{tag}}` 複製重新整串複製貼上，有時打字 word 在底層 `{{}}` 會被切開變成 `<w:t>{</w:t><w:t>{<w:/t><w:t>Tag</w:t><w:t>}</w:t><w:t>}<w:/t>` 如圖片
 
 ![image](https://user-images.githubusercontent.com/12729184/190683025-fbf1bfa3-a34a-4af9-a8d3-30c6807d229c.png)
