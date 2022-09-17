@@ -26,10 +26,10 @@
                 ms.Position = 0;
                 using (var docx = WordprocessingDocument.Open(ms, true))
                 {
-                    //foreach (var hdr in docx.MainDocumentPart.HeaderParts)
-                    //	hdr.Header.Generate(docx, value);
-                    //foreach (var ftr in docx.MainDocumentPart.FooterParts)
-                    //	ftr.Footer.Generate(docx, value);
+                    foreach (var hdr in docx.MainDocumentPart.HeaderParts)
+                        hdr.Header.Generate(docx, value);
+                    foreach (var ftr in docx.MainDocumentPart.FooterParts)
+                        ftr.Footer.Generate(docx, value);
                     docx.MainDocumentPart.Document.Body.Generate(docx, value);
                     docx.Save();
                 }
@@ -101,8 +101,9 @@
 
                     foreach (var tr in trs)
                     {
-                        var regex = new Regex("(?<={{).*?\\..*?(?=}})");
-                        var matchs = (regex.Matches(tr.InnerText).Cast<Match>().GroupBy(x => x.Value).Select(varGroup => varGroup.First().Value)).ToArray();
+                        
+                        var matchs = (Regex.Matches(tr.InnerText, "(?<={{).*?\\..*?(?=}})")
+                            .Cast<Match>().GroupBy(x => x.Value).Select(varGroup => varGroup.First().Value)).ToArray();
                         if (matchs.Length > 0)
                         {
                             var listKeys = matchs.Select(s => s.Split('.')[0]).Distinct().ToArray();
@@ -127,7 +128,7 @@
                                         dic.Add(dicKey, e.Value);
                                     }
 
-                                    ReplaceText(newTr, docx, tags = dic);
+                                    ReplaceText(newTr, docx, tags : dic);
                                     table.Append(newTr);
                                 }
                                 tr.Remove();

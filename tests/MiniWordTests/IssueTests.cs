@@ -1,18 +1,37 @@
 ﻿using MiniSoftware;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.IO.Compression;
-using System.Linq;
-using System.Text;
-using System.Xml;
-using System.Xml.Linq;
 using Xunit;
 
 namespace MiniWordTests
 {
     public class IssueTests
     {
+        [Fact]
+        public void TestIssue18()
+        {
+            var path = PathHelper.GetTempFilePath();
+            var templatePath = PathHelper.GetFile("TestIssue18.docx");
+            var value = new Dictionary<string, object>()
+            {
+                ["title"] = "FooCompany",
+                ["managers"] = new List<Dictionary<string, object>> {
+                    new Dictionary<string, object>{{"name","Jack"},{ "department", "HR" } },
+                    new Dictionary<string, object> {{ "name", "Loan"},{ "department", "IT" } }
+                },
+                ["employees"] = new List<Dictionary<string, object>> {
+                    new Dictionary<string, object>{{ "name", "Wade" },{ "department", "HR" } },
+                    new Dictionary<string, object> {{ "name", "Felix" },{ "department", "HR" } },
+                    new Dictionary<string, object>{{ "name", "Eric" },{ "department", "IT" } },
+                    new Dictionary<string, object> {{ "name", "Keaton" },{ "department", "IT" } }
+                }
+            };
+            MiniWord.SaveAsByTemplate(path, templatePath, value);
+            var xml = Helpers.GetZipFileContent(path, "word/document.xml");
+            Assert.Contains(@"<w:t>Keaton", xml);
+            Assert.Contains(@"<w:t>Eric", xml);
+        }
+
         /// <summary>
         /// [Split template string like `<w:t>{</w:t><w:t>{<w:/t><w:t>Tag</w:t><w:t>}</w:t><w:t>}<w:/t>` problem · Issue #17 · mini-software/MiniWord]
         /// (https://github.com/mini-software/MiniWord/issues/17)
@@ -252,48 +271,6 @@ ever since the 1500s, when an unknown printer took.
                 ["APP"] = "Demo APP",
             };
             MiniWord.SaveAsByTemplate(path, templatePath, value);
-        }
-    }
-
-    internal static class Helpers
-    {
-        internal static string GetZipFileContent(string zipPath, string filePath)
-        {
-            var ns = new XmlNamespaceManager(new NameTable());
-            ns.AddNamespace("x", "http://schemas.openxmlformats.org/spreadsheetml/2006/main");
-            using (var stream = File.OpenRead(zipPath))
-            using (ZipArchive archive = new ZipArchive(stream, ZipArchiveMode.Read, false, Encoding.UTF8))
-            {
-                var entry = archive.Entries.Single(w => w.FullName == filePath);
-                using (var sheetStream = entry.Open())
-                {
-                    var doc = XDocument.Load(sheetStream);
-                    return doc.ToString();
-                }
-            }
-        }
-    }
-
-    internal static class PathHelper
-    {
-        public static string GetFile(string fileName, string folderName = "docx")
-        {
-            return $@"../../../../../samples/{folderName}/{fileName}";
-        }
-
-        public static string GetTempPath(string extension = "docx")
-        {
-            var method = (new System.Diagnostics.StackTrace()).GetFrame(1).GetMethod();
-
-            var path = Path.Combine(Path.GetTempPath(), $"{method.DeclaringType.Name}_{method.Name}.{extension}").Replace("<", string.Empty).Replace(">", string.Empty);
-            if (File.Exists(path))
-                File.Delete(path);
-            return path;
-        }
-
-        public static string GetTempFilePath(string extension = "docx")
-        {
-            return Path.GetTempPath() + Guid.NewGuid().ToString() + "." + extension;
         }
     }
 }
