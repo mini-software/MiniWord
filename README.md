@@ -98,6 +98,48 @@ Template
 
 ![image](https://user-images.githubusercontent.com/12729184/190645704-1f6405e9-71e3-45b9-aa99-2ba52e5e1519.png)
 
+### Table
+
+Tag value is `IEmerable<Dictionary<string,object>>` type
+
+##### Example
+
+```csharp
+var value = new Dictionary<string, object>()
+{
+    ["TripHs"] = new List<Dictionary<string, object>>
+    {
+        new Dictionary<string, object>
+        {
+            { "sDate",DateTime.Parse("2022-09-08 08:30:00")},
+            { "eDate",DateTime.Parse("2022-09-08 15:00:00")},
+            { "How","Discussion requirement part1"},
+            { "Photo",new MiniWordPicture() { Path = PathHelper.GetFile("DemoExpenseMeeting02.png"), Width = 160, Height = 90 }},
+        },
+        new Dictionary<string, object>
+        {
+            { "sDate",DateTime.Parse("2022-09-09 08:30:00")},
+            { "eDate",DateTime.Parse("2022-09-09 17:00:00")},
+            { "How","Discussion requirement part2 and development"},
+            { "Photo",new MiniWordPicture() { Path = PathHelper.GetFile("DemoExpenseMeeting01.png"), Width = 160, Height = 90 }},
+        },
+    }
+};
+MiniWord.SaveAsByTemplate(path, templatePath, value);
+```
+
+##### Template
+
+![image](https://user-images.githubusercontent.com/12729184/190843632-05bb6459-f1c1-4bdc-a79b-54889afdfeea.png)
+
+
+##### Result
+
+![image](https://user-images.githubusercontent.com/12729184/190843663-c00baf16-21f2-4579-9d08-996a2c8c549b.png)
+
+
+
+
 
 
 ## Support Me : [Donate Link](https://miniexcel.github.io/)

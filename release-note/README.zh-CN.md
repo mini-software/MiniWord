@@ -25,7 +25,9 @@
 
 
 ### 0.3.0
+- [New] 支持 table 标签  #13
 - [New] datetime format -> yyyy-MM-dd HH:mm:ss
+- [Bug] fixed spliting template string like `<w:t>{</w:t><w:t>{<w:/t><w:t>Tag</w:t><w:t>}</w:t><w:t>}<w:/t>` problem #17
 
 ### 0.2.1
 

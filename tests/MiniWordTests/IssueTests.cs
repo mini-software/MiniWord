@@ -13,7 +13,43 @@ namespace MiniWordTests
 {
     public class IssueTests
     {
-       
+
+        /// <summary>
+        /// [Support table generate · Issue #13 · mini-software/MiniWord]
+        /// (https://github.com/mini-software/MiniWord/issues/13)
+        /// </summary>
+        [Fact]
+        public void TestIssue13()
+        {
+            var path = PathHelper.GetTempFilePath();
+            var templatePath = PathHelper.GetFile("TestExpenseDemo.docx");
+            var value = new Dictionary<string, object>()
+            {
+                ["TripHs"] = new List<Dictionary<string, object>>
+                {
+                    new Dictionary<string, object>
+                    {
+                        { "sDate",DateTime.Parse("2022-09-08 08:30:00")},
+                        { "eDate",DateTime.Parse("2022-09-08 15:00:00")},
+                        { "How","Discussion requirement part1"},
+                        { "Photo",new MiniWordPicture() { Path = PathHelper.GetFile("DemoExpenseMeeting02.png"), Width = 160, Height = 90 }},
+                    },
+                    new Dictionary<string, object>
+                    {
+                        { "sDate",DateTime.Parse("2022-09-09 08:30:00")},
+                        { "eDate",DateTime.Parse("2022-09-09 17:00:00")},
+                        { "How","Discussion requirement part2 and development"},
+                        { "Photo",new MiniWordPicture() { Path = PathHelper.GetFile("DemoExpenseMeeting01.png"), Width = 160, Height = 90 }},
+                    },
+                }
+            };
+            MiniWord.SaveAsByTemplate(path, templatePath, value);
+            //System.Diagnostics.Process.Start("explorer.exe", path);
+            var xml = Helpers.GetZipFileContent(path, "word/document.xml");
+            Assert.Contains(@"Discussion requirement part2 and development", xml);
+            Assert.Contains(@"Discussion requirement part1", xml);
+        }
+
         [Fact]
         public void TestDemo01_Tag_Text()
         {
@@ -72,7 +108,7 @@ namespace MiniWordTests
                 ["Skills"] = new[] { "- Photoshop", "- InDesign", "- MS Office", "- HTML 5", "- CSS 3" },
                 ["Address"] = "1234, White Home, Road-12/ABC Street-13, New York, USA, 12345",
                 ["AboutMe"] = "Hi, I’m Julian Anderson dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled the industry's standard dummy.",
-                ["BH"] = "1993-09-26",
+                ["Birthday"] = "1993-09-26",
                 ["Experiences"] = @"# SENIOR UI/UX DEVELOPER & DESIGNER
 ◼ The Matrix Media Limited | From May 2013 to May 2015
 Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took.
@@ -147,7 +183,7 @@ ever since the 1500s, when an unknown printer took.
             var templatePath = PathHelper.GetFile("TestBasicImage.docx");
             var value = new Dictionary<string, object>()
             {
-                ["Logo"] = new MiniWordPicture() { Path= PathHelper.GetFile("DemoLogo.png"), Width= 180, Height= 180 }
+                ["Logo"] = new MiniWordPicture() { Path = PathHelper.GetFile("DemoLogo.png"), Width = 180, Height = 180 }
             };
             MiniWord.SaveAsByTemplate(path, templatePath, value);
             var xml = Helpers.GetZipFileContent(path, "word/document.xml");
@@ -184,19 +220,19 @@ ever since the 1500s, when an unknown printer took.
         [Fact]
         public void TestIssue4()
         {
-			var path = PathHelper.GetTempFilePath();
+            var path = PathHelper.GetTempFilePath();
             var templatePath = PathHelper.GetFile("TestBasicFill.docx");
-			var value = new Dictionary<string, object>()
-			{
+            var value = new Dictionary<string, object>()
+            {
                 ["Company_Name"] = "MiniSofteware",
                 ["Name"] = "Jack",
-				["CreateDate"] = new DateTime(2021, 01, 01),
-				["VIP"] = true,
-				["Points"] = 123,
-				["APP"] = "Demo APP",
-			};
-			MiniWord.SaveAsByTemplate(path, templatePath, value);
-		}
+                ["CreateDate"] = new DateTime(2021, 01, 01),
+                ["VIP"] = true,
+                ["Points"] = 123,
+                ["APP"] = "Demo APP",
+            };
+            MiniWord.SaveAsByTemplate(path, templatePath, value);
+        }
     }
 
     internal static class Helpers
@@ -220,7 +256,7 @@ ever since the 1500s, when an unknown printer took.
 
     internal static class PathHelper
     {
-        public static string GetFile(string fileName,string folderName="docx")
+        public static string GetFile(string fileName, string folderName = "docx")
         {
             return $@"../../../../../samples/{folderName}/{fileName}";
         }

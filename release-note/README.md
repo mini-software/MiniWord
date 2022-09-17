@@ -25,7 +25,9 @@
 
 
 ### 0.3.0
+- [New] Support table generate  #13
 - [New] datetime format -> yyyy-MM-dd HH:mm:ss
+- [Bug] fixed spliting template string like `<w:t>{</w:t><w:t>{<w:/t><w:t>Tag</w:t><w:t>}</w:t><w:t>}<w:/t>` problem #17
 
 
 ### 0.2.1
