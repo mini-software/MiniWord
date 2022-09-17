@@ -16,8 +16,12 @@
 <div align="center">
  您的 <a href="https://github.com/mini-software/MiniWord">Star</a> 和 <a href="https://miniexcel.github.io">赞助</a> 可以让 MiniWord 走更远
 </div>
+
 ---
 
+## QQ群 : 813100564
+
+----
 
 ## 介绍
 
