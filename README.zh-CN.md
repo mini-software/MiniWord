@@ -31,9 +31,50 @@ MiniWord .NET Word模板引擎，藉由Word模板和数据简单、快速生成�
 
 
 
+## Getting Started
+
+### 安装
+
+- nuget link : https://www.nuget.org/packages/MiniWord
+- Packge xml `<PackageReference Include="MiniWord" Version="0.4.0" />`
+- Or .NET CLI : `dotnet add package MiniWord --version 0.4.0`
+
+### 快速入门
+
+模板遵循“所见即所得”的设计，模板和标签的样式会被完全保留
+
+```csharp
+var value = new Dictionary<string, object>(){["title"] = "Hello MiniWord"};
+MiniSoftware.MiniWord.SaveAsByTemplate(outputPath, templatePath, value);
+```
+
+![image](https://user-images.githubusercontent.com/12729184/190875707-6c5639ab-9518-4dc1-85d8-81e20af465e8.png)
+
+### 输入、输出
+
+- 输入系统支持模版路径或是Byte[]
+- 输出支持文件路径、Byte[]、Stream
+
+```csharp
+SaveAsByTemplate(string path, string templatePath, Dictionary<string, object> value)
+SaveAsByTemplate(string path, byte[] templateBytes, Dictionary<string, object> value)
+SaveAsByTemplate(this Stream stream, string templatePath, Dictionary<string, object> value)
+SaveAsByTemplate(this Stream stream, byte[] templateBytes, Dictionary<string, object> value)
+```
+
+
+
 ## 标签
 
+MiniWord 使用类似 Vue, React 的模版字串 `{{tag}}`，只需要确保 tag 与 value 参数的 key 一样`(大小写敏感)`，系统会自动替换字串。
+
 ### 文本
+
+```csharp
+{{tag}}
+```
+
+
 
 ##### 代码例子
 

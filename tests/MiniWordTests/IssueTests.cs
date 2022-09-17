@@ -8,6 +8,15 @@ namespace MiniWordTests
     public class IssueTests
     {
         [Fact]
+        public void TestDemo04()
+        {
+            var outputPath = PathHelper.GetTempFilePath();
+            var templatePath = PathHelper.GetFile("TestDemo04.docx");
+            var value = new Dictionary<string, object>() { ["title"] = "Hello MiniWord" };
+            MiniSoftware.MiniWord.SaveAsByTemplate(outputPath, templatePath, value);
+        }
+
+        [Fact]
         public void TestIssue18()
         {
             var path = PathHelper.GetTempFilePath();

@@ -27,9 +27,48 @@ MiniWord is an easy and effective .NET Word Template library.
 
 
 
+## Getting Started
+
+### Installation 
+
+- nuget link : https://www.nuget.org/packages/MiniWord
+- Packge xml `<PackageReference Include="MiniWord" Version="0.4.0" />`
+- Or .NET CLI : `dotnet add package MiniWord --version 0.4.0`
+
+### Quick Start
+
+Template follow "WHAT you see is what you get" design，and the template tag styles are completely preserved.
+
+```csharp
+var value = new Dictionary<string, object>(){["title"] = "Hello MiniWord"};
+MiniSoftware.MiniWord.SaveAsByTemplate(outputPath, templatePath, value);
+```
+
+![image](https://user-images.githubusercontent.com/12729184/190875707-6c5639ab-9518-4dc1-85d8-81e20af465e8.png)
+
+### Input, Output
+
+- Input support file path, byte[]
+- Output support file path, byte[], stream
+
+```csharp
+SaveAsByTemplate(string path, string templatePath, Dictionary<string, object> value)
+SaveAsByTemplate(string path, byte[] templateBytes, Dictionary<string, object> value)
+SaveAsByTemplate(this Stream stream, string templatePath, Dictionary<string, object> value)
+SaveAsByTemplate(this Stream stream, byte[] templateBytes, Dictionary<string, object> value)
+```
+
+
+
 ## Tags
 
+MiniWord template format string like Vue, React `{{tag}}`，users only need to make sure tag and value parameter key same then system will replace them automatically.
+
 ### Text
+
+```csharp
+{{tag}}
+```
 
 ##### Example
 
