@@ -22,7 +22,9 @@
 
 ---
 
-
+### 0.4.0
+- [New] support HeaderParts, FooterParts template
+- [Bug] fixed multiple table generate problem #18
 
 ### 0.3.0
 - [New] Support table generate  #13

@@ -24,6 +24,13 @@
 
 
 
+
+
+### 0.4.0
+
+- [New] 支持HeaderParts, FooterParts template
+- [Bug] 修正multiple table generate problem #18
+
 ### 0.3.0
 
 - [New] 支持 table 标签  #13
