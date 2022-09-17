@@ -83,7 +83,16 @@
                                 }
                                 else
                                 {
-									t.Text = t.Text.Replace($"{{{{{tag.Key}}}}}", tag.Value?.ToString());
+									var newText = string.Empty;
+                                    if (tag.Value is DateTime)
+                                    {
+										newText = ((DateTime)tag.Value).ToString("yyyy-MM-dd HH:mm:ss");
+                                    }
+                                    else
+                                    {
+										newText = tag.Value?.ToString();
+									}
+									t.Text = t.Text.Replace($"{{{{{tag.Key}}}}}", newText);
 								}
 							}
 						}

@@ -25,7 +25,7 @@
 
 MiniWord .NET Word模板引擎，藉由Word模板和數據簡單、快速生成文件。
 
-![image](https://user-images.githubusercontent.com/12729184/190674408-12c03f86-31ea-4132-bb31-e2a793f8c40f.png)
+![image](https://user-images.githubusercontent.com/12729184/190833432-9150094e-1db6-4216-b0fd-177c60800776.png)
 
 
 
@@ -39,18 +39,25 @@ MiniWord .NET Word模板引擎，藉由Word模板和數據簡單、快速生成�
 var value = new Dictionary<string, object>()
 {
     ["Name"] = "Jack",
-    ["Company_Name"] = "MiniSofteware",
-    ["CreateDate"] = new DateTime(2021, 01, 01),
-    ["VIP"] = true,
-    ["Points"] = 123,
-    ["APP"] = "Demo APP",
+    ["Department"] = "IT Department",
+    ["Purpose"] = "Shanghai site needs a new system to control HR system.",
+    ["StartDate"] = DateTime.Parse("2022-09-07 08:30:00"),
+    ["EndDate"] = DateTime.Parse("2022-09-15 15:30:00"),
+    ["Approved"] = true,
+    ["Total_Amount"] = 123456,
 };
 MiniWord.SaveAsByTemplate(path, templatePath, value);
 ```
 
+##### 模版
+
+![image](https://user-images.githubusercontent.com/12729184/190834360-39b4b799-d523-4b7e-9331-047a61fd5eb9.png)
+
 ##### 導出
 
-![image](https://user-images.githubusercontent.com/12729184/190646113-04182d43-6b04-441d-911b-68de6af18039.png)
+![image](https://user-images.githubusercontent.com/12729184/190834455-ba065211-0f9d-41d1-9b7a-5d9e96ac2eff.png)
+
+
 
 ### 圖片
 
@@ -72,7 +79,7 @@ MiniWord.SaveAsByTemplate(path, templatePath, value);
 
 ![image](https://user-images.githubusercontent.com/12729184/190647953-6f9da393-e666-4658-a56d-b3a7f13c0ea1.png)
 
-##### 效果
+##### 導出
 
 ![image](https://user-images.githubusercontent.com/12729184/190648179-30258d82-723d-4266-b711-43f132d1842d.png)
 
@@ -95,7 +102,7 @@ MiniWord.SaveAsByTemplate(path, templatePath, value);
 
 ![image](https://user-images.githubusercontent.com/12729184/190645513-230c54f3-d38f-47af-b844-0c8c1eff2f52.png)
 
-##### 效果
+##### 導出
 
 ![image](https://user-images.githubusercontent.com/12729184/190645704-1f6405e9-71e3-45b9-aa99-2ba52e5e1519.png)
 

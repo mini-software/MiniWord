@@ -37,18 +37,23 @@ MiniWord .NET Word模板引擎，藉由Word模板和数据简单、快速生成�
 var value = new Dictionary<string, object>()
 {
     ["Name"] = "Jack",
-    ["Company_Name"] = "MiniSofteware",
-    ["CreateDate"] = new DateTime(2021, 01, 01),
-    ["VIP"] = true,
-    ["Points"] = 123,
-    ["APP"] = "Demo APP",
+    ["Department"] = "IT Department",
+    ["Purpose"] = "Shanghai site needs a new system to control HR system.",
+    ["StartDate"] = DateTime.Parse("2022-09-07 08:30:00"),
+    ["EndDate"] = DateTime.Parse("2022-09-15 15:30:00"),
+    ["Approved"] = true,
+    ["Total_Amount"] = 123456,
 };
 MiniWord.SaveAsByTemplate(path, templatePath, value);
 ```
 
+##### 模版
+
+![image](https://user-images.githubusercontent.com/12729184/190834360-39b4b799-d523-4b7e-9331-047a61fd5eb9.png)
+
 ##### 导出
 
-![image](https://user-images.githubusercontent.com/12729184/190646113-04182d43-6b04-441d-911b-68de6af18039.png)
+![image](https://user-images.githubusercontent.com/12729184/190834455-ba065211-0f9d-41d1-9b7a-5d9e96ac2eff.png)
 
 ### 图片
 
@@ -100,7 +105,7 @@ MiniWord.SaveAsByTemplate(path, templatePath, value);
 ## 支持我 : [Donate Link](https://miniexcel.github.io/)
 
 <a href="https://user-images.githubusercontent.com/12729184/158003727-ca348041-5e59-44bc-a694-f400777e0252.jpg"><img src="https://user-images.githubusercontent.com/12729184/158003727-ca348041-5e59-44bc-a694-f400777e0252.jpg" alt="wechat" width="200px" height="300px">
-</a>
+</a> 
 <a href="https://user-images.githubusercontent.com/12729184/158003731-6d132872-19c3-4840-b1af-97aa22f9bf4b.jpg">
     <img src="https://user-images.githubusercontent.com/12729184/158003731-6d132872-19c3-4840-b1af-97aa22f9bf4b.jpg" alt="alipay" width="200px" height="300px"></a>
 

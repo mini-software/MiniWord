@@ -23,7 +23,7 @@
 
 MiniWord is an easy and effective .NET Word Template library.
 
-![image](https://user-images.githubusercontent.com/12729184/190674408-12c03f86-31ea-4132-bb31-e2a793f8c40f.png)
+![image](https://user-images.githubusercontent.com/12729184/190833432-9150094e-1db6-4216-b0fd-177c60800776.png)
 
 
 
@@ -37,18 +37,19 @@ MiniWord is an easy and effective .NET Word Template library.
 var value = new Dictionary<string, object>()
 {
     ["Name"] = "Jack",
-    ["Company_Name"] = "MiniSofteware",
-    ["CreateDate"] = new DateTime(2021, 01, 01),
-    ["VIP"] = true,
-    ["Points"] = 123,
-    ["APP"] = "Demo APP",
+    ["Department"] = "IT Department",
+    ["Purpose"] = "Shanghai site needs a new system to control HR system.",
+    ["StartDate"] = DateTime.Parse("2022-09-07 08:30:00"),
+    ["EndDate"] = DateTime.Parse("2022-09-15 15:30:00"),
+    ["Approved"] = true,
+    ["Total_Amount"] = 123456,
 };
 MiniWord.SaveAsByTemplate(path, templatePath, value);
 ```
 
 ##### Result
 
-![image](https://user-images.githubusercontent.com/12729184/190646113-04182d43-6b04-441d-911b-68de6af18039.png)
+![image](https://user-images.githubusercontent.com/12729184/190834455-ba065211-0f9d-41d1-9b7a-5d9e96ac2eff.png)
 
 ### Image
 

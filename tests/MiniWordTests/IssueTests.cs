@@ -13,6 +13,25 @@ namespace MiniWordTests
 {
     public class IssueTests
     {
+       
+        [Fact]
+        public void TestDemo01_Tag_Text()
+        {
+            var path = PathHelper.GetTempFilePath();
+            var templatePath = PathHelper.GetFile("TestExpenseDemo.docx");
+            var value = new Dictionary<string, object>()
+            {
+                ["Name"] = "Jack",
+                ["Department"] = "IT Department",
+                ["Purpose"] = "Shanghai site needs a new system to control HR system.",
+                ["StartDate"] = DateTime.Parse("2022-09-07 08:30:00"),
+                ["EndDate"] = DateTime.Parse("2022-09-15 15:30:00"),
+                ["Approved"] = true,
+                ["Total_Amount"] = 123456,
+            };
+            MiniWord.SaveAsByTemplate(path, templatePath, value);
+        }
+
         /// <summary>
         /// [System.InvalidOperationException: 'The parent of this element is null.' · Issue #12 · mini-software/MiniWord](https://github.com/mini-software/MiniWord/issues/12)
         /// </summary>
