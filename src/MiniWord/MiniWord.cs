@@ -38,7 +38,12 @@
 			SaveAsByTemplateImpl(stream, GetBytes(templatePath), value);
 		}
 
-		public static void SaveAsByTemplate(this Stream stream, byte[] templateBytes, Dictionary<string, object> value)
+        public static void SaveAsByTemplate(this Stream stream, string templatePath, object value)
+        {
+            SaveAsByTemplateImpl(stream, GetBytes(templatePath), value.ToDictionary());
+        }
+
+        public static void SaveAsByTemplate(this Stream stream, byte[] templateBytes, Dictionary<string, object> value)
 		{
 			SaveAsByTemplateImpl(stream, templateBytes, value);
 		}

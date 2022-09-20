@@ -43,6 +43,7 @@ public class ApiController : Controller
             Content = @"<html><body>
 <a href='api/DownloadWordFromTemplatePath'>DownloadWordFromTemplatePath</a><br>
 <a href='api/DownloadWordFromTemplateBytes'>DownloadWordFromTemplateBytes</a><br>
+<a href='api/DownloadWordFromTemplatePathByObjectType'>DownloadWordFromTemplatePathByObjectType</a><br>
 </body></html>"
         };
     }
@@ -62,6 +63,21 @@ public class ApiController : Controller
         }
     };
 
+    static object objectValue = new 
+    {
+        title = "FooCompany",
+        managers = new List<Dictionary<string, object>> {
+            new Dictionary<string, object>{{"name","Jack"},{ "department", "HR" } },
+            new Dictionary<string, object> {{ "name", "Loan"},{ "department", "IT" } }
+        },
+        employees = new List<Dictionary<string, object>> {
+            new Dictionary<string, object>{{ "name", "Wade" },{ "department", "HR" } },
+            new Dictionary<string, object> {{ "name", "Felix" },{ "department", "HR" } },
+            new Dictionary<string, object>{{ "name", "Eric" },{ "department", "IT" } },
+            new Dictionary<string, object> {{ "name", "Keaton" },{ "department", "IT" } }
+        }
+    };
+
     public IActionResult DownloadWordFromTemplatePath()
     {
         string templatePath = "TestTemplateComplex.docx";
@@ -70,6 +86,19 @@ public class ApiController : Controller
 
         MemoryStream memoryStream = new MemoryStream();
         MiniWord.SaveAsByTemplate(memoryStream, templatePath, value);
+        memoryStream.Seek(0, SeekOrigin.Begin);
+        return new FileStreamResult(memoryStream, "application/vnd.openxmlformats-officedocument.wordprocessingml.document")
+        {
+            FileDownloadName = "demo.docx"
+        };
+    }
+
+    public IActionResult DownloadWordFromTemplatePathByObjectType()
+    {
+        string templatePath = "TestTemplateComplex.docx";
+
+        MemoryStream memoryStream = new MemoryStream();
+        MiniWord.SaveAsByTemplate(memoryStream, templatePath, objectValue);
         memoryStream.Seek(0, SeekOrigin.Begin);
         return new FileStreamResult(memoryStream, "application/vnd.openxmlformats-officedocument.wordprocessingml.document")
         {
@@ -100,4 +129,5 @@ public class ApiController : Controller
             FileDownloadName = "demo.docx"
         };
     }
+
 }
