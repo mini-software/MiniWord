@@ -186,6 +186,19 @@ MiniWord.SaveAsByTemplate(path, templatePath, value);
 
 
 
+## 其他
+
+### POCO or dynamic 參數
+
+v0.5.0 支持 POCO 或 dynamic parameter
+
+```csharp
+var value = new { title = "Hello MiniWord" };
+MiniWord.SaveAsByTemplate(outputPath, templatePath, value);
+```
+
+
+
 ## 例子
 
 

@@ -24,6 +24,10 @@
 
 
 
+### 0.5.0
+
+- [New] 支持 object & dynamic parameter (#19 via @isdaniel )
+
 ### 0.4.0
 - [New] 支持HeaderParts, FooterParts template
 - [Bug] 修正multiple table generate problem #18
