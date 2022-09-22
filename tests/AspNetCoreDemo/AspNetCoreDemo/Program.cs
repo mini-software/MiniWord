@@ -44,6 +44,7 @@ public class ApiController : Controller
 <a href='api/DownloadWordFromTemplatePath'>DownloadWordFromTemplatePath</a><br>
 <a href='api/DownloadWordFromTemplateBytes'>DownloadWordFromTemplateBytes</a><br>
 <a href='api/DownloadWordFromTemplatePathByObjectType'>DownloadWordFromTemplatePathByObjectType</a><br>
+<a href='api/DownloadWordFromTemplatePathWithHyperLink'>DownloadWordFromTemplatePathWithHyperLink</a><br>
 </body></html>"
         };
     }
@@ -78,6 +79,25 @@ public class ApiController : Controller
         }
     };
 
+    static object hyperLinktValue = new
+    {
+        title = new MiniWorHyperLink() { 
+           TargetFrame = TargetFrameType.Self,
+           Text = "This is a HyperLink!!",
+           Url = "https://google.com"
+        },
+        managers = new List<Dictionary<string, object>> {
+            new Dictionary<string, object>{{"name","Jack"},{ "department", "HR" } },
+            new Dictionary<string, object> {{ "name", "Loan"},{ "department", "IT" } }
+        },
+        employees = new List<Dictionary<string, object>> {
+            new Dictionary<string, object>{{ "name", "Wade" },{ "department", "HR" } },
+            new Dictionary<string, object> {{ "name", "Felix" },{ "department", "HR" } },
+            new Dictionary<string, object>{{ "name", "Eric" },{ "department", "IT" } },
+            new Dictionary<string, object> {{ "name", "Keaton" },{ "department", "IT" } }
+        }
+    };
+
     public IActionResult DownloadWordFromTemplatePath()
     {
         string templatePath = "TestTemplateComplex.docx";
@@ -99,6 +119,19 @@ public class ApiController : Controller
 
         MemoryStream memoryStream = new MemoryStream();
         MiniWord.SaveAsByTemplate(memoryStream, templatePath, objectValue);
+        memoryStream.Seek(0, SeekOrigin.Begin);
+        return new FileStreamResult(memoryStream, "application/vnd.openxmlformats-officedocument.wordprocessingml.document")
+        {
+            FileDownloadName = "demo.docx"
+        };
+    }
+
+    public IActionResult DownloadWordFromTemplatePathWithHyperLink()
+    {
+        string templatePath = "TestTemplateComplex.docx";
+
+        MemoryStream memoryStream = new MemoryStream();
+        MiniWord.SaveAsByTemplate(memoryStream, templatePath, hyperLinktValue);
         memoryStream.Seek(0, SeekOrigin.Begin);
         return new FileStreamResult(memoryStream, "application/vnd.openxmlformats-officedocument.wordprocessingml.document")
         {
