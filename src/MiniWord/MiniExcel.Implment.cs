@@ -193,7 +193,7 @@
                                     }
 
                                     var mainPart = docx.MainDocumentPart;
-
+                                    
                                     var imagePart = mainPart.AddImagePart(pic.GetImagePartType);
                                     using (var stream = new MemoryStream(l_Data))
                                     {
@@ -201,6 +201,13 @@
                                         AddPicture(run, mainPart.GetIdOfPart(imagePart), pic);
 
                                     }
+                                    t.Remove();
+                                }
+                                else if(tag.Value is MiniWorHyperLink){
+                                    var mainPart = docx.MainDocumentPart;
+                                    var linkInfo = (MiniWorHyperLink)tag.Value;
+                                    var hyperlink = GetHyperLink(mainPart,linkInfo);
+                                    run.Append(hyperlink);
                                     t.Remove();
                                 }
                                 else
@@ -244,6 +251,23 @@
                     }
                 }
             }
+        }
+
+        private static Hyperlink GetHyperLink(MainDocumentPart mainPart,MiniWorHyperLink linkInfo)
+        {
+            var hr = mainPart.AddHyperlinkRelationship(new Uri(linkInfo.Url),true);
+            Hyperlink xmlHyperLink = new Hyperlink(new RunProperties(
+                    new RunStyle { Val = "Hyperlink", },
+                    new Underline { Val = linkInfo.UnderLineValue },
+                    new Color { ThemeColor = ThemeColorValues.Hyperlink }),
+                new Text(linkInfo.Text)
+                )
+            {
+                DocLocation = linkInfo.Url,
+                Id = hr.Id,
+                TargetFrame = linkInfo.GetTargetFrame()
+            };
+            return xmlHyperLink; 
         }
 
         private static void AddPicture(OpenXmlElement appendElement, string relationshipId, MiniWordPicture pic)

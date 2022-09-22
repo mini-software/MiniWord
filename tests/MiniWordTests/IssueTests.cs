@@ -460,7 +460,10 @@ ever since the 1500s, when an unknown printer took.
             var templatePath = PathHelper.GetFile("TestBasicFill.docx");
             var value = new Dictionary<string, object>()
             {
-                ["Name"] = "Jack",
+                ["Name"] = new MiniWorHyperLink(){
+                    Url = "https://google.com",
+                    Text = "測試連結!!"
+                },
                 ["Company_Name"] = "MiniSofteware",
                 ["CreateDate"] = new DateTime(2021, 01, 01),
                 ["VIP"] = true,
@@ -472,6 +475,8 @@ ever since the 1500s, when an unknown printer took.
             var xml = Helpers.GetZipFileContent(path, "word/document.xml");
             Assert.DoesNotContain("Jack Demo APP Account Data", xml);
             Assert.Contains("MiniSofteware Demo APP Account Data", xml);
+            Assert.Contains("MiniSofteware Demo APP Account Data", xml);
+            Assert.Contains("<w:hyperlink w:tgtFrame=\"_blank\"", xml);
         }
 
         /// <summary>
@@ -484,7 +489,10 @@ ever since the 1500s, when an unknown printer took.
             var templatePath = PathHelper.GetFile("TestBasicFill.docx");
             var value = new 
             {
-                Name = "Jack",
+                Name =new MiniWorHyperLink(){
+                    Url = "https://google.com",
+                    Text = "測試連結!!"
+                },
                 Company_Name = "MiniSofteware",
                 CreateDate = new DateTime(2021, 01, 01),
                 VIP = true,
@@ -496,6 +504,7 @@ ever since the 1500s, when an unknown printer took.
             var xml = Helpers.GetZipFileContent(path, "word/document.xml");
             Assert.DoesNotContain("Jack Demo APP Account Data", xml);
             Assert.Contains("MiniSofteware Demo APP Account Data", xml);
+            Assert.Contains("<w:hyperlink w:tgtFrame=\"_blank\"", xml);
         }
 
 
