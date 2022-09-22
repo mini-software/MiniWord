@@ -96,7 +96,7 @@ MiniWord.SaveAsByTemplate(path, templatePath, value);
 
 ### Image
 
-标签值为 `MiniWordPicture` 类别
+tag value is `MiniWordPicture` type
 
 ##### Example
 
