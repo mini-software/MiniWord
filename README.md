@@ -96,7 +96,7 @@ MiniWord.SaveAsByTemplate(path, templatePath, value);
 
 ### Image
 
-标签值为 `MiniWordPicture` 类别
+tag value is `MiniWordPicture` type
 
 ##### Example
 
@@ -179,6 +179,21 @@ MiniWord.SaveAsByTemplate(path, templatePath, value);
 ##### Result
 
 ![image](https://user-images.githubusercontent.com/12729184/190843663-c00baf16-21f2-4579-9d08-996a2c8c549b.png)
+
+
+
+## Other
+
+### POCO or dynamic parameter
+
+v0.5.0 support POCO or dynamic parameter
+
+```csharp
+var value = new { title = "Hello MiniWord" };
+MiniWord.SaveAsByTemplate(outputPath, templatePath, value);
+```
+
+
 
 
 
