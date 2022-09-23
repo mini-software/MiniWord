@@ -200,8 +200,30 @@ MiniWord.SaveAsByTemplate(outputPath, templatePath, value);
 ```
 
 
+### HyperLink
 
+我们可以尝试使用 `MiniWorHyperLink` 类，用模板测试替换为超链接。
 
+`MiniWorHyperLink` 提供了两个主要参数。
+
+* Url： HyperLink URI 目标路径
+* 文字：超链接文字
+
+```csharp
+var value = new 
+{
+    ["Name"] = new MiniWorHyperLink(){
+        Url = "https://google.com",
+        Text = "測試連結!!"
+    },
+    ["Company_Name"] = "MiniSofteware",
+    ["CreateDate"] = new DateTime(2021, 01, 01),
+    ["VIP"] = true,
+    ["Points"] = 123,
+    ["APP"] = "Demo APP",
+};
+MiniWord.SaveAsByTemplate(path, templatePath, value);
+```
 
 ## 例子
 
