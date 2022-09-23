@@ -1,4 +1,4 @@
-﻿namespace MiniSoftware
+﻿namespace MiniSoftware.Extensions
 {
     using System;
     using System.Collections;
@@ -26,7 +26,7 @@
                 PropertyDescriptorCollection props = TypeDescriptor.GetProperties(value);
                 foreach (PropertyDescriptor prop in props)
                 {
-                    
+
                     object val1 = prop.GetValue(value);
 
                     //支持第二层，且只支持2层
