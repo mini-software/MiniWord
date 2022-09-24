@@ -605,10 +605,10 @@ ever since the 1500s, when an unknown printer took.
             var templatePath = PathHelper.GetFile("TestBasicFill.docx");
             var value = new
             {
-                Company_Name = new MiniWordColorText { Text = "MiniSofteware", TextColor = "#eb70AB" },
-                Name = new MiniWordColorText { Text = "Jack", BackgroundColor = "#eb70AB" },
-                CreateDate = new MiniWordColorText { Text = new DateTime(2021, 01, 01).ToString(), BackgroundColor = "#eb70AB", TextColor = "#ffffff" },
-              
+                Company_Name = new MiniWordColorText { Text = "MiniSofteware", FontColor = "#eb70AB" },
+                Name = new MiniWordColorText { Text = "Jack", HighlightColor = "#eb70AB" },
+                CreateDate = new MiniWordColorText { Text = new DateTime(2021, 01, 01).ToString()
+                    , HighlightColor = "#eb70AB", FontColor = "#ffffff" },
                 VIP = true,
                 Points = 123,
                 APP = "Demo APP",

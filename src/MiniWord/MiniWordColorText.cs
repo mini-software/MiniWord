@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace MiniSoftware
 {
-  public  class MiniWordColorText
+    public class MiniWordColorText
     {
-        public string TextColor { get; set; }
+        public string FontColor { get; set; }
         public string Text { get; set; }
-        public string BackgroundColor { get; set; }
+        public string HighlightColor { get; set; }
     }
 }
