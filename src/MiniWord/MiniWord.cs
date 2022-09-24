@@ -1,6 +1,7 @@
 ﻿namespace MiniSoftware
 {
     using DocumentFormat.OpenXml.Office2013.Excel;
+    using MiniSoftware.Extensions;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Dynamic;
