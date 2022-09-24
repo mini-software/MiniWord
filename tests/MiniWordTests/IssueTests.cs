@@ -9,6 +9,51 @@ namespace MiniWordTests
 {
     public class IssueTests
     {
+
+        /// <summary>
+        /// [Text color multiple tags format error · Issue #37 · mini-software/MiniWord]
+        /// (https://github.com/mini-software/MiniWord/issues/37)
+        /// </summary>
+        [Fact]
+        public void TestIssue37()
+        {
+            {
+                var path = PathHelper.GetTempFilePath();
+                var templatePath = PathHelper.GetFile("TestIssue37.docx");
+                var value = new Dictionary<string, object>
+                {
+                    ["Content"] = "Test",
+                    ["Content2"] = "Test2",
+                };
+                MiniWord.SaveAsByTemplate(path, templatePath, value);
+                var xml = Helpers.GetZipFileContent(path, "word/document.xml");
+                Assert.Contains(@"Test", xml);
+                Assert.Contains(@"Test2", xml);
+            }
+
+            {
+                var path = PathHelper.GetTempFilePath();
+                var templatePath = PathHelper.GetFile("TestIssue37.docx");
+                var value = new Dictionary<string, object>
+                {
+                    ["Content"] = new MiniWordHyperLink()
+                    {
+                        Url = "https://google.com",
+                        Text = "Test1!!"
+                    },
+                    ["Content2"] = new MiniWordHyperLink()
+                    {
+                        Url = "https://google.com",
+                        Text = "Test2!!"
+                    },
+                };
+                MiniWord.SaveAsByTemplate(path, templatePath, value);
+                var xml = Helpers.GetZipFileContent(path, "word/document.xml");
+                Assert.Contains(@"Test", xml);
+                Assert.Contains(@"Test2", xml);
+            }
+        }
+
         [Fact]
         public void TestDemo04()
         {

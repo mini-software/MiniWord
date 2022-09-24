@@ -41,59 +41,9 @@
         }
         private static void Generate(this OpenXmlElement xmlElement, WordprocessingDocument docx, Dictionary<string, object> tags)
         {
+            // avoid {{tag}} like <t>{</t><t>{</t> 
+            AvoidSplitTagText(xmlElement);
 
-            // Avoid not standard string format e.g. {{<t>tag</t>}}
-            //foreach (var tag in tags)
-            //{
-            //    var regexStr = string.Concat(@"((\{\{(?:(?!\{\{|}}).)*>)|\{\{)", tag.Key, @"(}}|<.*?}})");
-
-            //    xmlElement.InnerXml = Regex.Replace(xmlElement.InnerXml, regexStr, $"{{{{{tag.Key?.ToString()}}}}}", RegexOptions.Singleline | RegexOptions.IgnorePatternWhitespace | RegexOptions.CultureInvariant);
-            //}
-            // Avoid not standard string format e.g. {{<t>tag</t>}}
-            {
-                var paragraphs = xmlElement.Descendants<Paragraph>().ToArray();
-                foreach (var p in paragraphs)
-                {
-                    var runs = p.Descendants<Run>().ToArray();
-                    var isMatch = tags.Any(tag =>
-                    {
-                        var b = p.InnerText.Contains($"{{{{{tag.Key}}}}}");
-                        if (!b && tag.Value is IEnumerable)
-                        {
-                            foreach (var item in tag.Value as IEnumerable)
-                            {
-                                if (item is Dictionary<string, object>)
-                                {
-                                    foreach (var dic in item as Dictionary<string, object>)
-                                    {
-                                        b = p.InnerText.Contains($"{{{{{tag.Key}.{dic.Key}}}}}");
-                                        if (b)
-                                            break;
-                                    }
-                                }
-                                break;
-                            }
-                        }
-                        return b;
-                    });
-                    if (isMatch)
-                    {
-                        var newText = p.InnerText?.ToString();
-                        foreach (var run in runs.Skip(1))
-                            run.RemoveAllChildren<Text>();
-                        if (runs.Length > 0)
-                        {
-                            var texts = runs[0].Descendants<Text>().ToArray();
-                            if (texts.Length > 0)
-                            {
-                                foreach (var text in texts.Skip(1))
-                                    text.RemoveAllChildren();
-                                texts[0].Text = newText;
-                            }
-                        }
-                    }
-                }
-            }
             //Tables
             var tables = xmlElement.Descendants<Table>().ToArray();
             {
@@ -141,6 +91,57 @@
             }
 
             ReplaceText(xmlElement, docx, tags);
+        }
+
+        private static void AvoidSplitTagText(OpenXmlElement xmlElement)
+        {
+            var texts = xmlElement.Descendants<Text>().ToList();
+            var pool = new List<Text>();
+            var sb = new StringBuilder();
+            var needAppend = false;
+            foreach (var text in texts)
+            {
+                var clear = false;
+                if (text.InnerText.StartsWith("{"))
+                {
+                    needAppend = true;
+                }
+                if (needAppend)
+                {
+                    sb.Append(text.InnerText);
+                    pool.Add(text);
+
+                    var s = sb.ToString(); //TODO:
+                                           // TODO: check tag exist
+                                           // TODO: record tag text if without tag then system need to clear them
+                                           // TODO: every {{tag}} one <t>for them</t> and add text before first text and copy first one and remove {{, tagname, }}
+
+                    if (!s.StartsWith("{{"))
+                        clear = true;
+                    else if (s.Contains("{{") && s.Contains("}}"))
+                    {
+                        if (sb.Length <= 1000) // avoid too big tag
+                        {
+                            var first = pool.First();
+                            var newText = first.Clone() as Text;
+                            newText.Text = s;
+                            first.Parent.InsertBefore(newText, first);
+                            foreach (var t in pool)
+                            {
+                                t.Text = "";
+                            }
+                        }
+                        clear = true;
+                    }
+                }
+
+                if (clear)
+                {
+                    sb.Clear();
+                    pool.Clear();
+                    needAppend = false;
+                }
+            }
         }
 
         private static void ReplaceText(OpenXmlElement xmlElement, WordprocessingDocument docx, Dictionary<string, object> tags)
