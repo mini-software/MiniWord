@@ -24,6 +24,13 @@
 
 
 
+### 0.6.0
+- [New] 支持 hyperLink  (#33 via @isdaniel)
+- [New] 支持 custom font color and highlight color (#35 via impPDX)
+- [New] 支持 2 level object parameter (#32 via @ping9719 , @shps951023)
+- [Bug] 修正 Multiple tags format error (#37 via @shps951023)
+
+
 ### 0.5.0
 
 - [New] 支持 object & dynamic parameter (#19 via @isdaniel )

@@ -24,14 +24,17 @@
 
 
 
-### 0.5.0
+### 0.6.0
+- [New] Support hyperLink  (#33 via @isdaniel)
+- [New] Support custom font color and highlight color  (#35 via impPDX)
+- [New] Support 2 level object parameter (#32 via @ping9719 , @shps951023)
+- [Bug] Fix Multiple tags format error (#37 via @shps951023)
 
+### 0.5.0
 - [New] support object & dynamic parameter (#19 via @isdaniel )
 
   
-
 ### 0.4.0
-
 - [New] support HeaderParts, FooterParts template
 - [Bug] fixed multiple table generate problem #18
 
