@@ -96,7 +96,7 @@ MiniWord.SaveAsByTemplate(path, templatePath, value);
 
 ### Image
 
-tag value is `MiniWordPicture` type
+标签值为 `MiniWordPicture` 类别
 
 ##### Example
 
@@ -193,30 +193,21 @@ var value = new { title = "Hello MiniWord" };
 MiniWord.SaveAsByTemplate(outputPath, templatePath, value);
 ```
 
-### HyperLink
-
-We can try to use `MiniWorHyperLink` class which will replace template text with HyperLink.
-
-`MiniWorHyperLink` provide two major parameters.
-
-* Url： HyperLink URI target path
-* Text：HyperLink Text
-
+### Font ForeColor and BackColor functions
 ```csharp
-var value = new 
-{
-    ["Name"] = new MiniWorHyperLink(){
-        Url = "https://google.com",
-        Text = "測試連結!!"
-    },
-    ["Company_Name"] = "MiniSofteware",
-    ["CreateDate"] = new DateTime(2021, 01, 01),
-    ["VIP"] = true,
-    ["Points"] = 123,
-    ["APP"] = "Demo APP",
-};
-MiniWord.SaveAsByTemplate(path, templatePath, value);
+     var value = new
+            {
+                Company_Name = new MiniWordColorText { Text = "MiniSofteware", ForeColor = "#eb70AB" },
+                Name = new MiniWordColorText { Text = "Jack", BackColor = "#eb70AB" },
+                CreateDate = new MiniWordColorText { Text = new DateTime(2021, 01, 01).ToString(), BackColor = "#eb70AB", ForeColor = "#ffffff" },
+              
+                VIP = true,
+                Points = 123,
+                APP = "Demo APP",
+            };
 ```
+
+
 
 ## Examples
 
