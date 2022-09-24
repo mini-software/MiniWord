@@ -204,10 +204,10 @@
                                     }
                                     t.Remove();
                                 }
-                                else if (tag.Value is MiniWorHyperLink)
+                                else if (tag.Value is MiniWordHyperLink)
                                 {
                                     var mainPart = docx.MainDocumentPart;
-                                    var linkInfo = (MiniWorHyperLink)tag.Value;
+                                    var linkInfo = (MiniWordHyperLink)tag.Value;
                                     var hyperlink = GetHyperLink(mainPart, linkInfo);
                                     run.Append(hyperlink);
                                     t.Remove();
@@ -255,7 +255,7 @@
             }
         }
 
-        private static Hyperlink GetHyperLink(MainDocumentPart mainPart, MiniWorHyperLink linkInfo)
+        private static Hyperlink GetHyperLink(MainDocumentPart mainPart, MiniWordHyperLink linkInfo)
         {
             var hr = mainPart.AddHyperlinkRelationship(new Uri(linkInfo.Url), true);
             Hyperlink xmlHyperLink = new Hyperlink(new RunProperties(

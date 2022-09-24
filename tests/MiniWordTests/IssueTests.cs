@@ -511,7 +511,7 @@ ever since the 1500s, when an unknown printer took.
             var templatePath = PathHelper.GetFile("TestBasicFill.docx");
             var value = new Dictionary<string, object>()
             {
-                ["Name"] = new MiniWorHyperLink(){
+                ["Name"] = new MiniWordHyperLink(){
                     Url = "https://google.com",
                     Text = "測試連結!!"
                 },
@@ -540,7 +540,7 @@ ever since the 1500s, when an unknown printer took.
             var templatePath = PathHelper.GetFile("TestBasicFill.docx");
             var value = new 
             {
-                Name =new MiniWorHyperLink(){
+                Name =new MiniWordHyperLink(){
                     Url = "https://google.com",
                     Text = "測試連結!!"
                 },
