@@ -3,7 +3,6 @@
     using DocumentFormat.OpenXml;
     using DocumentFormat.OpenXml.Packaging;
     using DocumentFormat.OpenXml.Wordprocessing;
-    using MiniSoftware.Utility;
     using System;
     using System.Collections;
     using System.Collections.Generic;
@@ -103,7 +102,7 @@
 
                     foreach (var tr in trs)
                     {
-                        
+
                         var matchs = (Regex.Matches(tr.InnerText, "(?<={{).*?\\..*?(?=}})")
                             .Cast<Match>().GroupBy(x => x.Value).Select(varGroup => varGroup.First().Value)).ToArray();
                         if (matchs.Length > 0)
@@ -130,7 +129,7 @@
                                         dic.Add(dicKey, e.Value);
                                     }
 
-                                    ReplaceText(newTr, docx, tags : dic);
+                                    ReplaceText(newTr, docx, tags: dic);
                                     table.Append(newTr);
                                 }
                                 tr.Remove();
@@ -194,7 +193,7 @@
                                     }
 
                                     var mainPart = docx.MainDocumentPart;
-                                    
+
                                     var imagePart = mainPart.AddImagePart(pic.GetImagePartType);
                                     using (var stream = new MemoryStream(l_Data))
                                     {
@@ -204,18 +203,12 @@
                                     }
                                     t.Remove();
                                 }
-                                else if(tag.Value is MiniWorHyperLink){
+                                else if (tag.Value is MiniWorHyperLink)
+                                {
                                     var mainPart = docx.MainDocumentPart;
                                     var linkInfo = (MiniWorHyperLink)tag.Value;
-                                    var hyperlink = GetHyperLink(mainPart,linkInfo);
+                                    var hyperlink = GetHyperLink(mainPart, linkInfo);
                                     run.Append(hyperlink);
-                                    t.Remove();
-                                }
-                                else if (tag.Value is MiniWordColorText)
-                                {
-                                    var miniWordColorText = (MiniWordColorText)tag.Value;
-                                    var colorText = AddColorText(miniWordColorText);
-                                    run.Append(colorText);
                                     t.Remove();
                                 }
                                 else
@@ -261,9 +254,9 @@
             }
         }
 
-        private static Hyperlink GetHyperLink(MainDocumentPart mainPart,MiniWorHyperLink linkInfo)
+        private static Hyperlink GetHyperLink(MainDocumentPart mainPart, MiniWorHyperLink linkInfo)
         {
-            var hr = mainPart.AddHyperlinkRelationship(new Uri(linkInfo.Url),true);
+            var hr = mainPart.AddHyperlinkRelationship(new Uri(linkInfo.Url), true);
             Hyperlink xmlHyperLink = new Hyperlink(new RunProperties(
                     new RunStyle { Val = "Hyperlink", },
                     new Underline { Val = linkInfo.UnderLineValue },
@@ -275,21 +268,9 @@
                 Id = hr.Id,
                 TargetFrame = linkInfo.GetTargetFrame()
             };
-            return xmlHyperLink; 
+            return xmlHyperLink;
         }
-        private static RunProperties AddColorText(MiniWordColorText miniWordColorText)
-        {
 
-            RunProperties runPro = new RunProperties();
-            Text text = new Text(miniWordColorText.Text);
-            Color color = new Color() { Val = miniWordColorText.ForeColor?.Replace("#", "") };
-            Shading shading = new Shading() { Fill = miniWordColorText.BackColor?.Replace("#", "") };
-            runPro.Append(shading);
-            runPro.Append(color);
-            runPro.Append(text);
-
-            return runPro;
-        }
         private static void AddPicture(OpenXmlElement appendElement, string relationshipId, MiniWordPicture pic)
         {
             // Define the reference of the image.
