@@ -193,6 +193,19 @@ var value = new { title = "Hello MiniWord" };
 MiniWord.SaveAsByTemplate(outputPath, templatePath, value);
 ```
 
+### FontColor and HighlightColor
+```csharp
+var value = new
+{
+    Company_Name = new MiniWordColorText { Text = "MiniSofteware", FontColor = "#eb70AB" },
+    Name = new MiniWordColorText { Text = "Jack", HighlightColor = "#eb70AB" },
+    CreateDate = new MiniWordColorText { Text = new DateTime(2021, 01, 01).ToString(), HighlightColor = "#eb70AB", FontColor = "#ffffff" },
+    VIP = true,
+    Points = 123,
+    APP = "Demo APP",
+};
+```
+
 ### HyperLink
 
 If value type is `MiniWordHyperLink` system will replace template string by hyperlink.
