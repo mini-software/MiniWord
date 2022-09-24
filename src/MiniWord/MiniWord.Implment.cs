@@ -212,6 +212,13 @@
                                     run.Append(hyperlink);
                                     t.Remove();
                                 }
+                                else if (tag.Value is MiniWordColorText)
+                                {
+                                    var miniWordColorText = (MiniWordColorText)tag.Value;
+                                    var colorText = AddColorText(miniWordColorText);
+                                    run.Append(colorText);
+                                    t.Remove();
+                                }
                                 else
                                 {
                                     var newText = string.Empty;
@@ -271,7 +278,19 @@
             };
             return xmlHyperLink;
         }
+        private static RunProperties AddColorText(MiniWordColorText miniWordColorText)
+        {
 
+            RunProperties runPro = new RunProperties();
+            Text text = new Text(miniWordColorText.Text);
+            Color color = new Color() { Val = miniWordColorText.TextColor?.Replace("#", "") };
+            Shading shading = new Shading() { Fill = miniWordColorText.BackgroundColor?.Replace("#", "") };
+            runPro.Append(shading);
+            runPro.Append(color);
+            runPro.Append(text);
+
+            return runPro;
+        }
         private static void AddPicture(OpenXmlElement appendElement, string relationshipId, MiniWordPicture pic)
         {
             // Define the reference of the image.

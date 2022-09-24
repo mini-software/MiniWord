@@ -199,6 +199,18 @@ var value = new { title = "Hello MiniWord" };
 MiniWord.SaveAsByTemplate(outputPath, templatePath, value);
 ```
 
+### 字体ForeColor和BackColor功能
+```csharp
+var value = new
+{
+    Company_Name = new MiniWordColorText { Text = "MiniSofteware", ForeColor = "#eb70AB" },
+    Name = new MiniWordColorText { Text = "Jack", BackColor = "#eb70AB" },
+    CreateDate = new MiniWordColorText { Text = new DateTime(2021, 01, 01).ToString(), BackColor = "#eb70AB", ForeColor = "#ffffff" },
+    VIP = true,
+    Points = 123,
+    APP = "Demo APP",
+};
+```
 
 ### HyperLink
 
