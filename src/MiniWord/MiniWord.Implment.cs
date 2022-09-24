@@ -3,6 +3,7 @@
     using DocumentFormat.OpenXml;
     using DocumentFormat.OpenXml.Packaging;
     using DocumentFormat.OpenXml.Wordprocessing;
+    using MiniSoftware.Utility;
     using System;
     using System.Collections;
     using System.Collections.Generic;
