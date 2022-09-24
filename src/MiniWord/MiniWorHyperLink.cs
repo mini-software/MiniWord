@@ -1,6 +1,7 @@
 namespace MiniSoftware
 {
     using DocumentFormat.OpenXml.Wordprocessing;
+    using MiniSoftware.Utility;
 
     public class MiniWorHyperLink{
         public string Url { get; set; }

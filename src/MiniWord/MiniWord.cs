@@ -1,4 +1,4 @@
-﻿namespace MiniSoftware
+namespace MiniSoftware
 {
     using DocumentFormat.OpenXml.Office2013.Excel;
     using MiniSoftware.Extensions;

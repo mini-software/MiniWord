@@ -1,4 +1,4 @@
-﻿namespace MiniSoftware.Extensions
+namespace MiniSoftware.Extensions
 {
     using System;
     using System.Collections;

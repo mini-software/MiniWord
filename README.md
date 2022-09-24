@@ -193,9 +193,30 @@ var value = new { title = "Hello MiniWord" };
 MiniWord.SaveAsByTemplate(outputPath, templatePath, value);
 ```
 
+### HyperLink
 
+We can try to use `MiniWorHyperLink` class which will replace template text with HyperLink.
 
+`MiniWorHyperLink` provide two major parameters.
 
+* Url： HyperLink URI target path
+* Text：HyperLink Text
+
+```csharp
+var value = new 
+{
+    ["Name"] = new MiniWorHyperLink(){
+        Url = "https://google.com",
+        Text = "測試連結!!"
+    },
+    ["Company_Name"] = "MiniSofteware",
+    ["CreateDate"] = new DateTime(2021, 01, 01),
+    ["VIP"] = true,
+    ["Points"] = 123,
+    ["APP"] = "Demo APP",
+};
+MiniWord.SaveAsByTemplate(path, templatePath, value);
+```
 
 ## Examples
 
