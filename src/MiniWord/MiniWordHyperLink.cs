@@ -3,7 +3,8 @@ namespace MiniSoftware
     using DocumentFormat.OpenXml.Wordprocessing;
     using MiniSoftware.Utility;
 
-    public class MiniWorHyperLink{
+    public class MiniWordHyperLink
+    {
         public string Url { get; set; }
 
         public string Text { get; set; }
@@ -12,8 +13,9 @@ namespace MiniSoftware
 
         public TargetFrameType TargetFrame { get; set; } = TargetFrameType.Blank;
 
-        internal string GetTargetFrame(){
-            
+        internal string GetTargetFrame()
+        {
+
             switch (TargetFrame)
             {
                 case TargetFrameType.Blank:

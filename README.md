@@ -193,18 +193,27 @@ var value = new { title = "Hello MiniWord" };
 MiniWord.SaveAsByTemplate(outputPath, templatePath, value);
 ```
 
-### Font ForeColor and BackColor functions
+### HyperLink
+
+If value type is `MiniWordHyperLink` system will replace template string by hyperlink.
+
+* Url： HyperLink URI target path
+* Text：Description 
+
 ```csharp
-     var value = new
-            {
-                Company_Name = new MiniWordColorText { Text = "MiniSofteware", ForeColor = "#eb70AB" },
-                Name = new MiniWordColorText { Text = "Jack", BackColor = "#eb70AB" },
-                CreateDate = new MiniWordColorText { Text = new DateTime(2021, 01, 01).ToString(), BackColor = "#eb70AB", ForeColor = "#ffffff" },
-              
-                VIP = true,
-                Points = 123,
-                APP = "Demo APP",
-            };
+var value = new 
+{
+    ["Name"] = new MiniWordHyperLink(){
+        Url = "https://google.com",
+        Text = "Test Link!!"
+    },
+    ["Company_Name"] = "MiniSofteware",
+    ["CreateDate"] = new DateTime(2021, 01, 01),
+    ["VIP"] = true,
+    ["Points"] = 123,
+    ["APP"] = "Demo APP",
+};
+MiniWord.SaveAsByTemplate(path, templatePath, value);
 ```
 
 

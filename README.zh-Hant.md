@@ -200,9 +200,9 @@ MiniWord.SaveAsByTemplate(outputPath, templatePath, value);
 
 ### HyperLink
 
-我們可以嘗試使用 `MiniWorHyperLink` 類，它將模板文本替換為超鏈接。
+我們可以嘗試使用 `MiniWordHyperLink` 類，它將模板文本替換為超鏈接。
 
-`MiniWorHyperLink` 提供了兩個主要參數。
+`MiniWordHyperLink` 提供了兩個主要參數。
 
 * Url： HyperLink URI 目標路徑
 * 文字：超鏈接文字
@@ -210,7 +210,7 @@ MiniWord.SaveAsByTemplate(outputPath, templatePath, value);
 ```csharp
 var value = new 
 {
-    ["Name"] = new MiniWorHyperLink(){
+    ["Name"] = new MiniWordHyperLink(){
         Url = "https://google.com",
         Text = "測試連結!!"
     },
