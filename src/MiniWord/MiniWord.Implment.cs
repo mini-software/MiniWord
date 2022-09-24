@@ -283,8 +283,8 @@
 
             RunProperties runPro = new RunProperties();
             Text text = new Text(miniWordColorText.Text);
-            Color color = new Color() { Val = miniWordColorText.TextColor?.Replace("#", "") };
-            Shading shading = new Shading() { Fill = miniWordColorText.BackgroundColor?.Replace("#", "") };
+            Color color = new Color() { Val = miniWordColorText.FontColor?.Replace("#", "") };
+            Shading shading = new Shading() { Fill = miniWordColorText.HighlightColor?.Replace("#", "") };
             runPro.Append(shading);
             runPro.Append(color);
             runPro.Append(text);
