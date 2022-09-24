@@ -1,7 +1,12 @@
-﻿namespace MiniSoftware
+namespace MiniSoftware
 {
+    using DocumentFormat.OpenXml.Office2013.Excel;
     using MiniSoftware.Extensions;
+    using System.Collections.Generic;
+    using System.ComponentModel;
+    using System.Dynamic;
     using System.IO;
+    using System.Linq.Expressions;
 
     public static partial class MiniWord
     {

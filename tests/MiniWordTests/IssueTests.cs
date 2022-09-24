@@ -33,59 +33,75 @@ namespace MiniWordTests
         {
             var path = PathHelper.GetTempFilePath();
             var templatePath = PathHelper.GetFile("TestIssue18.docx");
-            //方式1
-            //var value = new Dictionary<string, object>()
-            //{
-            //    ["title"] = "FooCompany",
-            //    ["managers"] = new List<Dictionary<string, object>> {
-            //        new Dictionary<string, object>{{"name","Jack"},{ "department", "HR" } },
-            //        new Dictionary<string, object> {{ "name", "Loan"},{ "department", "IT" } }
-            //    },
-            //    ["employees"] = new List<Dictionary<string, object>> {
-            //        new Dictionary<string, object>{{ "name", "Wade" },{ "department", "HR" } },
-            //        new Dictionary<string, object> {{ "name", "Felix" },{ "department", "HR" } },
-            //        new Dictionary<string, object>{{ "name", "Eric" },{ "department", "IT" } },
-            //        new Dictionary<string, object> {{ "name", "Keaton" },{ "department", "IT" } }
-            //    }
-            //};
-            //方式2
-            //var value = new
-            //{
-            //    title = "FooCompany",
-            //    managers = new[]
-            //    {
-            //        new {name="Jack",department="HR" },
-            //        new {name="Loan",department="IT" },
-            //    },
-            //    employees = new[]
-            //    {
-            //        new {name="Jack",department="HR" },
-            //        new {name="Loan",department="HR" },
-            //        new {name="Eric",department="IT" },
-            //        new {name="Keaton",department="IT" },
-            //    },
-            //};
-            //方式3
-            Foo value = new Foo()
+
             {
-                title = "FooCompany",
-                managers = new List<User>()
+                var value = new Dictionary<string, object>()
                 {
-                    new User (){ name="Jack",department="HR"},
-                    new User (){ name="Loan",department="IT"},
-                },
-                employees = new List<User>()
+                    ["title"] = "FooCompany",
+                    ["managers"] = new List<Dictionary<string, object>> {
+                        new Dictionary<string, object>{{"name","Jack"},{ "department", "HR" } },
+                        new Dictionary<string, object> {{ "name", "Loan"},{ "department", "IT" } }
+                    },
+                    ["employees"] = new List<Dictionary<string, object>> {
+                        new Dictionary<string, object>{{ "name", "Wade" },{ "department", "HR" } },
+                        new Dictionary<string, object> {{ "name", "Felix" },{ "department", "HR" } },
+                        new Dictionary<string, object>{{ "name", "Eric" },{ "department", "IT" } },
+                        new Dictionary<string, object> {{ "name", "Keaton" },{ "department", "IT" } }
+                    }
+                };
+                MiniWord.SaveAsByTemplate(path, templatePath, value);
+                var xml = Helpers.GetZipFileContent(path, "word/document.xml");
+                Assert.Contains(@"<w:t>Keaton", xml);
+                Assert.Contains(@"<w:t>Eric", xml);
+            }
+
+            //Strong type
+            {
+                var value = new
                 {
-                    new User (){ name="Jack",department="HR"},
-                    new User (){ name="Loan",department="HR"},
-                    new User (){ name="Eric",department="IT"},
-                    new User (){ name="Keaton",department="IT"},
-                },
-            };
-            MiniWord.SaveAsByTemplate(path, templatePath, value);
-            var xml = Helpers.GetZipFileContent(path, "word/document.xml");
-            Assert.Contains(@"<w:t>Keaton", xml);
-            Assert.Contains(@"<w:t>Eric", xml);
+                    title = "FooCompany",
+                    managers = new[]
+                    {
+                        new {name="Jack",department="HR" },
+                        new {name="Loan",department="IT" },
+                    },
+                    employees = new[]
+                    {
+                        new {name="Jack",department="HR" },
+                        new {name="Loan",department="HR" },
+                        new {name="Eric",department="IT" },
+                        new {name="Keaton",department="IT" },
+                    },
+                };
+                MiniWord.SaveAsByTemplate(path, templatePath, value);
+                var xml = Helpers.GetZipFileContent(path, "word/document.xml");
+                Assert.Contains(@"<w:t>Keaton", xml);
+                Assert.Contains(@"<w:t>Eric", xml);
+            }
+
+            //Strong type
+            {
+                Foo value = new Foo()
+                {
+                    title = "FooCompany",
+                    managers = new List<User>()
+                    {
+                        new User (){ name="Jack",department="HR"},
+                        new User (){ name="Loan",department="IT"},
+                    },
+                        employees = new List<User>()
+                    {
+                        new User (){ name="Jack",department="HR"},
+                        new User (){ name="Loan",department="HR"},
+                        new User (){ name="Eric",department="IT"},
+                        new User (){ name="Keaton",department="IT"},
+                    },
+                };
+                MiniWord.SaveAsByTemplate(path, templatePath, value);
+                var xml = Helpers.GetZipFileContent(path, "word/document.xml");
+                Assert.Contains(@"<w:t>Keaton", xml);
+                Assert.Contains(@"<w:t>Eric", xml);
+            }
         }
 
         /// <summary>
@@ -441,18 +457,18 @@ ever since the 1500s, when an unknown printer took.
         [Fact]
         public void TestIssue11_new()
         {
-            {
-                var path = PathHelper.GetTempFilePath();
-                var templatePath = PathHelper.GetFile("TestIssue11.docx");
-                var value = new 
-                {
-                    managers = new[] { "Jack", "Alan" },
-                    employees = new[] { "Mike", "Henry" },
-                };
-                MiniWord.SaveAsByTemplate(path, templatePath, value);
-                var xml = Helpers.GetZipFileContent(path, "word/document.xml");
-                Assert.Contains("Jack", xml);
-            }
+            //{
+            //    var path = PathHelper.GetTempFilePath();
+            //    var templatePath = PathHelper.GetFile("TestIssue11.docx");
+            //    var value = new 
+            //    {
+            //        managers = new[] { "Jack", "Alan" },
+            //        employees = new[] { "Mike", "Henry" },
+            //    };
+            //    MiniWord.SaveAsByTemplate(path, templatePath, value);
+            //    var xml = Helpers.GetZipFileContent(path, "word/document.xml");
+            //    Assert.Contains("Jack", xml);
+            //}
             {
                 var path = PathHelper.GetTempFilePath();
                 var templatePath = PathHelper.GetFile("TestIssue11.docx");
