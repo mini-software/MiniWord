@@ -96,7 +96,7 @@ MiniWord.SaveAsByTemplate(path, templatePath, value);
 
 ### Image
 
-标签值为 `MiniWordPicture` 类别
+Value type is `MiniWordPicture` 
 
 ##### Example
 
@@ -348,12 +348,7 @@ public class ApiController : Controller
 
 
 
-## Support Me : [Donate Link](https://miniexcel.github.io/)
-
-<a href="https://user-images.githubusercontent.com/12729184/158003727-ca348041-5e59-44bc-a694-f400777e0252.jpg"><img src="https://user-images.githubusercontent.com/12729184/158003727-ca348041-5e59-44bc-a694-f400777e0252.jpg" alt="wechat" width="200px" height="300px">
-</a>
-<a href="https://user-images.githubusercontent.com/12729184/158003731-6d132872-19c3-4840-b1af-97aa22f9bf4b.jpg">
-    <img src="https://user-images.githubusercontent.com/12729184/158003731-6d132872-19c3-4840-b1af-97aa22f9bf4b.jpg" alt="alipay" width="200px" height="300px"></a>
+## Support : [Donate Link](https://miniexcel.github.io/)
 
 
 
