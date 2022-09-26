@@ -204,12 +204,10 @@
                                     }
                                     t.Remove();
                                 }
-                                else if (tag.Value is MiniWordHyperLink)
+                                else if (tag.Value is MiniWordHyperLink ||
+                                        tag.Value is IEnumerable<MiniWordHyperLink>)
                                 {
-                                    var mainPart = docx.MainDocumentPart;
-                                    var linkInfo = (MiniWordHyperLink)tag.Value;
-                                    var hyperlink = GetHyperLink(mainPart, linkInfo);
-                                    run.Append(hyperlink);
+                                    AddHyperLink(docx, run, tag.Value);
                                     t.Remove();
                                 }
                                 else
@@ -252,6 +250,28 @@
                         }
                     }
                 }
+            }
+        }
+
+        private static void AddHyperLink(WordprocessingDocument docx, Run run, object value)
+        {
+            List<MiniWordHyperLink> links = new List<MiniWordHyperLink>();
+
+            if (value is MiniWordHyperLink)
+            {
+                links.Add((MiniWordHyperLink)value);
+            }
+            else
+            {
+                links.AddRange((IEnumerable<MiniWordHyperLink>)value);
+            }
+
+            foreach (var linkInfo in links)
+            {
+                var mainPart = docx.MainDocumentPart;
+                var hyperlink = GetHyperLink(mainPart, linkInfo);
+                run.Append(hyperlink);
+                run.Append(new Break());
             }
         }
 
