@@ -24,6 +24,9 @@
 
 
 
+### 0.6.1
+- [Bug] Fixed system does not support `IEnumerable<MiniWordHyperLink>` (#39 via @isdaniel)
+
 ### 0.6.0
 - [New] Support hyperLink  (#33 via @isdaniel)
 - [New] Support custom font color and highlight color  (#35 via impPDX)

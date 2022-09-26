@@ -355,20 +355,12 @@ public class ApiController : Controller
 
 
 
-## 支持我 : [Donate Link](https://miniexcel.github.io/)
+## 支持 : [Donate Link](https://miniexcel.github.io/)
 
 <a href="https://user-images.githubusercontent.com/12729184/158003727-ca348041-5e59-44bc-a694-f400777e0252.jpg"><img src="https://user-images.githubusercontent.com/12729184/158003727-ca348041-5e59-44bc-a694-f400777e0252.jpg" alt="wechat" width="200px" height="300px">
 </a> 
 <a href="https://user-images.githubusercontent.com/12729184/158003731-6d132872-19c3-4840-b1af-97aa22f9bf4b.jpg">
     <img src="https://user-images.githubusercontent.com/12729184/158003731-6d132872-19c3-4840-b1af-97aa22f9bf4b.jpg" alt="alipay" width="200px" height="300px"></a>
-
-## 常见问题
-
-### 模版字串没有生效
-
-建议 `{{tag}}` 复制重新整串复制贴上，有时打字 word 在底层 `{{}}`会被切开变成`<w:t>{</w:t><w:t>{<w:/t><w:t>Tag</w:t><w:t>}</w:t><w:t>}<w:/t>` 如图片
-
-![image](https://user-images.githubusercontent.com/12729184/190683025-fbf1bfa3-a34a-4af9-a8d3-30c6807d229c.png)
 
 
 
