@@ -204,8 +204,7 @@
                                     }
                                     t.Remove();
                                 }
-                                else if (tag.Value is MiniWordHyperLink ||
-                                        tag.Value is IEnumerable<MiniWordHyperLink>)
+                                else if (IsHyperLink(tag.Value))
                                 {
                                     AddHyperLink(docx, run, tag.Value);
                                     t.Remove();
@@ -251,6 +250,12 @@
                     }
                 }
             }
+        }
+
+        private static bool IsHyperLink(object value)
+        {
+            return value is MiniWordHyperLink ||
+                    value is IEnumerable<MiniWordHyperLink>;
         }
 
         private static void AddHyperLink(WordprocessingDocument docx, Run run, object value)
