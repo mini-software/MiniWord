@@ -575,6 +575,115 @@ ever since the 1500s, when an unknown printer took.
             Assert.Contains("<w:hyperlink w:tgtFrame=\"_blank\"", xml);
         }
 
+        [Fact]
+        public void MiniWordHyperLink_List()
+        {
+            var path = PathHelper.GetTempFilePath();
+            var templatePath = PathHelper.GetFile("TestBasicFill.docx");
+            var value = new Dictionary<string, object>()
+            {
+                ["Name"] = new List<MiniWordHyperLink>(){
+                    new MiniWordHyperLink(){
+                        Url = "https://google.com",
+                        Text = "測試連結22!!"
+                    },
+                    new MiniWordHyperLink(){
+                        Url = "https://google1.com",
+                        Text = "測試連結11!!"
+                    }
+                },
+                ["Company_Name"] = "MiniSofteware",
+                ["CreateDate"] = new DateTime(2021, 01, 01),
+                ["VIP"] = true,
+                ["Points"] = 123,
+                ["APP"] = "Demo APP",
+            };
+            MiniWord.SaveAsByTemplate(path, templatePath, value);
+            //Console.WriteLine(path);
+            var docXml = Helpers.GetZipFileContent(path, "word/document.xml");
+            Assert.DoesNotContain("Jack Demo APP Account Data", docXml);
+            Assert.Contains("MiniSofteware Demo APP Account Data", docXml);
+            Assert.Contains("MiniSofteware Demo APP Account Data", docXml);
+            Assert.Contains("<w:hyperlink w:tgtFrame=\"_blank\"", docXml);
+
+            var relsXml = Helpers.GetZipFileContent(path, "word/_rels/document.xml.rels");
+            Assert.Contains("<Relationship Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink\" Target=\"https://google.com\"", relsXml);
+            Assert.Contains("<Relationship Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink\" Target=\"https://google1.com\"", relsXml);
+        }
+
+
+        [Fact]
+        public void MiniWordHyperLink_Array()
+        {
+            var path = PathHelper.GetTempFilePath();
+            var templatePath = PathHelper.GetFile("TestBasicFill.docx");
+            var value = new Dictionary<string, object>()
+            {
+                ["Name"] = new MiniWordHyperLink[]{
+                    new MiniWordHyperLink(){
+                        Url = "https://google.com",
+                        Text = "測試連結22!!"
+                    },
+                    new MiniWordHyperLink(){
+                        Url = "https://google1.com",
+                        Text = "測試連結11!!"
+                    }
+                },
+                ["Company_Name"] = "MiniSofteware",
+                ["CreateDate"] = new DateTime(2021, 01, 01),
+                ["VIP"] = true,
+                ["Points"] = 123,
+                ["APP"] = "Demo APP",
+            };
+            MiniWord.SaveAsByTemplate(path, templatePath, value);
+
+            var docXml = Helpers.GetZipFileContent(path, "word/document.xml");
+            Assert.DoesNotContain("Jack Demo APP Account Data", docXml);
+            Assert.Contains("MiniSofteware Demo APP Account Data", docXml);
+            Assert.Contains("MiniSofteware Demo APP Account Data", docXml);
+            Assert.Contains("<w:hyperlink w:tgtFrame=\"_blank\"", docXml);
+
+            var relsXml = Helpers.GetZipFileContent(path, "word/_rels/document.xml.rels");
+            Assert.Contains("<Relationship Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink\" Target=\"https://google.com\"", relsXml);
+            Assert.Contains("<Relationship Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink\" Target=\"https://google1.com\"", relsXml);
+        }
+
+        [Fact]
+        public void MiniWordHyperLink_AnonymousArray()
+        {
+            var path = PathHelper.GetTempFilePath();
+            var templatePath = PathHelper.GetFile("TestBasicFill.docx");
+            var value = new Dictionary<string, object>()
+            {
+                ["Name"] = new []{
+                    new MiniWordHyperLink(){
+                        Url = "https://google.com",
+                        Text = "測試連結22!!"
+                    },
+                    new MiniWordHyperLink(){
+                        Url = "https://google1.com",
+                        Text = "測試連結11!!"
+                    }
+                },
+                ["Company_Name"] = "MiniSofteware",
+                ["CreateDate"] = new DateTime(2021, 01, 01),
+                ["VIP"] = true,
+                ["Points"] = 123,
+                ["APP"] = "Demo APP",
+            };
+            MiniWord.SaveAsByTemplate(path, templatePath, value);
+
+            var docXml = Helpers.GetZipFileContent(path, "word/document.xml");
+            Assert.DoesNotContain("Jack Demo APP Account Data", docXml);
+            Assert.Contains("MiniSofteware Demo APP Account Data", docXml);
+            Assert.Contains("MiniSofteware Demo APP Account Data", docXml);
+            Assert.Contains("<w:hyperlink w:tgtFrame=\"_blank\"", docXml);
+
+            var relsXml = Helpers.GetZipFileContent(path, "word/_rels/document.xml.rels");
+            Assert.Contains("<Relationship Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink\" Target=\"https://google.com\"", relsXml);
+            Assert.Contains("<Relationship Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink\" Target=\"https://google1.com\"", relsXml);
+        }
+
         /// <summary>
         /// [Fuzzy Regex replace similar key · Issue #5 · mini-software/MiniWord](https://github.com/mini-software/MiniWord/issues/5)
         /// </summary>
