@@ -25,7 +25,7 @@
 
 MiniWord .NET Word模板引擎，藉由Word模板和數據簡單、快速生成文件。
 
-![image](https://user-images.githubusercontent.com/12729184/190835307-6cd87982-b5f3-4a79-9682-bdd1cc02a4ea.png)
+![image](C:\Users\Wei\Downloads\190835307-6cd87982-b5f3-4a79-9682-bdd1cc02a4ea.png)
 
 
 
@@ -90,11 +90,11 @@ MiniWord.SaveAsByTemplate(path, templatePath, value);
 
 ##### 模版
 
-![image](https://user-images.githubusercontent.com/12729184/190834360-39b4b799-d523-4b7e-9331-047a61fd5eb9.png)
+![image](C:\Users\Wei\Downloads\190834360-39b4b799-d523-4b7e-9331-047a61fd5eb9.png)
 
 ##### 導出
 
-![image](https://user-images.githubusercontent.com/12729184/190834455-ba065211-0f9d-41d1-9b7a-5d9e96ac2eff.png)
+![image](C:\Users\Wei\Downloads\190834455-ba065211-0f9d-41d1-9b7a-5d9e96ac2eff.png)
 
 
 
@@ -351,7 +351,7 @@ public class ApiController : Controller
 
 
 
-## 支持我 : [Donate Link](https://miniexcel.github.io/)
+## 支持 : [Donate Link](https://miniexcel.github.io/)
 
 <a href="https://user-images.githubusercontent.com/12729184/158003727-ca348041-5e59-44bc-a694-f400777e0252.jpg"><img src="https://user-images.githubusercontent.com/12729184/158003727-ca348041-5e59-44bc-a694-f400777e0252.jpg" alt="wechat" width="200px" height="300px">
 </a>
@@ -360,10 +360,3 @@ public class ApiController : Controller
 
 
 
-## 常見問題
-
-### 模版字串沒有生效
-
-建議 `{{tag}}` 複製重新整串複製貼上，有時打字 word 在底層 `{{}}` 會被切開變成 `<w:t>{</w:t><w:t>{<w:/t><w:t>Tag</w:t><w:t>}</w:t><w:t>}<w:/t>` 如圖片
-
-![image](https://user-images.githubusercontent.com/12729184/190683025-fbf1bfa3-a34a-4af9-a8d3-30c6807d229c.png)

@@ -22,6 +22,8 @@
 
 ---
 
+### 0.6.1
+- [Bug] 修正系统不支持 `IEnumerable<MiniWordHyperLink>` (#39 via @isdaniel)
 
 ### 0.6.0
 - [New] 支持 hyperLink  (#33 via @isdaniel)
