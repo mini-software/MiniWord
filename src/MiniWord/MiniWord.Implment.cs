@@ -3,6 +3,7 @@
     using DocumentFormat.OpenXml;
     using DocumentFormat.OpenXml.Packaging;
     using DocumentFormat.OpenXml.Wordprocessing;
+    using MiniSoftware.Extensions;
     using MiniSoftware.Utility;
     using System;
     using System.Collections;
@@ -43,6 +44,8 @@
         {
             // avoid {{tag}} like <t>{</t><t>{</t> 
             AvoidSplitTagText(xmlElement);
+            // avoid {{tag}} like <t>aa{</t><t>{</t>  test in...
+            //AvoidSplitTagText(xmlElement, tags.Select(o => "{{" + o.Key + "}}"));
 
             //Tables
             var tables = xmlElement.Descendants<Table>().ToArray();
@@ -140,6 +143,20 @@
                     sb.Clear();
                     pool.Clear();
                     needAppend = false;
+                }
+            }
+        }
+
+        private static void AvoidSplitTagText(OpenXmlElement xmlElement, IEnumerable<string> txt)
+        {
+            foreach (var paragraph in xmlElement.Elements<Paragraph>())
+            {
+                foreach (var continuousString in paragraph.GetContinuousString())
+                {
+                    foreach (var text in txt.Where(o => continuousString.Item1.Contains(o)))
+                    {
+                        continuousString.Item3.TrimStringToInContinuousString(text);
+                    }
                 }
             }
         }
