@@ -9,6 +9,21 @@ namespace MiniWordTests
 {
     public class IssueTests
     {
+        [Fact]
+        public void TestIssueAvoidSplitTag()
+        {
+            {
+                var path = PathHelper.GetTempFilePath();
+                var templatePath = PathHelper.GetFile("TestDemo04.docx");
+                var value = new Dictionary<string, object>
+                {
+                    ["title"] = "Hello MiniWord",
+                };
+                MiniWord.SaveAsByTemplate(path, templatePath, value);
+                var xml = Helpers.GetZipFileContent(path, "word/document.xml");
+                Assert.Contains(@"MiniWord", xml);
+            }
+        }
 
         /// <summary>
         /// [Text color multiple tags format error · Issue #37 · mini-software/MiniWord]
