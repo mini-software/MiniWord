@@ -38,7 +38,7 @@ namespace MiniSoftware.Extensions
                         var text = run.GetFirstChild<Text>();
                         runs.Add(run);
                         texts.Add(text);
-                        sb.Append(text.InnerText);
+                        sb.Append(text.Text);
                     }
                     else
                     {
@@ -73,9 +73,9 @@ namespace MiniSoftware.Extensions
             if (runs.Any())
                 tuples.Add(new Tuple<string, List<Run>, List<Text>>(sb.ToString(), runs, texts));
 
-            sb = new StringBuilder();
-            runs = new List<Run>();
-            texts = new List<Text>();
+            sb = null;
+            runs = null;
+            texts = null;
 
             return tuples;
         }
@@ -93,64 +93,42 @@ namespace MiniSoftware.Extensions
             //优化块为：[AB][C][DE][FGH][]
              */
 
-            var index = string.Concat(texts.SelectMany(o => o.Text)).IndexOf(text);
-            if (index == -1)
+            var allTxtx = string.Concat(texts.SelectMany(o => o.Text));
+            var indexState = allTxtx.IndexOf(text);
+            if (indexState == -1)
                 return;
 
-            int i = -1;
-            int addLengg = 0;
-            bool isbr = false;
-            foreach (var textWord in texts)
+            int indexEnd = indexState + text.Length - 1;
+            List<Tuple<int, char>> yl = new List<Tuple<int, char>>(allTxtx.Length);
+            int iRun = 0;
+            int iIndex = 0;
+            int iRunOf = -1;
+            foreach (var item in texts)
             {
-                if (addLengg > 0)
+                foreach (var item2 in item.Text)
                 {
-                    isbr = true;
-                    var leng = textWord.Text.Length;
+                    if (indexState <= iIndex && iIndex <= indexEnd)
+                    {
+                        if (iRunOf == -1)
+                            iRunOf = iRun;
 
-                    if (addLengg - leng > 0)
-                    {
-                        addLengg -= leng;
-                        textWord.Text = "";
-                    }
-                    else if (addLengg - leng == 0)
-                    {
-                        textWord.Text = "";
-                        break;
+                        yl.Add(new Tuple<int, char>(iRunOf, item2));
                     }
                     else
                     {
-                        textWord.Text = textWord.Text.Substring(addLengg);
+                        yl.Add(new Tuple<int, char>(iRun, item2));
                     }
-                }
-                else if (isbr)
-                {
-                    break;
-                }
-                else
-                {
-                    i += textWord.Text.Length;
-                    //开始包含
-                    if (i >= index)
-                    {
-                        //全部包含
-                        if (textWord.Text.Contains(text))
-                        {
-                            break;
-                        }
-                        //部分包含
-                        else
-                        {
-                            var str1 = textWord.Text.Substring(0, i - index + 1);
-                            if (i == index)
-                                str1 = "";
 
-                            var str2 = str1 + text;
-
-                            addLengg = str2.Length - textWord.Text.Length;
-                            textWord.Text = str2;
-                        }
-                    }
+                    iIndex++;
                 }
+                iRun++;
+            }
+
+            int i = 0;
+            foreach (var item in texts)
+            {
+                item.Text = string.Concat(yl.Where(o => o.Item1 == i).Select(o => o.Item2));
+                i++;
             }
 
         }

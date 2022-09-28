@@ -43,9 +43,9 @@
         private static void Generate(this OpenXmlElement xmlElement, WordprocessingDocument docx, Dictionary<string, object> tags)
         {
             // avoid {{tag}} like <t>{</t><t>{</t> 
-            AvoidSplitTagText(xmlElement);
+            //AvoidSplitTagText(xmlElement);
             // avoid {{tag}} like <t>aa{</t><t>{</t>  test in...
-            //AvoidSplitTagText(xmlElement, tags.Select(o => "{{" + o.Key + "}}"));
+            AvoidSplitTagText(xmlElement, tags.Select(o => "{{" + o.Key + "}}"));
 
             //Tables
             var tables = xmlElement.Descendants<Table>().ToArray();
