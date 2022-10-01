@@ -32,8 +32,6 @@ MiniWord is an easy and effective .NET Word Template library.
 ### Installation 
 
 - nuget link : https://www.nuget.org/packages/MiniWord
-- Packge xml `<PackageReference Include="MiniWord" Version="0.4.0" />`
-- Or .NET CLI : `dotnet add package MiniWord --version 0.4.0`
 
 ### Quick Start
 

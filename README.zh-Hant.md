@@ -34,8 +34,6 @@ MiniWord .NET Word模板引擎，藉由Word模板和數據簡單、快速生成�
 ### 安裝
 
 - nuget link : https://www.nuget.org/packages/MiniWord
-- Packge xml `<PackageReference Include="MiniWord" Version="0.4.0" />`
-- Or .NET CLI : `dotnet add package MiniWord --version 0.4.0`
 
 ### 快速入門
 
