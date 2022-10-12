@@ -45,7 +45,7 @@
             // avoid {{tag}} like <t>{</t><t>{</t> 
             //AvoidSplitTagText(xmlElement);
             // avoid {{tag}} like <t>aa{</t><t>{</t>  test in...
-            AvoidSplitTagText(xmlElement, tags.Select(o => "{{" + o.Key + "}}"));
+            AvoidSplitTagText(xmlElement, GetReplaceKeys(tags));
 
             //Tables
             var tables = xmlElement.Descendants<Table>().ToArray();
@@ -149,7 +149,7 @@
 
         private static void AvoidSplitTagText(OpenXmlElement xmlElement, IEnumerable<string> txt)
         {
-            foreach (var paragraph in xmlElement.Elements<Paragraph>())
+            foreach (var paragraph in xmlElement.Descendants<Paragraph>())
             {
                 foreach (var continuousString in paragraph.GetContinuousString())
                 {
@@ -159,6 +159,31 @@
                     }
                 }
             }
+        }
+
+        private static List<string> GetReplaceKeys(Dictionary<string, object> tags)
+        {
+            var keys = new List<string>();
+            foreach (var item in tags)
+            {
+                if (item.Value.IsStrongTypeEnumerable())
+                {
+                    foreach (var item2 in (IEnumerable)item.Value)
+                    {
+                        if (item2 is Dictionary<string, object> dic)
+                        {
+                            foreach (var item3 in dic.Keys)
+                                keys.Add("{{" + item.Key + "." + item3 + "}}");
+                        }
+                        break;
+                    }
+                }
+                else
+                {
+                    keys.Add("{{" + item.Key + "}}");
+                }
+            }
+            return keys;
         }
 
         private static void ReplaceText(OpenXmlElement xmlElement, WordprocessingDocument docx, Dictionary<string, object> tags)

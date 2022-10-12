@@ -29,7 +29,7 @@ namespace MiniSoftware.Extensions
 
 					if (IsStrongTypeEnumerable(val1))
 					{
-						var isValueOrStringType = false; ;
+						var isValueOrStringType = false;
 						List<Dictionary<string, object>> sx = new List<Dictionary<string, object>>();
 						foreach (object val1item in (IEnumerable)val1)
 						{
@@ -76,7 +76,7 @@ namespace MiniSoftware.Extensions
 				return reuslt;
 			}
 		}
-		internal static bool IsStrongTypeEnumerable(object obj)
+		internal static bool IsStrongTypeEnumerable(this object obj)
 		{
 			return obj is IEnumerable && !(obj is string) && !(obj is char[]) && !(obj is string[]);
 		}
