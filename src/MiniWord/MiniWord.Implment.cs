@@ -82,7 +82,9 @@
                                         var dicKey = $"{listKey}.{e.Key}";
                                         dic.Add(dicKey, e.Value);
                                     }
-
+                                    
+                                    ReplaceStatements(xmlElement, tags);
+                                    
                                     ReplaceText(newTr, docx, tags: dic);
                                     table.Append(newTr);
                                 }
@@ -92,6 +94,8 @@
                     }
                 }
             }
+            
+            ReplaceStatements(xmlElement, tags);
 
             ReplaceText(xmlElement, docx, tags);
         }
@@ -184,6 +188,129 @@
                 }
             }
             return keys;
+        }
+
+        private static void ReplaceStatements(OpenXmlElement xmlElement, Dictionary<string, object> tags)
+        {
+            var paragraphs = xmlElement.Descendants<Paragraph>().ToList();
+
+            while (paragraphs.Any(s => s.InnerText.Contains("@if"))) 
+            {
+                var ifIndex = paragraphs.FindIndex(0, s => s.InnerText.Contains("@if"));
+                var endIfFinalIndex = paragraphs.FindIndex(ifIndex, s => s.InnerText.Contains("@endif"));
+                
+                var statement = paragraphs[ifIndex].InnerText.Split(' ');
+
+                var checkStatement = EvaluateStatement(tags[statement[1]], statement[2], statement[3]);
+
+                if (checkStatement)
+                {
+                    for (int i = ifIndex+1; i <= endIfFinalIndex-1; i++)
+                    {
+                        paragraphs[i].Remove();
+                    }
+                }
+                
+                paragraphs[ifIndex].Remove();
+                paragraphs[endIfFinalIndex].Remove();
+
+                paragraphs = xmlElement.Descendants<Paragraph>().ToList();
+            }
+        }
+
+        private static bool EvaluateStatement(object tagValue, string comparisonOperator, string value)
+        {
+            var checkStatement = false;
+            
+            switch (tagValue)
+                {
+                    case double dtg when double.TryParse(value, out var doubleNumber):
+                        switch (comparisonOperator)
+                        {
+                            case "==":
+                                checkStatement = !dtg.Equals(doubleNumber);
+                                break;
+                            case "!=":
+                                checkStatement = dtg.Equals(doubleNumber);
+                                break;
+                            case ">":
+                                checkStatement = dtg <= doubleNumber;
+                                break;
+                            case "<":
+                                checkStatement = dtg >= doubleNumber;
+                                break;
+                            case ">=":
+                                checkStatement = dtg < doubleNumber;
+                                break;
+                            case "<=":
+                                checkStatement = dtg > doubleNumber;
+                                break;
+                        }
+
+                        break;
+                    case int itg when int.TryParse(value, out var intNumber):
+                        switch (comparisonOperator)
+                        {
+                            case "==":
+                                checkStatement = !itg.Equals(intNumber);
+                                break;
+                            case "!=":
+                                checkStatement = itg.Equals(intNumber);
+                                break;
+                            case ">":
+                                checkStatement = itg <= intNumber;
+                                break;
+                            case "<":
+                                checkStatement = itg >= intNumber;
+                                break;
+                            case ">=":
+                                checkStatement = itg < intNumber;
+                                break;
+                            case "<=":
+                                checkStatement = itg > intNumber;
+                                break;
+                        }
+
+                        break;
+                    case DateTime dttg when DateTime.TryParse(value, out var date):
+                        switch (comparisonOperator)
+                        {
+                            case "==":
+                                checkStatement = !dttg.Equals(date);
+                                break;
+                            case "!=":
+                                checkStatement = dttg.Equals(date);
+                                break;
+                            case ">":
+                                checkStatement = dttg <= date;
+                                break;
+                            case "<":
+                                checkStatement = dttg >= date;
+                                break;
+                            case ">=":
+                                checkStatement = dttg < date;
+                                break;
+                            case "<=":
+                                checkStatement = dttg > date;
+                                break;
+                        }
+
+                        break;
+                    case string stg:
+                        switch (comparisonOperator)
+                        {
+                            case "==":
+                                checkStatement = stg != value;
+                                break;
+                            case "!=":
+                                checkStatement = stg == value;
+                                break;
+                        }
+
+                        break;
+                }
+
+            return checkStatement;
         }
 
         private static void ReplaceText(OpenXmlElement xmlElement, WordprocessingDocument docx, Dictionary<string, object> tags)
