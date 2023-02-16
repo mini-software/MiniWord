@@ -252,10 +252,11 @@
                                     AddHyperLink(docx, run, tag.Value);
                                     t.Remove();
                                 }
-                                else if (tag.Value is MiniWordColorText)
+                                else if (tag.Value is MiniWordColorText || tag.Value is MiniWordColorText[])
                                 {
-                                    var miniWordColorText = (MiniWordColorText)tag.Value;
-                                    var colorText = AddColorText(miniWordColorText);
+                                    var colorText = tag.Value is MiniWordColorText
+                                        ? AddColorText(new[] { (MiniWordColorText)tag.Value })
+                                        : AddColorText((MiniWordColorText[])tag.Value);
                                     run.Append(colorText);
                                     t.Remove();
                                 }
@@ -346,16 +347,19 @@
             };
             return xmlHyperLink;
         }
-        private static RunProperties AddColorText(MiniWordColorText miniWordColorText)
+        private static RunProperties AddColorText(MiniWordColorText[] miniWordColorTextArray)
         {
 
             RunProperties runPro = new RunProperties();
-            Text text = new Text(miniWordColorText.Text);
-            Color color = new Color() { Val = miniWordColorText.FontColor?.Replace("#", "") };
-            Shading shading = new Shading() { Fill = miniWordColorText.HighlightColor?.Replace("#", "") };
-            runPro.Append(shading);
-            runPro.Append(color);
-            runPro.Append(text);
+            foreach (var miniWordColorText in miniWordColorTextArray)
+            {
+                Text text = new Text(miniWordColorText.Text);
+                Color color = new Color() { Val = miniWordColorText.FontColor?.Replace("#", "") };
+                Shading shading = new Shading() { Fill = miniWordColorText.HighlightColor?.Replace("#", "") };
+                runPro.Append(shading);
+                runPro.Append(color);
+                runPro.Append(text);
+            }
 
             return runPro;
         }
