@@ -23,6 +23,9 @@
 ---
 
 
+### 0.6.2
+- [New] Add support to List inside List via `IEnumerable<MiniWordForeach>` and `{{foreach`/`endforeach}}` tags (via @eynarhaji)
+- [New] Add support to @if statements inside templates (via @eynarhaji)
 
 ### 0.6.1
 - [Bug] Fixed system does not support `IEnumerable<MiniWordHyperLink>` (#39 via @isdaniel)

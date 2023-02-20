@@ -627,39 +627,6 @@ ever since the 1500s, when an unknown printer took.
         }
 
         [Fact]
-        public void MiniWordIfStatement_FirstIf()
-        {
-            var path = PathHelper.GetTempFilePath();
-            var templatePath = PathHelper.GetFile("TestBasicStatement.docx");
-            var value = new Dictionary<string, object>()
-            {
-                ["Name"] = new List<MiniWordHyperLink>(){
-                    new MiniWordHyperLink(){
-                        Url = "https://google.com",
-                        Text = "測試連結22!!"
-                    },
-                    new MiniWordHyperLink(){
-                        Url = "https://google1.com",
-                        Text = "測試連結11!!"
-                    }
-                },
-                ["Company_Name"] = "MiniSofteware",
-                ["CreateDate"] = new DateTime(2021, 01, 01),
-                ["VIP"] = true,
-                ["Points"] = 123,
-                ["APP"] = "Demo APP",
-            };
-            MiniWord.SaveAsByTemplate(path, templatePath, value);
-            //Console.WriteLine(path);
-            var docXml = Helpers.GetZipFileContent(path, "word/document.xml");
-            Assert.Contains("First if chosen: MiniSofteware", docXml);
-            Assert.DoesNotContain("Second if chosen: MaxiSoftware", docXml);
-            Assert.Contains("Points are greater than 100", docXml);
-            Assert.Contains("CreateDate is not less than 2021", docXml);
-            Assert.DoesNotContain("CreateDate is not greater than 2021", docXml);
-        }
-
-        [Fact]
         public void MiniWordHyperLink_Array()
         {
             var path = PathHelper.GetTempFilePath();

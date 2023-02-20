@@ -45,7 +45,7 @@
             // avoid {{tag}} like <t>{</t><t>{</t> 
             //AvoidSplitTagText(xmlElement);
             // avoid {{tag}} like <t>aa{</t><t>{</t>  test in...
-            AvoidSplitTagText(xmlElement, GetReplaceKeys(tags));
+            AvoidSplitTagText(xmlElement);
 
             //Tables
             var tables = xmlElement.Descendants<Table>().ToArray();
@@ -56,16 +56,15 @@
 
                     foreach (var tr in trs)
                     {
-
                         var matchs = (Regex.Matches(tr.InnerText, "(?<={{).*?\\..*?(?=}})")
                             .Cast<Match>().GroupBy(x => x.Value).Select(varGroup => varGroup.First().Value)).ToArray();
                         if (matchs.Length > 0)
                         {
                             var listKeys = matchs.Select(s => s.Split('.')[0]).Distinct().ToArray();
                             // TODO:
-                            // not support > 1 list in same tr
-                            if (listKeys.Length > 1)
-                                throw new NotSupportedException("MiniWord doesn't support more than 1 list in same row");
+                            // not support > 2 list in same tr
+                            if (listKeys.Length > 2)
+                                throw new NotSupportedException("MiniWord doesn't support more than 2 list in same row");
                             var listKey = listKeys[0];
                             if (tags.ContainsKey(listKey) && tags[listKey] is IEnumerable)
                             {
@@ -106,6 +105,7 @@
             var pool = new List<Text>();
             var sb = new StringBuilder();
             var needAppend = false;
+            var foreachIncluded = false;
             foreach (var text in texts)
             {
                 var clear = false;
@@ -122,10 +122,13 @@
                                            // TODO: check tag exist
                                            // TODO: record tag text if without tag then system need to clear them
                                            // TODO: every {{tag}} one <t>for them</t> and add text before first text and copy first one and remove {{, tagname, }}
-
+                                           
+                    if(s.StartsWith("{{foreach"))
+                        foreachIncluded = true;
+                                           
                     if (!s.StartsWith("{{"))
                         clear = true;
-                    else if (s.Contains("{{") && s.Contains("}}"))
+                    else if (s.Contains("{{") && s.Contains("}}") && !foreachIncluded)
                     {
                         if (sb.Length <= 1000) // avoid too big tag
                         {
@@ -140,6 +143,23 @@
                         }
                         clear = true;
                     }
+                    else if (s.Contains("{{foreach") && s.Contains("endforeach}}") && foreachIncluded)
+                    {
+                        if (sb.Length <= 1000) // avoid too big tag
+                        {
+                            var first = pool.First();
+                            var newText = first.Clone() as Text;
+                            newText.Text = s;
+                            first.Parent.InsertBefore(newText, first);
+                            foreach (var t in pool)
+                            {
+                                t.Text = "";
+                            }
+                        }
+                        clear = true;
+                        foreachIncluded = false;
+                    }
+                    
                 }
 
                 if (clear)
@@ -177,7 +197,9 @@
                         if (item2 is Dictionary<string, object> dic)
                         {
                             foreach (var item3 in dic.Keys)
+                            {
                                 keys.Add("{{" + item.Key + "." + item3 + "}}");
+                            }
                         }
                         break;
                     }
@@ -330,6 +352,19 @@
                         foreach (var tag in tags)
                         {
                             var isMatch = t.Text.Contains($"{{{{{tag.Key}}}}}");
+
+                            if (!isMatch && tag.Value is List<MiniWordForeach> forTags)
+                            {
+                                if (forTags.Any(forTag => forTag.Value.Keys.Any(dictKey =>
+                                    {
+                                        var innerTag = "{{" + tag.Key + "." + dictKey + "}}";
+                                        return t.Text.Contains(innerTag);
+                                    })))
+                                {
+                                    isMatch = true;
+                                }
+                            }
+                            
                             if (isMatch)
                             {
                                 if (tag.Value is string[] || tag.Value is IList<string> || tag.Value is List<string>)
@@ -348,6 +383,31 @@
                                         run.Append(newT);
                                         currentT = newT;
                                     }
+                                    t.Remove();
+                                }
+                                else if (tag.Value is List<MiniWordForeach> vs)
+                                {
+                                    var currentT = t;
+                                    var generatedText = new Text();
+                                    currentT.Text = currentT.Text.Replace(@"{{foreach", "").Replace(@"endforeach}}", "");
+                                    for (var i = 0; i < vs.Count; i++)
+                                    {
+                                        var newT = t.CloneNode(true) as Text;
+
+                                        foreach (var vv in vs[i].Value)
+                                        {
+                                            newT.Text = newT.Text.Replace("{{" + tag.Key + "." + vv.Key + "}}", vv.Value.ToString());
+                                        }
+
+                                        if (i != vs.Count)
+                                        {
+                                            newT.Text += vs[i].Separator;
+                                        }
+
+                                        generatedText.Text += newT.Text;
+                                    }
+
+                                    run.Append(generatedText);
                                     t.Remove();
                                 }
                                 else if (tag.Value is MiniWordPicture)
