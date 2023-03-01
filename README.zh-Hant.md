@@ -273,7 +273,9 @@ MiniWord.SaveAsByTemplate(path, templatePath, value);
 
 ![after_if](https://user-images.githubusercontent.com/38832863/220125435-72ea24b4-2412-45de-961a-ad4b2134417b.PNG)
 
-## 
+### 多彩字體
+
+##### 例子
 
 ```csharp
 var value = new
