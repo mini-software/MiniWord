@@ -22,6 +22,11 @@
 
 ---
 
+### 0.7.0
+- [New] 支持 List inside List via `IEnumerable<MiniWordForeach>` and `{{foreach`/`endforeach}}` tags (via @eynarhaji)
+- [New] 支持 @if statements inside templates (via @eynarhaji)
+- [New] 支持 multiple color word by word (via @andy505050)
+
 ### 0.6.1
 - [Bug] 修正系统不支持 `IEnumerable<MiniWordHyperLink>` (#39 via @isdaniel)
 
