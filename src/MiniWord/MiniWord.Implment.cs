@@ -45,7 +45,7 @@
             // avoid {{tag}} like <t>{</t><t>{</t> 
             //AvoidSplitTagText(xmlElement);
             // avoid {{tag}} like <t>aa{</t><t>{</t>  test in...
-            AvoidSplitTagText(xmlElement, GetReplaceKeys(tags));
+            AvoidSplitTagText(xmlElement);
 
             //Tables
             var tables = xmlElement.Descendants<Table>().ToArray();
@@ -56,16 +56,15 @@
 
                     foreach (var tr in trs)
                     {
-
                         var matchs = (Regex.Matches(tr.InnerText, "(?<={{).*?\\..*?(?=}})")
                             .Cast<Match>().GroupBy(x => x.Value).Select(varGroup => varGroup.First().Value)).ToArray();
                         if (matchs.Length > 0)
                         {
                             var listKeys = matchs.Select(s => s.Split('.')[0]).Distinct().ToArray();
                             // TODO:
-                            // not support > 1 list in same tr
-                            if (listKeys.Length > 1)
-                                throw new NotSupportedException("MiniWord doesn't support more than 1 list in same row");
+                            // not support > 2 list in same tr
+                            if (listKeys.Length > 2)
+                                throw new NotSupportedException("MiniWord doesn't support more than 2 list in same row");
                             var listKey = listKeys[0];
                             if (tags.ContainsKey(listKey) && tags[listKey] is IEnumerable)
                             {
@@ -82,7 +81,9 @@
                                         var dicKey = $"{listKey}.{e.Key}";
                                         dic.Add(dicKey, e.Value);
                                     }
-
+                                    
+                                    ReplaceStatements(xmlElement, tags);
+                                    
                                     ReplaceText(newTr, docx, tags: dic);
                                     table.Append(newTr);
                                 }
@@ -92,6 +93,8 @@
                     }
                 }
             }
+            
+            ReplaceStatements(xmlElement, tags);
 
             ReplaceText(xmlElement, docx, tags);
         }
@@ -102,6 +105,7 @@
             var pool = new List<Text>();
             var sb = new StringBuilder();
             var needAppend = false;
+            var foreachIncluded = false;
             foreach (var text in texts)
             {
                 var clear = false;
@@ -118,10 +122,13 @@
                                            // TODO: check tag exist
                                            // TODO: record tag text if without tag then system need to clear them
                                            // TODO: every {{tag}} one <t>for them</t> and add text before first text and copy first one and remove {{, tagname, }}
-
+                                           
+                    if(s.StartsWith("{{foreach"))
+                        foreachIncluded = true;
+                                           
                     if (!s.StartsWith("{{"))
                         clear = true;
-                    else if (s.Contains("{{") && s.Contains("}}"))
+                    else if (s.Contains("{{") && s.Contains("}}") && !foreachIncluded)
                     {
                         if (sb.Length <= 1000) // avoid too big tag
                         {
@@ -136,6 +143,23 @@
                         }
                         clear = true;
                     }
+                    else if (s.Contains("{{foreach") && s.Contains("endforeach}}") && foreachIncluded)
+                    {
+                        if (sb.Length <= 1000) // avoid too big tag
+                        {
+                            var first = pool.First();
+                            var newText = first.Clone() as Text;
+                            newText.Text = s;
+                            first.Parent.InsertBefore(newText, first);
+                            foreach (var t in pool)
+                            {
+                                t.Text = "";
+                            }
+                        }
+                        clear = true;
+                        foreachIncluded = false;
+                    }
+                    
                 }
 
                 if (clear)
@@ -173,7 +197,9 @@
                         if (item2 is Dictionary<string, object> dic)
                         {
                             foreach (var item3 in dic.Keys)
+                            {
                                 keys.Add("{{" + item.Key + "." + item3 + "}}");
+                            }
                         }
                         break;
                     }
@@ -184,6 +210,129 @@
                 }
             }
             return keys;
+        }
+
+        private static void ReplaceStatements(OpenXmlElement xmlElement, Dictionary<string, object> tags)
+        {
+            var paragraphs = xmlElement.Descendants<Paragraph>().ToList();
+
+            while (paragraphs.Any(s => s.InnerText.Contains("@if"))) 
+            {
+                var ifIndex = paragraphs.FindIndex(0, s => s.InnerText.Contains("@if"));
+                var endIfFinalIndex = paragraphs.FindIndex(ifIndex, s => s.InnerText.Contains("@endif"));
+                
+                var statement = paragraphs[ifIndex].InnerText.Split(' ');
+
+                var checkStatement = EvaluateStatement(tags[statement[1]], statement[2], statement[3]);
+
+                if (checkStatement)
+                {
+                    for (int i = ifIndex+1; i <= endIfFinalIndex-1; i++)
+                    {
+                        paragraphs[i].Remove();
+                    }
+                }
+                
+                paragraphs[ifIndex].Remove();
+                paragraphs[endIfFinalIndex].Remove();
+
+                paragraphs = xmlElement.Descendants<Paragraph>().ToList();
+            }
+        }
+
+        private static bool EvaluateStatement(object tagValue, string comparisonOperator, string value)
+        {
+            var checkStatement = false;
+            
+            switch (tagValue)
+                {
+                    case double dtg when double.TryParse(value, out var doubleNumber):
+                        switch (comparisonOperator)
+                        {
+                            case "==":
+                                checkStatement = !dtg.Equals(doubleNumber);
+                                break;
+                            case "!=":
+                                checkStatement = dtg.Equals(doubleNumber);
+                                break;
+                            case ">":
+                                checkStatement = dtg <= doubleNumber;
+                                break;
+                            case "<":
+                                checkStatement = dtg >= doubleNumber;
+                                break;
+                            case ">=":
+                                checkStatement = dtg < doubleNumber;
+                                break;
+                            case "<=":
+                                checkStatement = dtg > doubleNumber;
+                                break;
+                        }
+
+                        break;
+                    case int itg when int.TryParse(value, out var intNumber):
+                        switch (comparisonOperator)
+                        {
+                            case "==":
+                                checkStatement = !itg.Equals(intNumber);
+                                break;
+                            case "!=":
+                                checkStatement = itg.Equals(intNumber);
+                                break;
+                            case ">":
+                                checkStatement = itg <= intNumber;
+                                break;
+                            case "<":
+                                checkStatement = itg >= intNumber;
+                                break;
+                            case ">=":
+                                checkStatement = itg < intNumber;
+                                break;
+                            case "<=":
+                                checkStatement = itg > intNumber;
+                                break;
+                        }
+
+                        break;
+                    case DateTime dttg when DateTime.TryParse(value, out var date):
+                        switch (comparisonOperator)
+                        {
+                            case "==":
+                                checkStatement = !dttg.Equals(date);
+                                break;
+                            case "!=":
+                                checkStatement = dttg.Equals(date);
+                                break;
+                            case ">":
+                                checkStatement = dttg <= date;
+                                break;
+                            case "<":
+                                checkStatement = dttg >= date;
+                                break;
+                            case ">=":
+                                checkStatement = dttg < date;
+                                break;
+                            case "<=":
+                                checkStatement = dttg > date;
+                                break;
+                        }
+
+                        break;
+                    case string stg:
+                        switch (comparisonOperator)
+                        {
+                            case "==":
+                                checkStatement = stg != value;
+                                break;
+                            case "!=":
+                                checkStatement = stg == value;
+                                break;
+                        }
+
+                        break;
+                }
+
+            return checkStatement;
         }
 
         private static void ReplaceText(OpenXmlElement xmlElement, WordprocessingDocument docx, Dictionary<string, object> tags)
@@ -203,6 +352,19 @@
                         foreach (var tag in tags)
                         {
                             var isMatch = t.Text.Contains($"{{{{{tag.Key}}}}}");
+
+                            if (!isMatch && tag.Value is List<MiniWordForeach> forTags)
+                            {
+                                if (forTags.Any(forTag => forTag.Value.Keys.Any(dictKey =>
+                                    {
+                                        var innerTag = "{{" + tag.Key + "." + dictKey + "}}";
+                                        return t.Text.Contains(innerTag);
+                                    })))
+                                {
+                                    isMatch = true;
+                                }
+                            }
+                            
                             if (isMatch)
                             {
                                 if (tag.Value is string[] || tag.Value is IList<string> || tag.Value is List<string>)
@@ -221,6 +383,31 @@
                                         run.Append(newT);
                                         currentT = newT;
                                     }
+                                    t.Remove();
+                                }
+                                else if (tag.Value is List<MiniWordForeach> vs)
+                                {
+                                    var currentT = t;
+                                    var generatedText = new Text();
+                                    currentT.Text = currentT.Text.Replace(@"{{foreach", "").Replace(@"endforeach}}", "");
+                                    for (var i = 0; i < vs.Count; i++)
+                                    {
+                                        var newT = t.CloneNode(true) as Text;
+
+                                        foreach (var vv in vs[i].Value)
+                                        {
+                                            newT.Text = newT.Text.Replace("{{" + tag.Key + "." + vv.Key + "}}", vv.Value.ToString());
+                                        }
+
+                                        if (i != vs.Count)
+                                        {
+                                            newT.Text += vs[i].Separator;
+                                        }
+
+                                        generatedText.Text += newT.Text;
+                                    }
+
+                                    run.Append(generatedText);
                                     t.Remove();
                                 }
                                 else if (tag.Value is MiniWordPicture)

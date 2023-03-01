@@ -626,7 +626,6 @@ ever since the 1500s, when an unknown printer took.
             Assert.Contains("<Relationship Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink\" Target=\"https://google1.com\"", relsXml);
         }
 
-
         [Fact]
         public void MiniWordHyperLink_Array()
         {

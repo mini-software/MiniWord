@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<TargetFrameworks>net45;netstandard2.0;net5.0</TargetFrameworks>
-		<Version>0.6.1</Version>
+		<Version>0.6.2</Version>
 	</PropertyGroup>
 	<PropertyGroup>
 		<AssemblyName>MiniWord</AssemblyName>
@@ -10,7 +10,7 @@
 		<PackageTags>word;template;micro-helper;mini;openxml;helper;</PackageTags>
 		<Description>.NET Word(docx) exporting template engine without COM+ and interop (support Linux and Mac)
 		</Description>
-		<Authors>LIN,WEI-HAN</Authors>
+		<Authors>LIN,WEI-HAN, eynarhaji</Authors>
 		<PackageId>MiniWord</PackageId>
 		<Copyright>LIN,WEI-HAN, 2022 onwards</Copyright>
 		<NeutralLanguage>en</NeutralLanguage>
