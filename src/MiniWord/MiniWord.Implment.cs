@@ -458,6 +458,23 @@
                                     {
                                         newText = tag.Value?.ToString();
                                     }
+                                    if (newText.IsNotBlank())
+                                    {
+                                        var vs = newText.Split(new char[] { '\r', '\n' });
+                                        var currentT = t;
+                                        var isFirst = true;
+                                        foreach (var v in vs)
+                                        {
+                                            var newT = t.CloneNode(true) as Text;
+                                            newT.Text = t.Text.Replace($"{{{{{tag.Key}}}}}", v?.ToString());
+                                            if (isFirst)
+                                                isFirst = false;
+                                            else
+                                                run.Append(new Break());
+                                            run.Append(newT);
+                                            currentT = newT;
+                                        }
+                                    }
                                     t.Text = t.Text.Replace($"{{{{{tag.Key}}}}}", newText);
                                 }
                             }
