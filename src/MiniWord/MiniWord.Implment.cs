@@ -1,4 +1,4 @@
-﻿namespace MiniSoftware
+namespace MiniSoftware
 {
     using DocumentFormat.OpenXml;
     using DocumentFormat.OpenXml.Packaging;
@@ -29,10 +29,12 @@
                 ms.Position = 0;
                 using (var docx = WordprocessingDocument.Open(ms, true))
                 {
-                    foreach (var hdr in docx.MainDocumentPart.HeaderParts)
-                        hdr.Header.Generate(docx, value);
-                    foreach (var ftr in docx.MainDocumentPart.FooterParts)
-                        ftr.Footer.Generate(docx, value);
+                    var hc = docx.MainDocumentPart.HeaderParts.Count();
+                    var fc = docx.MainDocumentPart.FooterParts.Count();
+                    for (int i = 0; i < hc; i++)
+                        docx.MainDocumentPart.HeaderParts.ElementAt(i).Header.Generate(docx, value);
+                    for (int i = 0; i < fc; i++)
+                        docx.MainDocumentPart.FooterParts.ElementAt(i).Footer.Generate(docx, value);
                     docx.MainDocumentPart.Document.Body.Generate(docx, value);
                     docx.Save();
                 }
@@ -472,7 +474,7 @@
                                     }
                                     if (newText.IsNotBlank())
                                     {
-                                        var vs = newText.Split(new char[] { '\r', '\n' });
+                                        var vs = newText.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
                                         var currentT = t;
                                         var isFirst = true;
                                         foreach (var v in vs)
