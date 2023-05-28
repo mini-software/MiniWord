@@ -223,7 +223,8 @@
                 
                 var statement = paragraphs[ifIndex].InnerText.Split(' ');
 
-                var checkStatement = EvaluateStatement(tags[statement[1]], statement[2], statement[3]);
+                var tagValue = tags[statement[1]];
+                var checkStatement = statement.Length == 4 ? EvaluateStatement(tagValue, statement[2], statement[3]) : !bool.Parse(tagValue.ToString());
 
                 if (checkStatement)
                 {
@@ -317,6 +318,17 @@
                                 break;
                         }
 
+                        break;
+                    case bool btg when bool.TryParse(value, out var boolean):
+                        switch (comparisonOperator)
+                        {
+                            case "==":
+                                checkStatement = btg != boolean;
+                                break;
+                            case "!=":
+                                checkStatement = btg == boolean;
+                                break;
+                        }
                         break;
                     case string stg:
                         switch (comparisonOperator)
