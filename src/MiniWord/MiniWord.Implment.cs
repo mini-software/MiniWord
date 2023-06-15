@@ -83,9 +83,9 @@ namespace MiniSoftware
                                         var dicKey = $"{listKey}.{e.Key}";
                                         dic.Add(dicKey, e.Value);
                                     }
-                                    
-                                    ReplaceStatements(xmlElement, tags);
-                                    
+
+                                    ReplaceStatements(newTr, tags: dic);
+
                                     ReplaceText(newTr, docx, tags: dic);
                                     table.Append(newTr);
                                 }
@@ -95,7 +95,7 @@ namespace MiniSoftware
                     }
                 }
             }
-            
+
             ReplaceStatements(xmlElement, tags);
 
             ReplaceText(xmlElement, docx, tags);
@@ -124,10 +124,10 @@ namespace MiniSoftware
                                            // TODO: check tag exist
                                            // TODO: record tag text if without tag then system need to clear them
                                            // TODO: every {{tag}} one <t>for them</t> and add text before first text and copy first one and remove {{, tagname, }}
-                                           
-                    if(s.StartsWith("{{foreach"))
+
+                    if (s.StartsWith("{{foreach"))
                         foreachIncluded = true;
-                                           
+
                     if (!s.StartsWith("{{"))
                         clear = true;
                     else if (s.Contains("{{") && s.Contains("}}") && !foreachIncluded)
@@ -161,7 +161,7 @@ namespace MiniSoftware
                         clear = true;
                         foreachIncluded = false;
                     }
-                    
+
                 }
 
                 if (clear)
@@ -218,11 +218,11 @@ namespace MiniSoftware
         {
             var paragraphs = xmlElement.Descendants<Paragraph>().ToList();
 
-            while (paragraphs.Any(s => s.InnerText.Contains("@if"))) 
+            while (paragraphs.Any(s => s.InnerText.Contains("@if")))
             {
                 var ifIndex = paragraphs.FindIndex(0, s => s.InnerText.Contains("@if"));
                 var endIfFinalIndex = paragraphs.FindIndex(ifIndex, s => s.InnerText.Contains("@endif"));
-                
+
                 var statement = paragraphs[ifIndex].InnerText.Split(' ');
 
                 var tagValue = tags[statement[1]];
@@ -230,12 +230,12 @@ namespace MiniSoftware
 
                 if (checkStatement)
                 {
-                    for (int i = ifIndex+1; i <= endIfFinalIndex-1; i++)
+                    for (int i = ifIndex + 1; i <= endIfFinalIndex - 1; i++)
                     {
                         paragraphs[i].Remove();
                     }
                 }
-                
+
                 paragraphs[ifIndex].Remove();
                 paragraphs[endIfFinalIndex].Remove();
 
@@ -246,105 +246,105 @@ namespace MiniSoftware
         private static bool EvaluateStatement(object tagValue, string comparisonOperator, string value)
         {
             var checkStatement = false;
-            
+
             switch (tagValue)
-                {
-                    case double dtg when double.TryParse(value, out var doubleNumber):
-                        switch (comparisonOperator)
-                        {
-                            case "==":
-                                checkStatement = !dtg.Equals(doubleNumber);
-                                break;
-                            case "!=":
-                                checkStatement = dtg.Equals(doubleNumber);
-                                break;
-                            case ">":
-                                checkStatement = dtg <= doubleNumber;
-                                break;
-                            case "<":
-                                checkStatement = dtg >= doubleNumber;
-                                break;
-                            case ">=":
-                                checkStatement = dtg < doubleNumber;
-                                break;
-                            case "<=":
-                                checkStatement = dtg > doubleNumber;
-                                break;
-                        }
+            {
+                case double dtg when double.TryParse(value, out var doubleNumber):
+                    switch (comparisonOperator)
+                    {
+                        case "==":
+                            checkStatement = !dtg.Equals(doubleNumber);
+                            break;
+                        case "!=":
+                            checkStatement = dtg.Equals(doubleNumber);
+                            break;
+                        case ">":
+                            checkStatement = dtg <= doubleNumber;
+                            break;
+                        case "<":
+                            checkStatement = dtg >= doubleNumber;
+                            break;
+                        case ">=":
+                            checkStatement = dtg < doubleNumber;
+                            break;
+                        case "<=":
+                            checkStatement = dtg > doubleNumber;
+                            break;
+                    }
 
-                        break;
-                    case int itg when int.TryParse(value, out var intNumber):
-                        switch (comparisonOperator)
-                        {
-                            case "==":
-                                checkStatement = !itg.Equals(intNumber);
-                                break;
-                            case "!=":
-                                checkStatement = itg.Equals(intNumber);
-                                break;
-                            case ">":
-                                checkStatement = itg <= intNumber;
-                                break;
-                            case "<":
-                                checkStatement = itg >= intNumber;
-                                break;
-                            case ">=":
-                                checkStatement = itg < intNumber;
-                                break;
-                            case "<=":
-                                checkStatement = itg > intNumber;
-                                break;
-                        }
+                    break;
+                case int itg when int.TryParse(value, out var intNumber):
+                    switch (comparisonOperator)
+                    {
+                        case "==":
+                            checkStatement = !itg.Equals(intNumber);
+                            break;
+                        case "!=":
+                            checkStatement = itg.Equals(intNumber);
+                            break;
+                        case ">":
+                            checkStatement = itg <= intNumber;
+                            break;
+                        case "<":
+                            checkStatement = itg >= intNumber;
+                            break;
+                        case ">=":
+                            checkStatement = itg < intNumber;
+                            break;
+                        case "<=":
+                            checkStatement = itg > intNumber;
+                            break;
+                    }
 
-                        break;
-                    case DateTime dttg when DateTime.TryParse(value, out var date):
-                        switch (comparisonOperator)
-                        {
-                            case "==":
-                                checkStatement = !dttg.Equals(date);
-                                break;
-                            case "!=":
-                                checkStatement = dttg.Equals(date);
-                                break;
-                            case ">":
-                                checkStatement = dttg <= date;
-                                break;
-                            case "<":
-                                checkStatement = dttg >= date;
-                                break;
-                            case ">=":
-                                checkStatement = dttg < date;
-                                break;
-                            case "<=":
-                                checkStatement = dttg > date;
-                                break;
-                        }
+                    break;
+                case DateTime dttg when DateTime.TryParse(value, out var date):
+                    switch (comparisonOperator)
+                    {
+                        case "==":
+                            checkStatement = !dttg.Equals(date);
+                            break;
+                        case "!=":
+                            checkStatement = dttg.Equals(date);
+                            break;
+                        case ">":
+                            checkStatement = dttg <= date;
+                            break;
+                        case "<":
+                            checkStatement = dttg >= date;
+                            break;
+                        case ">=":
+                            checkStatement = dttg < date;
+                            break;
+                        case "<=":
+                            checkStatement = dttg > date;
+                            break;
+                    }
 
-                        break;
-                    case bool btg when bool.TryParse(value, out var boolean):
-                        switch (comparisonOperator)
-                        {
-                            case "==":
-                                checkStatement = btg != boolean;
-                                break;
-                            case "!=":
-                                checkStatement = btg == boolean;
-                                break;
-                        }
-                        break;
-                    case string stg:
-                        switch (comparisonOperator)
-                        {
-                            case "==":
-                                checkStatement = stg != value;
-                                break;
-                            case "!=":
-                                checkStatement = stg == value;
-                                break;
-                        }
+                    break;
+                case bool btg when bool.TryParse(value, out var boolean):
+                    switch (comparisonOperator)
+                    {
+                        case "==":
+                            checkStatement = btg != boolean;
+                            break;
+                        case "!=":
+                            checkStatement = btg == boolean;
+                            break;
+                    }
+                    break;
+                case string stg:
+                    switch (comparisonOperator)
+                    {
+                        case "==":
+                            checkStatement = stg != value;
+                            break;
+                        case "!=":
+                            checkStatement = stg == value;
+                            break;
+                    }
 
-                        break;
-                }
+                    break;
+            }
 
             return checkStatement;
         }
@@ -378,7 +378,7 @@ namespace MiniSoftware
                                     isMatch = true;
                                 }
                             }
-                            
+
                             if (isMatch)
                             {
                                 if (tag.Value is string[] || tag.Value is IList<string> || tag.Value is List<string>)
@@ -618,7 +618,7 @@ namespace MiniSoftware
                                                  new A.BlipExtension()
                                                  {
                                                      Uri =
-                                                        $"{{{ Guid.NewGuid().ToString("n")}}}"
+                                                        $"{{{Guid.NewGuid().ToString("n")}}}"
                                                  })
                                          )
                                          {
