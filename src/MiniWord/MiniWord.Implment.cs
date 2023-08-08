@@ -3,12 +3,11 @@ namespace MiniSoftware
     using DocumentFormat.OpenXml;
     using DocumentFormat.OpenXml.Packaging;
     using DocumentFormat.OpenXml.Wordprocessing;
-    using MiniSoftware.Extensions;
-    using MiniSoftware.Utility;
+    using Extensions;
+    using Utility;
     using System;
     using System.Collections;
     using System.Collections.Generic;
-    using System.Dynamic;
     using System.IO;
     using System.Linq;
     using System.Text;
@@ -58,7 +57,9 @@ namespace MiniSoftware
 
                     foreach (var tr in trs)
                     {
-                        var matchs = (Regex.Matches(tr.InnerText, "(?<={{).*?\\..*?(?=}})")
+                        var innerText = tr.InnerText.Replace("{{foreach", "").Replace("endforeach}}", "")
+                            .Replace("{{if(", "").Replace(")if", "").Replace("endif}}", "");
+                        var matchs = (Regex.Matches(innerText, "(?<={{).*?\\..*?(?=}})")
                             .Cast<Match>().GroupBy(x => x.Value).Select(varGroup => varGroup.First().Value)).ToArray();
                         if (matchs.Length > 0)
                         {
@@ -83,9 +84,7 @@ namespace MiniSoftware
                                         var dicKey = $"{listKey}.{e.Key}";
                                         dic.Add(dicKey, e.Value);
                                     }
-
-                                    ReplaceStatements(newTr, tags: dic);
-
+                                    
                                     ReplaceText(newTr, docx, tags: dic);
                                     table.Append(newTr);
                                 }
@@ -95,9 +94,7 @@ namespace MiniSoftware
                     }
                 }
             }
-
-            ReplaceStatements(xmlElement, tags);
-
+            
             ReplaceText(xmlElement, docx, tags);
         }
 
@@ -107,7 +104,6 @@ namespace MiniSoftware
             var pool = new List<Text>();
             var sb = new StringBuilder();
             var needAppend = false;
-            var foreachIncluded = false;
             foreach (var text in texts)
             {
                 var clear = false;
@@ -124,13 +120,21 @@ namespace MiniSoftware
                                            // TODO: check tag exist
                                            // TODO: record tag text if without tag then system need to clear them
                                            // TODO: every {{tag}} one <t>for them</t> and add text before first text and copy first one and remove {{, tagname, }}
-
-                    if (s.StartsWith("{{foreach"))
-                        foreachIncluded = true;
-
-                    if (!s.StartsWith("{{"))
-                        clear = true;
-                    else if (s.Contains("{{") && s.Contains("}}") && !foreachIncluded)
+                    
+                    const string foreachTag = "{{foreach";
+                    const string endForeachTag = "endforeach}}";
+                    const string ifTag = "{{if";
+                    const string endifTag = "endif}}";
+                    const string tagStart = "{{";
+                    const string tagEnd = "}}";
+                    
+                    var foreachTagContains = s.Split(new []{foreachTag}, StringSplitOptions.None).Length - 1 ==
+                                             s.Split(new []{endForeachTag}, StringSplitOptions.None).Length - 1;
+                    var ifTagContains = s.Split(new []{ifTag}, StringSplitOptions.None).Length - 1 ==
+                                        s.Split(new []{endifTag}, StringSplitOptions.None).Length - 1;
+                    var tagContains = s.StartsWith(tagStart) && s.Contains(tagEnd);
+                    
+                    if (foreachTagContains && ifTagContains && tagContains)
                     {
                         if (sb.Length <= 1000) // avoid too big tag
                         {
@@ -145,23 +149,6 @@ namespace MiniSoftware
                         }
                         clear = true;
                     }
-                    else if (s.Contains("{{foreach") && s.Contains("endforeach}}") && foreachIncluded)
-                    {
-                        if (sb.Length <= 1000) // avoid too big tag
-                        {
-                            var first = pool.First();
-                            var newText = first.Clone() as Text;
-                            newText.Text = s;
-                            first.Parent.InsertBefore(newText, first);
-                            foreach (var t in pool)
-                            {
-                                t.Text = "";
-                            }
-                        }
-                        clear = true;
-                        foreachIncluded = false;
-                    }
-
                 }
 
                 if (clear)
@@ -214,112 +201,96 @@ namespace MiniSoftware
             return keys;
         }
 
-        private static void ReplaceStatements(OpenXmlElement xmlElement, Dictionary<string, object> tags)
-        {
-            var paragraphs = xmlElement.Descendants<Paragraph>().ToList();
-
-            while (paragraphs.Any(s => s.InnerText.Contains("@if")))
-            {
-                var ifIndex = paragraphs.FindIndex(0, s => s.InnerText.Contains("@if"));
-                var endIfFinalIndex = paragraphs.FindIndex(ifIndex, s => s.InnerText.Contains("@endif"));
-
-                var statement = paragraphs[ifIndex].InnerText.Split(' ');
-
-                var tagValue = tags[statement[1]];
-                var checkStatement = statement.Length == 4 ? EvaluateStatement(tagValue, statement[2], statement[3]) : !bool.Parse(tagValue.ToString());
-
-                if (checkStatement)
-                {
-                    for (int i = ifIndex + 1; i <= endIfFinalIndex - 1; i++)
-                    {
-                        paragraphs[i].Remove();
-                    }
-                }
-
-                paragraphs[ifIndex].Remove();
-                paragraphs[endIfFinalIndex].Remove();
-
-                paragraphs = xmlElement.Descendants<Paragraph>().ToList();
-            }
-        }
-
-        private static bool EvaluateStatement(object tagValue, string comparisonOperator, string value)
+        private static bool EvaluateStatement(string tagValue, string comparisonOperator, string value)
         {
             var checkStatement = false;
 
-            switch (tagValue)
-            {
-                case double dtg when double.TryParse(value, out var doubleNumber):
-                    switch (comparisonOperator)
-                    {
-                        case "==":
-                            checkStatement = !dtg.Equals(doubleNumber);
-                            break;
-                        case "!=":
-                            checkStatement = dtg.Equals(doubleNumber);
-                            break;
-                        case ">":
-                            checkStatement = dtg <= doubleNumber;
-                            break;
-                        case "<":
-                            checkStatement = dtg >= doubleNumber;
-                            break;
-                        case ">=":
-                            checkStatement = dtg < doubleNumber;
-                            break;
-                        case "<=":
-                            checkStatement = dtg > doubleNumber;
-                            break;
-                    }
+            var tagValueEvaluation = EvaluateValue(tagValue);
+            
+            switch (tagValueEvaluation)
+                {
+                    case double dtg when double.TryParse(value, out var doubleNumber):
+                        switch (comparisonOperator)
+                        {
+                            case "==":
+                                checkStatement = dtg.Equals(doubleNumber);
+                                break;
+                            case "!=":
+                                checkStatement = !dtg.Equals(doubleNumber);
+                                break;
+                            case ">":
+                                checkStatement = dtg > doubleNumber;
+                                break;
+                            case "<":
+                                checkStatement = dtg < doubleNumber;
+                                break;
+                            case ">=":
+                                checkStatement = dtg >= doubleNumber;
+                                break;
+                            case "<=":
+                                checkStatement = dtg <= doubleNumber;
+                                break;
+                        }
 
-                    break;
-                case int itg when int.TryParse(value, out var intNumber):
-                    switch (comparisonOperator)
-                    {
-                        case "==":
-                            checkStatement = !itg.Equals(intNumber);
-                            break;
-                        case "!=":
-                            checkStatement = itg.Equals(intNumber);
-                            break;
-                        case ">":
-                            checkStatement = itg <= intNumber;
-                            break;
-                        case "<":
-                            checkStatement = itg >= intNumber;
-                            break;
-                        case ">=":
-                            checkStatement = itg < intNumber;
-                            break;
-                        case "<=":
-                            checkStatement = itg > intNumber;
-                            break;
-                    }
+                        break;
+                    case int itg when int.TryParse(value, out var intNumber):
+                        switch (comparisonOperator)
+                        {
+                            case "==":
+                                checkStatement = itg.Equals(intNumber);
+                                break;
+                            case "!=":
+                                checkStatement = !itg.Equals(intNumber);
+                                break;
+                            case ">":
+                                checkStatement = itg > intNumber;
+                                break;
+                            case "<":
+                                checkStatement = itg < intNumber;
+                                break;
+                            case ">=":
+                                checkStatement = itg >= intNumber;
+                                break;
+                            case "<=":
+                                checkStatement = itg <= intNumber;
+                                break;
+                        }
 
-                    break;
-                case DateTime dttg when DateTime.TryParse(value, out var date):
-                    switch (comparisonOperator)
-                    {
-                        case "==":
-                            checkStatement = !dttg.Equals(date);
-                            break;
-                        case "!=":
-                            checkStatement = dttg.Equals(date);
-                            break;
-                        case ">":
-                            checkStatement = dttg <= date;
-                            break;
-                        case "<":
-                            checkStatement = dttg >= date;
-                            break;
-                        case ">=":
-                            checkStatement = dttg < date;
-                            break;
-                        case "<=":
-                            checkStatement = dttg > date;
-                            break;
-                    }
+                        break;
+                    case DateTime dttg when DateTime.TryParse(value, out var date):
+                        switch (comparisonOperator)
+                        {
+                            case "==":
+                                checkStatement = dttg.Equals(date);
+                                break;
+                            case "!=":
+                                checkStatement = !dttg.Equals(date);
+                                break;
+                            case ">":
+                                checkStatement = dttg > date;
+                                break;
+                            case "<":
+                                checkStatement = dttg < date;
+                                break;
+                            case ">=":
+                                checkStatement = dttg >= date;
+                                break;
+                            case "<=":
+                                checkStatement = dttg <= date;
+                                break;
+                        }
 
+                        break;
+                    case string stg:
+                        switch (comparisonOperator)
+                        {
+                            case "==":
+                                checkStatement = stg == value;
+                                break;
+                            case "!=":
+                                checkStatement = stg != value;
+                                break;
+                        }
                     break;
                 case bool btg when bool.TryParse(value, out var boolean):
                     switch (comparisonOperator)
@@ -331,22 +302,23 @@ namespace MiniSoftware
                             checkStatement = btg == boolean;
                             break;
                     }
-                    break;
-                case string stg:
-                    switch (comparisonOperator)
-                    {
-                        case "==":
-                            checkStatement = stg != value;
-                            break;
-                        case "!=":
-                            checkStatement = stg == value;
-                            break;
-                    }
 
                     break;
             }
 
             return checkStatement;
+        }
+
+        private static object EvaluateValue(string value)
+        {
+            if (double.TryParse(value, out var doubleNumber))
+                return doubleNumber;
+            else if (int.TryParse(value, out var intNumber))
+                return intNumber;
+            else if (DateTime.TryParse(value, out var date))
+                return date;
+            
+            return value;
         }
 
         private static void ReplaceText(OpenXmlElement xmlElement, WordprocessingDocument docx, Dictionary<string, object> tags)
@@ -394,6 +366,7 @@ namespace MiniSoftware
                                             isFirst = false;
                                         else
                                             run.Append(new Break());
+                                        newT.Text = EvaluateIfStatement(newT.Text);
                                         run.Append(newT);
                                         currentT = newT;
                                     }
@@ -404,6 +377,8 @@ namespace MiniSoftware
                                     var currentT = t;
                                     var generatedText = new Text();
                                     currentT.Text = currentT.Text.Replace(@"{{foreach", "").Replace(@"endforeach}}", "");
+                                    
+                                    var newTexts = new Dictionary<int, string>();
                                     for (var i = 0; i < vs.Count; i++)
                                     {
                                         var newT = t.CloneNode(true) as Text;
@@ -412,13 +387,22 @@ namespace MiniSoftware
                                         {
                                             newT.Text = newT.Text.Replace("{{" + tag.Key + "." + vv.Key + "}}", vv.Value.ToString());
                                         }
+                                        
+                                        newT.Text = EvaluateIfStatement(newT.Text);
+                                        
+                                        if(!string.IsNullOrEmpty(newT.Text))
+                                            newTexts.Add(i, newT.Text);
+                                    }
 
-                                        if (i != vs.Count)
+                                    for (var i = 0; i < newTexts.Count; i++)
+                                    {
+                                        var dict = newTexts.ElementAt(i);
+                                        generatedText.Text += dict.Value;
+                                        
+                                        if (i != newTexts.Count - 1)
                                         {
-                                            newT.Text += vs[i].Separator;
+                                            generatedText.Text += vs[dict.Key].Separator;
                                         }
-
-                                        generatedText.Text += newT.Text;
                                     }
 
                                     run.Append(generatedText);
@@ -472,28 +456,14 @@ namespace MiniSoftware
                                     {
                                         newText = tag.Value?.ToString();
                                     }
-                                    if (!string.IsNullOrEmpty(newText))
-                                    {
-                                        var nts = newText.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
-                                        var currentT = t;
-                                        var isFirst = true;
-                                        foreach (var v in nts)
-                                        {
-                                            var newT = t.CloneNode(true) as Text;
-                                            newT.Text = t.Text.Replace($"{{{{{tag.Key}}}}}", v?.ToString());
-                                            if (isFirst)
-                                                isFirst = false;
-                                            else
-                                                run.Append(new Break());
-                                            run.Append(newT);
-                                            currentT = newT;
-                                        }
-                                    }
+                                    
                                     t.Text = t.Text.Replace($"{{{{{tag.Key}}}}}", newText);
                                 }
                             }
                         }
-
+                        
+                        t.Text = EvaluateIfStatement(t.Text);
+                        
                         // add breakline
                         {
                             var newText = t.Text;
@@ -519,6 +489,37 @@ namespace MiniSoftware
                     }
                 }
             }
+        }
+
+        private static string EvaluateIfStatement(string text)
+        {
+            const string ifStartTag = "{{if(";
+            const string ifEndTag = ")if";
+            const string endIfTag = "endif}}";
+            
+            while (text.Contains(ifStartTag)) 
+            {
+                var ifIndex = text.IndexOf(ifStartTag, StringComparison.Ordinal);
+                var ifEndIndex = text.IndexOf(")if", ifIndex, StringComparison.Ordinal);
+                            
+                var statement = text.Substring(ifIndex + ifStartTag.Length, ifEndIndex - (ifIndex + ifStartTag.Length)).Split(',');
+                            
+                var checkStatement = EvaluateStatement(statement[0], statement[1], statement[2]);
+
+                if (checkStatement)
+                {
+                    text = text.Remove(ifIndex, ifEndIndex - ifIndex + ifEndTag.Length);
+                    var endIfFinalIndex = text.IndexOf(endIfTag, StringComparison.Ordinal);
+                    text = text.Remove(endIfFinalIndex, endIfTag.Length);
+                }
+                else
+                {
+                    var endIfFinalIndex = text.IndexOf(endIfTag, StringComparison.Ordinal);
+                    text = text.Remove(ifIndex, endIfFinalIndex - ifIndex + endIfTag.Length);
+                }
+            }
+
+            return text;
         }
 
         private static bool IsHyperLink(object value)
