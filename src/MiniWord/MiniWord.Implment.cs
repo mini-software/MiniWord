@@ -1,4 +1,4 @@
-﻿namespace MiniSoftware
+namespace MiniSoftware
 {
     using DocumentFormat.OpenXml;
     using DocumentFormat.OpenXml.Packaging;
@@ -29,10 +29,12 @@
                 ms.Position = 0;
                 using (var docx = WordprocessingDocument.Open(ms, true))
                 {
-                    foreach (var hdr in docx.MainDocumentPart.HeaderParts)
-                        hdr.Header.Generate(docx, value);
-                    foreach (var ftr in docx.MainDocumentPart.FooterParts)
-                        ftr.Footer.Generate(docx, value);
+                    var hc = docx.MainDocumentPart.HeaderParts.Count();
+                    var fc = docx.MainDocumentPart.FooterParts.Count();
+                    for (int i = 0; i < hc; i++)
+                        docx.MainDocumentPart.HeaderParts.ElementAt(i).Header.Generate(docx, value);
+                    for (int i = 0; i < fc; i++)
+                        docx.MainDocumentPart.FooterParts.ElementAt(i).Footer.Generate(docx, value);
                     docx.MainDocumentPart.Document.Body.Generate(docx, value);
                     docx.Save();
                 }
@@ -81,9 +83,9 @@
                                         var dicKey = $"{listKey}.{e.Key}";
                                         dic.Add(dicKey, e.Value);
                                     }
-                                    
-                                    ReplaceStatements(xmlElement, tags);
-                                    
+
+                                    ReplaceStatements(newTr, tags: dic);
+
                                     ReplaceText(newTr, docx, tags: dic);
                                     table.Append(newTr);
                                 }
@@ -93,7 +95,7 @@
                     }
                 }
             }
-            
+
             ReplaceStatements(xmlElement, tags);
 
             ReplaceText(xmlElement, docx, tags);
@@ -122,10 +124,10 @@
                                            // TODO: check tag exist
                                            // TODO: record tag text if without tag then system need to clear them
                                            // TODO: every {{tag}} one <t>for them</t> and add text before first text and copy first one and remove {{, tagname, }}
-                                           
-                    if(s.StartsWith("{{foreach"))
+
+                    if (s.StartsWith("{{foreach"))
                         foreachIncluded = true;
-                                           
+
                     if (!s.StartsWith("{{"))
                         clear = true;
                     else if (s.Contains("{{") && s.Contains("}}") && !foreachIncluded)
@@ -159,7 +161,7 @@
                         clear = true;
                         foreachIncluded = false;
                     }
-                    
+
                 }
 
                 if (clear)
@@ -216,23 +218,24 @@
         {
             var paragraphs = xmlElement.Descendants<Paragraph>().ToList();
 
-            while (paragraphs.Any(s => s.InnerText.Contains("@if"))) 
+            while (paragraphs.Any(s => s.InnerText.Contains("@if")))
             {
                 var ifIndex = paragraphs.FindIndex(0, s => s.InnerText.Contains("@if"));
                 var endIfFinalIndex = paragraphs.FindIndex(ifIndex, s => s.InnerText.Contains("@endif"));
-                
+
                 var statement = paragraphs[ifIndex].InnerText.Split(' ');
 
-                var checkStatement = EvaluateStatement(tags[statement[1]], statement[2], statement[3]);
+                var tagValue = tags[statement[1]];
+                var checkStatement = statement.Length == 4 ? EvaluateStatement(tagValue, statement[2], statement[3]) : !bool.Parse(tagValue.ToString());
 
                 if (checkStatement)
                 {
-                    for (int i = ifIndex+1; i <= endIfFinalIndex-1; i++)
+                    for (int i = ifIndex + 1; i <= endIfFinalIndex - 1; i++)
                     {
                         paragraphs[i].Remove();
                     }
                 }
-                
+
                 paragraphs[ifIndex].Remove();
                 paragraphs[endIfFinalIndex].Remove();
 
@@ -243,94 +246,105 @@
         private static bool EvaluateStatement(object tagValue, string comparisonOperator, string value)
         {
             var checkStatement = false;
-            
+
             switch (tagValue)
-                {
-                    case double dtg when double.TryParse(value, out var doubleNumber):
-                        switch (comparisonOperator)
-                        {
-                            case "==":
-                                checkStatement = !dtg.Equals(doubleNumber);
-                                break;
-                            case "!=":
-                                checkStatement = dtg.Equals(doubleNumber);
-                                break;
-                            case ">":
-                                checkStatement = dtg <= doubleNumber;
-                                break;
-                            case "<":
-                                checkStatement = dtg >= doubleNumber;
-                                break;
-                            case ">=":
-                                checkStatement = dtg < doubleNumber;
-                                break;
-                            case "<=":
-                                checkStatement = dtg > doubleNumber;
-                                break;
-                        }
+            {
+                case double dtg when double.TryParse(value, out var doubleNumber):
+                    switch (comparisonOperator)
+                    {
+                        case "==":
+                            checkStatement = !dtg.Equals(doubleNumber);
+                            break;
+                        case "!=":
+                            checkStatement = dtg.Equals(doubleNumber);
+                            break;
+                        case ">":
+                            checkStatement = dtg <= doubleNumber;
+                            break;
+                        case "<":
+                            checkStatement = dtg >= doubleNumber;
+                            break;
+                        case ">=":
+                            checkStatement = dtg < doubleNumber;
+                            break;
+                        case "<=":
+                            checkStatement = dtg > doubleNumber;
+                            break;
+                    }
 
-                        break;
-                    case int itg when int.TryParse(value, out var intNumber):
-                        switch (comparisonOperator)
-                        {
-                            case "==":
-                                checkStatement = !itg.Equals(intNumber);
-                                break;
-                            case "!=":
-                                checkStatement = itg.Equals(intNumber);
-                                break;
-                            case ">":
-                                checkStatement = itg <= intNumber;
-                                break;
-                            case "<":
-                                checkStatement = itg >= intNumber;
-                                break;
-                            case ">=":
-                                checkStatement = itg < intNumber;
-                                break;
-                            case "<=":
-                                checkStatement = itg > intNumber;
-                                break;
-                        }
+                    break;
+                case int itg when int.TryParse(value, out var intNumber):
+                    switch (comparisonOperator)
+                    {
+                        case "==":
+                            checkStatement = !itg.Equals(intNumber);
+                            break;
+                        case "!=":
+                            checkStatement = itg.Equals(intNumber);
+                            break;
+                        case ">":
+                            checkStatement = itg <= intNumber;
+                            break;
+                        case "<":
+                            checkStatement = itg >= intNumber;
+                            break;
+                        case ">=":
+                            checkStatement = itg < intNumber;
+                            break;
+                        case "<=":
+                            checkStatement = itg > intNumber;
+                            break;
+                    }
 
-                        break;
-                    case DateTime dttg when DateTime.TryParse(value, out var date):
-                        switch (comparisonOperator)
-                        {
-                            case "==":
-                                checkStatement = !dttg.Equals(date);
-                                break;
-                            case "!=":
-                                checkStatement = dttg.Equals(date);
-                                break;
-                            case ">":
-                                checkStatement = dttg <= date;
-                                break;
-                            case "<":
-                                checkStatement = dttg >= date;
-                                break;
-                            case ">=":
-                                checkStatement = dttg < date;
-                                break;
-                            case "<=":
-                                checkStatement = dttg > date;
-                                break;
-                        }
+                    break;
+                case DateTime dttg when DateTime.TryParse(value, out var date):
+                    switch (comparisonOperator)
+                    {
+                        case "==":
+                            checkStatement = !dttg.Equals(date);
+                            break;
+                        case "!=":
+                            checkStatement = dttg.Equals(date);
+                            break;
+                        case ">":
+                            checkStatement = dttg <= date;
+                            break;
+                        case "<":
+                            checkStatement = dttg >= date;
+                            break;
+                        case ">=":
+                            checkStatement = dttg < date;
+                            break;
+                        case "<=":
+                            checkStatement = dttg > date;
+                            break;
+                    }
 
-                        break;
-                    case string stg:
-                        switch (comparisonOperator)
-                        {
-                            case "==":
-                                checkStatement = stg != value;
-                                break;
-                            case "!=":
-                                checkStatement = stg == value;
-                                break;
-                        }
+                    break;
+                case bool btg when bool.TryParse(value, out var boolean):
+                    switch (comparisonOperator)
+                    {
+                        case "==":
+                            checkStatement = btg != boolean;
+                            break;
+                        case "!=":
+                            checkStatement = btg == boolean;
+                            break;
+                    }
+                    break;
+                case string stg:
+                    switch (comparisonOperator)
+                    {
+                        case "==":
+                            checkStatement = stg != value;
+                            break;
+                        case "!=":
+                            checkStatement = stg == value;
+                            break;
+                    }
 
-                        break;
-                }
+                    break;
+            }
 
             return checkStatement;
         }
@@ -364,7 +378,7 @@
                                     isMatch = true;
                                 }
                             }
-                            
+
                             if (isMatch)
                             {
                                 if (tag.Value is string[] || tag.Value is IList<string> || tag.Value is List<string>)
@@ -439,10 +453,11 @@
                                     AddHyperLink(docx, run, tag.Value);
                                     t.Remove();
                                 }
-                                else if (tag.Value is MiniWordColorText)
+                                else if (tag.Value is MiniWordColorText || tag.Value is MiniWordColorText[])
                                 {
-                                    var miniWordColorText = (MiniWordColorText)tag.Value;
-                                    var colorText = AddColorText(miniWordColorText);
+                                    var colorText = tag.Value is MiniWordColorText
+                                        ? AddColorText(new[] { (MiniWordColorText)tag.Value })
+                                        : AddColorText((MiniWordColorText[])tag.Value);
                                     run.Append(colorText);
                                     t.Remove();
                                 }
@@ -456,6 +471,23 @@
                                     else
                                     {
                                         newText = tag.Value?.ToString();
+                                    }
+                                    if (newText.IsNotBlank())
+                                    {
+                                        var vs = newText.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+                                        var currentT = t;
+                                        var isFirst = true;
+                                        foreach (var v in vs)
+                                        {
+                                            var newT = t.CloneNode(true) as Text;
+                                            newT.Text = t.Text.Replace($"{{{{{tag.Key}}}}}", v?.ToString());
+                                            if (isFirst)
+                                                isFirst = false;
+                                            else
+                                                run.Append(new Break());
+                                            run.Append(newT);
+                                            currentT = newT;
+                                        }
                                     }
                                     t.Text = t.Text.Replace($"{{{{{tag.Key}}}}}", newText);
                                 }
@@ -533,16 +565,19 @@
             };
             return xmlHyperLink;
         }
-        private static RunProperties AddColorText(MiniWordColorText miniWordColorText)
+        private static RunProperties AddColorText(MiniWordColorText[] miniWordColorTextArray)
         {
 
             RunProperties runPro = new RunProperties();
-            Text text = new Text(miniWordColorText.Text);
-            Color color = new Color() { Val = miniWordColorText.FontColor?.Replace("#", "") };
-            Shading shading = new Shading() { Fill = miniWordColorText.HighlightColor?.Replace("#", "") };
-            runPro.Append(shading);
-            runPro.Append(color);
-            runPro.Append(text);
+            foreach (var miniWordColorText in miniWordColorTextArray)
+            {
+                Text text = new Text(miniWordColorText.Text);
+                Color color = new Color() { Val = miniWordColorText.FontColor?.Replace("#", "") };
+                Shading shading = new Shading() { Fill = miniWordColorText.HighlightColor?.Replace("#", "") };
+                runPro.Append(shading);
+                runPro.Append(color);
+                runPro.Append(text);
+            }
 
             return runPro;
         }
@@ -583,7 +618,7 @@
                                                  new A.BlipExtension()
                                                  {
                                                      Uri =
-                                                        $"{{{ Guid.NewGuid().ToString("n")}}}"
+                                                        $"{{{Guid.NewGuid().ToString("n")}}}"
                                                  })
                                          )
                                          {

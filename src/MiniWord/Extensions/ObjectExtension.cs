@@ -78,7 +78,7 @@ namespace MiniSoftware.Extensions
 		}
 		internal static bool IsStrongTypeEnumerable(this object obj)
 		{
-			return obj is IEnumerable && !(obj is string) && !(obj is char[]) && !(obj is string[]);
-		}
+            return obj is IEnumerable && !(obj is string) && !(obj is char[]) && !(obj is string[]) && !(obj is MiniWordColorText[]);
+        }
 	}
 }

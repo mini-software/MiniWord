@@ -268,6 +268,32 @@ MiniWord.SaveAsByTemplate(path, templatePath, value);
 ![after_if](https://user-images.githubusercontent.com/38832863/220125435-72ea24b4-2412-45de-961a-ad4b2134417b.PNG)
 
 
+### ColorText
+
+##### Example
+
+```csharp
+var value = new
+{
+    Company_Name = new MiniWordColorText { Text = "MiniSofteware", FontColor = "#eb70AB", },
+    Name = new[] {
+        new MiniWordColorText { Text = "Ja", HighlightColor = "#eb70AB" },
+        new MiniWordColorText { Text = "ck", HighlightColor = "#a56abe" }
+    },
+    CreateDate = new MiniWordColorText
+    {
+        Text = new DateTime(2021, 01, 01).ToString(),
+        HighlightColor = "#eb70AB",
+        FontColor = "#ffffff",
+    },
+    VIP = true,
+    Points = 123,
+    APP = "Demo APP",
+};
+MiniWord.SaveAsByTemplate(path, templatePath, value);
+```
+
+
 ## Other
 
 ### POCO or dynamic parameter

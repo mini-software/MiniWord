@@ -784,6 +784,31 @@ ever since the 1500s, when an unknown printer took.
             MiniWord.SaveAsByTemplate(path, templatePath, value);
         }
 
+        [Fact]
+        public void TestMultipleColorWordByWord()
+        {
+            var path = PathHelper.GetTempFilePath();
+            var templatePath = PathHelper.GetFile("TestBasicFill.docx");
+            var value = new
+            {
+                Company_Name = new MiniWordColorText { Text = "MiniSofteware", FontColor = "#eb70AB", },
+                Name = new[] {
+                    new MiniWordColorText { Text = "Ja", HighlightColor = "#eb70AB" },
+                    new MiniWordColorText { Text = "ck", HighlightColor = "#a56abe" }
+                },
+                CreateDate = new MiniWordColorText
+                {
+                    Text = new DateTime(2021, 01, 01).ToString(),
+                    HighlightColor = "#eb70AB",
+                    FontColor = "#ffffff",
+                },
+                VIP = true,
+                Points = 123,
+                APP = "Demo APP",
+            };
+            MiniWord.SaveAsByTemplate(path, templatePath, value);
+        }
+
 
         #region Model:TestIssue18.docx
         public class Foo
