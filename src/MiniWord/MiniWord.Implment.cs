@@ -472,12 +472,12 @@ namespace MiniSoftware
                                     {
                                         newText = tag.Value?.ToString();
                                     }
-                                    if (newText.IsNotBlank())
+                                    if (!string.IsNullOrEmpty(newText))
                                     {
-                                        var vs = newText.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+                                        var nts = newText.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
                                         var currentT = t;
                                         var isFirst = true;
-                                        foreach (var v in vs)
+                                        foreach (var v in nts)
                                         {
                                             var newT = t.CloneNode(true) as Text;
                                             newT.Text = t.Text.Replace($"{{{{{tag.Key}}}}}", v?.ToString());
@@ -567,7 +567,6 @@ namespace MiniSoftware
         }
         private static RunProperties AddColorText(MiniWordColorText[] miniWordColorTextArray)
         {
-
             RunProperties runPro = new RunProperties();
             foreach (var miniWordColorText in miniWordColorTextArray)
             {
