@@ -85,6 +85,8 @@ namespace MiniSoftware
                                         dic.Add(dicKey, e.Value);
                                     }
                                     
+                                    ReplaceStatements(newTr, tags: dic);
+                                    
                                     ReplaceText(newTr, docx, tags: dic);
                                     table.Append(newTr);
                                 }
@@ -94,6 +96,8 @@ namespace MiniSoftware
                     }
                 }
             }
+            
+            ReplaceStatements(xmlElement, tags);
             
             ReplaceText(xmlElement, docx, tags);
         }
@@ -488,6 +492,35 @@ namespace MiniSoftware
                         }
                     }
                 }
+            }
+        }
+        
+        private static void ReplaceStatements(OpenXmlElement xmlElement, Dictionary<string, object> tags)
+        {
+            var paragraphs = xmlElement.Descendants<Paragraph>().ToList();
+
+            while (paragraphs.Any(s => s.InnerText.Contains("@if")))
+            {
+                var ifIndex = paragraphs.FindIndex(0, s => s.InnerText.Contains("@if"));
+                var endIfFinalIndex = paragraphs.FindIndex(ifIndex, s => s.InnerText.Contains("@endif"));
+
+                var statement = paragraphs[ifIndex].InnerText.Split(' ');
+
+                var tagValue = tags[statement[1]];
+                var checkStatement = statement.Length == 4 ? EvaluateStatement(tagValue.ToString(), statement[2], statement[3]) : !bool.Parse(tagValue.ToString());
+
+                if (!checkStatement)
+                {
+                    for (int i = ifIndex + 1; i <= endIfFinalIndex - 1; i++)
+                    {
+                        paragraphs[i].Remove();
+                    }
+                }
+
+                paragraphs[ifIndex].Remove();
+                paragraphs[endIfFinalIndex].Remove();
+
+                paragraphs = xmlElement.Descendants<Paragraph>().ToList();
             }
         }
 

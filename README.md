@@ -237,7 +237,8 @@ MiniWord.SaveAsByTemplate(path, templatePath, value);
 
 ### If statement inside template
 
-Adding `{{if` and `endif}}` tags to template is required.
+For multip paragraph, use @if and @endif tags.
+For single paragraph and inside foreach, use `{{if` and `endif}}` tags to template is required.
 
 ##### Example
 
@@ -263,10 +264,19 @@ var value = new Dictionary<string, object>()
 MiniWord.SaveAsByTemplate(path, templatePath, value);
 ```
 
-##### Template
+##### Template For Multi Paragraph
+
+![before_if](https://user-images.githubusercontent.com/38832863/220125429-7dd6ce94-35c6-478e-8903-064f9cf9361a.PNG)
+
+##### Result Of Multi Paragraph
+
+![after_if](https://user-images.githubusercontent.com/38832863/220125435-72ea24b4-2412-45de-961a-ad4b2134417b.PNG)
+
+##### Template For Single Paragraph
+
 <img width="931" alt="Screenshot 2023-08-08 at 17 55 46" src="https://github.com/mini-software/MiniWord/assets/38832863/2adea468-a9c1-422f-a270-167086bc4ba3">
 
-##### Result
+##### Result Of Single Paragraph
 
 <img width="536" alt="Screenshot 2023-08-08 at 17 56 47" src="https://github.com/mini-software/MiniWord/assets/38832863/01f71c0f-eee0-4189-8510-abe063126514">
 
