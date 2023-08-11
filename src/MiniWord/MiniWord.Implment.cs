@@ -506,7 +506,8 @@ namespace MiniSoftware
 
                 var statement = paragraphs[ifIndex].InnerText.Split(' ');
 
-                var tagValue = tags[statement[1]];
+                var tagValue = tags[statement[1]] ?? "NULL";
+
                 var checkStatement = statement.Length == 4 ? EvaluateStatement(tagValue.ToString(), statement[2], statement[3]) : !bool.Parse(tagValue.ToString());
 
                 if (!checkStatement)
