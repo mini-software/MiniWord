@@ -22,6 +22,9 @@
 
 ---
 
+### 0.7.1
+- [New] Add support to if statement inside foreach statement inside templates. Please refer to samples. (via @eynarhaji)
+- [New] Change tags for if statements for single paragraph if statement {{if and endif}} inside templates. Please refer to samples. (via @eynarhaji)
 
 ### 0.7.0
 - [New] Add support to List inside List via `IEnumerable<MiniWordForeach>` and `{{foreach`/`endforeach}}` tags (via @eynarhaji)
