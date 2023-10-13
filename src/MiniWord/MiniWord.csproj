@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<TargetFrameworks>net45;netstandard2.0;net5.0</TargetFrameworks>
+		<TargetFrameworks>net45;netstandard2.0;net6.0;net7.0</TargetFrameworks>
 		<Version>0.7.1</Version>
 	</PropertyGroup>
 	<PropertyGroup>
@@ -22,6 +22,7 @@
 		<PackageIcon>icon.png</PackageIcon>
 		<PackageReleaseNotes>Please Check [Release Notes](https://github.com/mini-software/MiniWord/tree/main/release-note)</PackageReleaseNotes>
 		<RepositoryType>Github</RepositoryType>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 	</PropertyGroup>
 	<ItemGroup>
 		<None Update="icon.png">
