@@ -88,7 +88,9 @@ namespace MiniSoftware
                                     ReplaceStatements(newTr, tags: dic);
                                     
                                     ReplaceText(newTr, docx, tags: dic);
-                                    table.Append(newTr);
+                                    //Fix #47 表格应插入到模板标签位置而不是最后一行
+                                    table.InsertAfter(newTr, tr);
+                                    //table.Append(newTr);
                                 }
                                 tr.Remove();
                             }
