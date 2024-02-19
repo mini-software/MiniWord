@@ -10,6 +10,46 @@ namespace MiniWordTests
     public class IssueTests
     {
         [Fact]
+        public void TestIssue69()
+        {
+            {
+                var path = PathHelper.GetTempFilePath();
+                var templatePath = PathHelper.GetFile("TestIssue47.docx");
+                var value = new Dictionary<string, object>()
+                {
+                    { "line",new List<Dictionary<string, object>>
+                        {
+                            new Dictionary<string, object>
+                            {
+                                {"num", "1"},
+                                {"spc", "Specification1"},
+                                {"desc", "Description1"},
+                                {"qty", "10"},
+                                {"up", "20.00"},
+                                {"tax_rate", "0.20"},
+                                {"tax_amount", "4.00"}
+                            },
+                            new Dictionary<string, object>
+                            {
+                                {"num", "2"},
+                                {"spc", "Specification2"},
+                                {"desc", "Description2"},
+                                {"qty", "5"},
+                                {"up", "30.00"},
+                                {"tax_rate", "0.15"},
+                                {"tax_amount", "2.25"}
+                            }
+                        }
+                    }
+                };
+                MiniWord.SaveAsByTemplate(path, templatePath, value);
+                // TODO: waiting solution
+                //var xml = Helpers.GetZipFileContent(path, "word/document.xml");
+                //Assert.Contains(@"MiniWord", xml);
+            }
+        }
+
+        [Fact]
         public void TestIssueAvoidSplitTag()
         {
             {
@@ -149,7 +189,7 @@ namespace MiniWordTests
                         new User (){ name="Jack",department="HR"},
                         new User (){ name="Loan",department="IT"},
                     },
-                        employees = new List<User>()
+                    employees = new List<User>()
                     {
                         new User (){ name="Jack",department="HR"},
                         new User (){ name="Loan",department="HR"},
@@ -193,7 +233,7 @@ namespace MiniWordTests
         {
             var path = PathHelper.GetTempFilePath();
             var templatePath = PathHelper.GetFile("TestIssue17.docx");
-            var value = new 
+            var value = new
             {
                 Content = "Test",
                 Content2 = "Test2",
@@ -250,7 +290,7 @@ namespace MiniWordTests
         {
             var path = PathHelper.GetTempFilePath();
             var templatePath = PathHelper.GetFile("TestExpenseDemo.docx");
-            var value = new 
+            var value = new
             {
                 TripHs = new List<Dictionary<string, object>>
                 {
@@ -343,7 +383,7 @@ namespace MiniWordTests
         [Fact]
         public void TestIssue12_dynamic()
         {
-            
+
             var path = PathHelper.GetTempFilePath();
             var templatePath = PathHelper.GetFile("TestBasicFill.docx");
             dynamic value = new ExpandoObject();
@@ -353,7 +393,7 @@ namespace MiniWordTests
             value.VIP = true;
             value.Points = 123;
             value.APP = "Demo APP\n";
-            
+
             MiniWord.SaveAsByTemplate(path, templatePath, value);
             var xml = Helpers.GetZipFileContent(path, "word/document.xml");
             Assert.Contains(@"<w:t>MiniSofteware", xml);
@@ -369,7 +409,8 @@ namespace MiniWordTests
 
             var path = PathHelper.GetTempFilePath();
             var templatePath = PathHelper.GetFile("TestBasicFill.docx");
-            object value = new {
+            object value = new
+            {
                 Company_Name = "MiniSofteware\n",
                 Name = "Jack",
                 CreateDate = new DateTime(2021, 01, 01),
@@ -434,7 +475,7 @@ ever since the 1500s, when an unknown printer took.
         [Fact]
         public void TestIssueDemo03_dynamic()
         {
-            
+
             var path = PathHelper.GetTempFilePath();
             var templatePath = PathHelper.GetFile("TestDemo02.docx");
             dynamic value = new ExpandoObject();
@@ -571,7 +612,8 @@ ever since the 1500s, when an unknown printer took.
             var templatePath = PathHelper.GetFile("TestBasicFill.docx");
             var value = new Dictionary<string, object>()
             {
-                ["Name"] = new MiniWordHyperLink(){
+                ["Name"] = new MiniWordHyperLink()
+                {
                     Url = "https://google.com",
                     Text = "測試連結!!"
                 },
@@ -669,7 +711,7 @@ ever since the 1500s, when an unknown printer took.
             var templatePath = PathHelper.GetFile("TestBasicFill.docx");
             var value = new Dictionary<string, object>()
             {
-                ["Name"] = new []{
+                ["Name"] = new[]{
                     new MiniWordHyperLink(){
                         Url = "https://google.com",
                         Text = "測試連結22!!"
@@ -706,9 +748,10 @@ ever since the 1500s, when an unknown printer took.
         {
             var path = PathHelper.GetTempFilePath();
             var templatePath = PathHelper.GetFile("TestBasicFill.docx");
-            var value = new 
+            var value = new
             {
-                Name =new MiniWordHyperLink(){
+                Name = new MiniWordHyperLink()
+                {
                     Url = "https://google.com",
                     Text = "測試連結!!"
                 },
@@ -755,7 +798,7 @@ ever since the 1500s, when an unknown printer took.
         {
             var path = PathHelper.GetTempFilePath();
             var templatePath = PathHelper.GetFile("TestBasicFill.docx");
-            var value = new 
+            var value = new
             {
                 Company_Name = "MiniSofteware",
                 Name = "Jack",
@@ -775,8 +818,13 @@ ever since the 1500s, when an unknown printer took.
             {
                 Company_Name = new MiniWordColorText { Text = "MiniSofteware", FontColor = "#eb70AB" },
                 Name = new MiniWordColorText { Text = "Jack", HighlightColor = "#eb70AB" },
-                CreateDate = new MiniWordColorText { Text = new DateTime(2021, 01, 01).ToString()
-                    , HighlightColor = "#eb70AB", FontColor = "#ffffff" },
+                CreateDate = new MiniWordColorText
+                {
+                    Text = new DateTime(2021, 01, 01).ToString()
+                    ,
+                    HighlightColor = "#eb70AB",
+                    FontColor = "#ffffff"
+                },
                 VIP = true,
                 Points = 123,
                 APP = "Demo APP",

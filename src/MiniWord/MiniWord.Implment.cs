@@ -88,13 +88,14 @@ namespace MiniSoftware
                                     ReplaceStatements(newTr, tags: dic);
                                     
                                     ReplaceText(newTr, docx, tags: dic);
-                                    //Fix #47 表格应插入到模板标签位置而不是最后一行\
+                                    //Fix #47 The table should be inserted at the template tag position instead of the last row
                                     if (table.Contains(tr))
                                     {
                                         table.InsertBefore(newTr, tr);
                                     }
-                                    else {
-                                        //如果是嵌套表,暂时按原来的方案追加到末尾
+                                    else
+                                    {
+                                        // If it is a nested table, temporarily append it to the end according to the original plan.
                                         table.Append(newTr);
                                     }
                                 }

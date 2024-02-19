@@ -22,9 +22,13 @@
 
 ---
 
-### 0.7.1
-- [New] Add support to if statement inside foreach statement inside templates. Please refer to samples. (via @eynarhaji)
+### 0.8.0
+
+- [New] Support new OpenXml to solve the problem of line wrapping to multiple lines #68 (via @ping9719)
+
+- [New] Support if statement inside foreach statement inside templates. Please refer to samples. (via @eynarhaji)
 - [New] Change tags for if statements for single paragraph if statement {{if and endif}} inside templates. Please refer to samples. (via @eynarhaji)
+- [Bug]  The table should be inserted at the template tag position instead of the last row #47 (via @itldg)
 
 ### 0.7.0
 - [New] Add support to List inside List via `IEnumerable<MiniWordForeach>` and `{{foreach`/`endforeach}}` tags (via @eynarhaji)
