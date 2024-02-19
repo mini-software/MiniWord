@@ -465,16 +465,16 @@ namespace MiniSoftware
                                 }
                             }
                         }
-                        
+
                         t.Text = EvaluateIfStatement(t.Text);
-                        
+
                         // add breakline
                         {
                             var newText = t.Text;
-                            var splits = Regex.Split(newText, "(<[a-zA-Z/].*?>|\n)");
+                            var splits = Regex.Split(newText, "(<[a-zA-Z/].*?>|\n|\r\n)").Where(o => o != "\n" && o != "\r\n");
                             var currentT = t;
                             var isFirst = true;
-                            if (splits.Length > 1)
+                            if (splits.Count() > 1)
                             {
                                 foreach (var v in splits)
                                 {
