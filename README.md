@@ -110,11 +110,11 @@ MiniWord.SaveAsByTemplate(path, templatePath, value);
 
 ##### Template
 
-![image](C:\Users\Wei\Downloads\190647953-6f9da393-e666-4658-a56d-b3a7f13c0ea1.png)
+![image](https://user-images.githubusercontent.com/12729184/190647953-6f9da393-e666-4658-a56d-b3a7f13c0ea1.png)
 
 ##### Result
 
-![image](C:\Users\Wei\Downloads\190648179-30258d82-723d-4266-b711-43f132d1842d.png)
+![image](https://user-images.githubusercontent.com/12729184/190648179-30258d82-723d-4266-b711-43f132d1842d.png)
 
 ### List
 
@@ -133,11 +133,11 @@ MiniWord.SaveAsByTemplate(path, templatePath, value);
 
 Template
 
-![image](C:\Users\Wei\Downloads\190645513-230c54f3-d38f-47af-b844-0c8c1eff2f52.png)
+![image](https://user-images.githubusercontent.com/12729184/190645513-230c54f3-d38f-47af-b844-0c8c1eff2f52.png)
 
 ##### Result
 
-![image](C:\Users\Wei\Downloads\190645704-1f6405e9-71e3-45b9-aa99-2ba52e5e1519.png)
+![image](https://user-images.githubusercontent.com/12729184/190645704-1f6405e9-71e3-45b9-aa99-2ba52e5e1519.png)
 
 ### Table
 
@@ -171,12 +171,12 @@ MiniWord.SaveAsByTemplate(path, templatePath, value);
 
 ##### Template
 
-![image](C:\Users\Wei\Downloads\190843632-05bb6459-f1c1-4bdc-a79b-54889afdfeea.png)
+![image](https://user-images.githubusercontent.com/12729184/190843632-05bb6459-f1c1-4bdc-a79b-54889afdfeea.png)
 
 
 ##### Result
 
-![image](C:\Users\Wei\Downloads\190843663-c00baf16-21f2-4579-9d08-996a2c8c549b.png)
+![image](https://user-images.githubusercontent.com/12729184/190843663-c00baf16-21f2-4579-9d08-996a2c8c549b.png)
 
 ### List inside list
 
@@ -227,13 +227,18 @@ MiniWord.SaveAsByTemplate(path, templatePath, value);
 
 ![before_foreach](https://user-images.githubusercontent.com/38832863/220123955-063c9345-3998-4fd7-982c-8d1e3b48bbf8.PNG)
 
+<img width="755" alt="Screenshot 2023-08-08 at 17 59 37" src="https://github.com/mini-software/MiniWord/assets/38832863/7811bf53-48cf-4fa4-85d7-d98663feb119">
+
 ##### Result
 
 ![after_foreach](https://user-images.githubusercontent.com/38832863/220123960-913a7140-2fa2-415e-bb3e-456e04167382.PNG)
 
+<img width="755" alt="Screenshot 2023-08-08 at 18 00 15" src="https://github.com/mini-software/MiniWord/assets/38832863/9e1afcf7-64b1-441c-8488-9ea2bd3114a1">
+
 ### If statement inside template
 
-Adding `@if` and `@endif` tags to template is required.
+For multip paragraph, use @if and @endif tags.
+For single paragraph and inside foreach, use `{{if` and `endif}}` tags to template is required.
 
 ##### Example
 
@@ -259,13 +264,46 @@ var value = new Dictionary<string, object>()
 MiniWord.SaveAsByTemplate(path, templatePath, value);
 ```
 
-##### Template
+##### Template For Multi Paragraph
 
 ![before_if](https://user-images.githubusercontent.com/38832863/220125429-7dd6ce94-35c6-478e-8903-064f9cf9361a.PNG)
 
-##### Result
+##### Result Of Multi Paragraph
 
 ![after_if](https://user-images.githubusercontent.com/38832863/220125435-72ea24b4-2412-45de-961a-ad4b2134417b.PNG)
+
+##### Template For Single Paragraph
+
+<img width="931" alt="Screenshot 2023-08-08 at 17 55 46" src="https://github.com/mini-software/MiniWord/assets/38832863/2adea468-a9c1-422f-a270-167086bc4ba3">
+
+##### Result Of Single Paragraph
+
+<img width="536" alt="Screenshot 2023-08-08 at 17 56 47" src="https://github.com/mini-software/MiniWord/assets/38832863/01f71c0f-eee0-4189-8510-abe063126514">
+
+### ColorText
+
+##### Example
+
+```csharp
+var value = new
+{
+    Company_Name = new MiniWordColorText { Text = "MiniSofteware", FontColor = "#eb70AB", },
+    Name = new[] {
+        new MiniWordColorText { Text = "Ja", HighlightColor = "#eb70AB" },
+        new MiniWordColorText { Text = "ck", HighlightColor = "#a56abe" }
+    },
+    CreateDate = new MiniWordColorText
+    {
+        Text = new DateTime(2021, 01, 01).ToString(),
+        HighlightColor = "#eb70AB",
+        FontColor = "#ffffff",
+    },
+    VIP = true,
+    Points = 123,
+    APP = "Demo APP",
+};
+MiniWord.SaveAsByTemplate(path, templatePath, value);
+```
 
 
 ## Other
@@ -435,6 +473,3 @@ public class ApiController : Controller
 
 
 ## Support : [Donate Link](https://miniexcel.github.io/)
-
-
-

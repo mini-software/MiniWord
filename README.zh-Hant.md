@@ -25,7 +25,7 @@
 
 MiniWord .NET Word模板引擎，藉由Word模板和數據簡單、快速生成文件。
 
-![image](C:\Users\Wei\Downloads\190835307-6cd87982-b5f3-4a79-9682-bdd1cc02a4ea.png)
+![image](https://user-images.githubusercontent.com/12729184/190835307-6cd87982-b5f3-4a79-9682-bdd1cc02a4ea.png)
 
 
 
@@ -88,11 +88,11 @@ MiniWord.SaveAsByTemplate(path, templatePath, value);
 
 ##### 模版
 
-![image](C:\Users\Wei\Downloads\190834360-39b4b799-d523-4b7e-9331-047a61fd5eb9.png)
+![image](https://user-images.githubusercontent.com/12729184/190834360-39b4b799-d523-4b7e-9331-047a61fd5eb9.png)
 
 ##### 導出
 
-![image](C:\Users\Wei\Downloads\190834455-ba065211-0f9d-41d1-9b7a-5d9e96ac2eff.png)
+![image](https://user-images.githubusercontent.com/12729184/190834455-ba065211-0f9d-41d1-9b7a-5d9e96ac2eff.png)
 
 
 
