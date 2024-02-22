@@ -184,6 +184,122 @@ MiniWord.SaveAsByTemplate(path, templatePath, value);
 
 
 
+### 二级列表
+
+Tag 是 `IEnumerable<MiniWordForeach>` 类别.  使用方式`{{foreach` 和 `endforeach}}`.
+
+##### Example
+
+```csharp
+var value = new Dictionary<string, object>()
+{
+    ["TripHs"] = new List<Dictionary<string, object>>
+    {
+        new Dictionary<string, object>
+        {
+            { "sDate", DateTime.Parse("2022-09-08 08:30:00") },
+            { "eDate", DateTime.Parse("2022-09-08 15:00:00") },
+            { "How", "Discussion requirement part1" },
+            {
+                "Details", new List<MiniWordForeach>()
+                {
+                    new MiniWordForeach()
+                    {
+                        Value = new Dictionary<string, object>()
+                        {
+                            {"Text", "Air"},
+                            {"Value", "Airplane"}
+                        },
+                        Separator = " | "
+                    },
+                    new MiniWordForeach()
+                    {
+                        Value = new Dictionary<string, object>()
+                        {
+                            {"Text", "Parking"},
+                            {"Value", "Car"}
+                        },
+                        Separator = " / "
+                    }
+                }
+            }
+        }
+    }
+};
+MiniWord.SaveAsByTemplate(path, templatePath, value);
+```
+
+##### Template
+
+![before_foreach](https://user-images.githubusercontent.com/38832863/220123955-063c9345-3998-4fd7-982c-8d1e3b48bbf8.PNG)
+
+##### Result
+
+![after_foreach](https://user-images.githubusercontent.com/38832863/220123960-913a7140-2fa2-415e-bb3e-456e04167382.PNG)
+
+### 条件判断
+
+ `@if` 和 `@endif` tags .
+
+##### Example
+
+```csharp
+var value = new Dictionary<string, object>()
+{
+    ["Name"] = new List<MiniWordHyperLink>(){
+        new MiniWordHyperLink(){
+            Url = "https://google.com",
+            Text = "測試連結22!!"
+        },
+        new MiniWordHyperLink(){
+            Url = "https://google1.com",
+            Text = "測試連結11!!"
+        }
+    },
+    ["Company_Name"] = "MiniSofteware",
+    ["CreateDate"] = new DateTime(2021, 01, 01),
+    ["VIP"] = true,
+    ["Points"] = 123,
+    ["APP"] = "Demo APP",
+};
+MiniWord.SaveAsByTemplate(path, templatePath, value);
+```
+
+##### Template
+
+![before_if](https://user-images.githubusercontent.com/38832863/220125429-7dd6ce94-35c6-478e-8903-064f9cf9361a.PNG)
+
+##### Result
+
+![after_if](https://user-images.githubusercontent.com/38832863/220125435-72ea24b4-2412-45de-961a-ad4b2134417b.PNG)
+
+### 多彩字體
+
+##### 例子
+
+```csharp
+var value = new
+{
+    Company_Name = new MiniWordColorText { Text = "MiniSofteware", FontColor = "#eb70AB", },
+    Name = new[] {
+        new MiniWordColorText { Text = "Ja", HighlightColor = "#eb70AB" },
+        new MiniWordColorText { Text = "ck", HighlightColor = "#a56abe" }
+    },
+    CreateDate = new MiniWordColorText
+    {
+        Text = new DateTime(2021, 01, 01).ToString(),
+        HighlightColor = "#eb70AB",
+        FontColor = "#ffffff",
+    },
+    VIP = true,
+    Points = 123,
+    APP = "Demo APP",
+};
+MiniWord.SaveAsByTemplate(path, templatePath, value);
+```
+
+
+
 ## 其他
 
 ### POCO or dynamic 參數

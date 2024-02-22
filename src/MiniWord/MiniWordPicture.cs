@@ -24,7 +24,7 @@
             }
             set { _extension = value; }
         }
-        internal ImagePartType GetImagePartType
+        internal PartTypeInfo GetImagePartType
         {
             get
             {

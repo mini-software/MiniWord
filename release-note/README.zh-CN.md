@@ -22,6 +22,18 @@
 
 ---
 
+### 0.8.0
+
+- [New] 支持 new OpenXml to solve the problem of line wrapping to multiple lines #68 (via @ping9719)
+- [New] 支持 to if statement inside foreach statement inside templates. Please refer to samples. (via @eynarhaji)
+- [New] 变更 tags for if statements for single paragraph if statement {{if and endif}} inside templates. Please refer to samples. (via @eynarhaji)
+- [Bug]  The table should be inserted at the template tag position instead of the last row #47 (via @itldg)
+
+### 0.7.0
+- [New] 支持 List inside List via `IEnumerable<MiniWordForeach>` and `{{foreach`/`endforeach}}` tags (via @eynarhaji)
+- [New] 支持 @if statements inside templates (via @eynarhaji)
+- [New] 支持 multiple color word by word (via @andy505050)
+
 ### 0.6.1
 - [Bug] 修正系统不支持 `IEnumerable<MiniWordHyperLink>` (#39 via @isdaniel)
 
