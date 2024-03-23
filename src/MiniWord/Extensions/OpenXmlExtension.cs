@@ -12,10 +12,10 @@ namespace MiniSoftware.Extensions
     internal static class OpenXmlExtension
     {
         /// <summary>
-        /// ¸ß¼¶ËÑË÷£ºµÃµ½¶ÎÂäÀïÃæµÄÁ¬Ðø×Ö·û´®
+        /// ï¿½ß¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ãµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö·ï¿½ï¿½ï¿½
         /// </summary>
-        /// <param name="paragraph">¶ÎÂä</param>
-        /// <returns>Item1£ºÁ¬ÐøÎÄ±¾£»Item2£º¿é£»Item3£º¿éÎÄ±¾</returns>
+        /// <param name="paragraph">ï¿½ï¿½ï¿½ï¿½</param>
+        /// <returns>Item1ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä±ï¿½ï¿½ï¿½Item2ï¿½ï¿½ï¿½é£»Item3ï¿½ï¿½ï¿½ï¿½ï¿½Ä±ï¿½</returns>
         internal static List<Tuple<string, List<Run>, List<Text>>> GetContinuousString(this Paragraph paragraph)
         {
             List<Tuple<string, List<Run>, List<Text>>> tuples = new List<Tuple<string, List<Run>, List<Text>>>();
@@ -26,13 +26,13 @@ namespace MiniSoftware.Extensions
             var runs = new List<Run>();
             var texts = new List<Text>();
 
-            //¶ÎÂä£ºËùÓÐ×Ó¼¶
+            //ï¿½ï¿½ï¿½ä£ºï¿½ï¿½ï¿½ï¿½ï¿½Ó¼ï¿½
             foreach (var pChildElement in paragraph.ChildElements)
             {
-                //¿é
+                //ï¿½ï¿½
                 if (pChildElement is Run run)
                 {
-                    //ÎÄ±¾¿é
+                    //ï¿½Ä±ï¿½ï¿½ï¿½
                     if (run.IsText())
                     {
                         var text = run.GetFirstChild<Text>();
@@ -50,10 +50,10 @@ namespace MiniSoftware.Extensions
                         texts = new List<Text>();
                     }
                 }
-                //¹«Ê½£¬ÊéÇ©...
+                //ï¿½ï¿½Ê½ï¿½ï¿½ï¿½ï¿½Ç©...
                 else
                 {
-                    //Ìø¹ýµÄÀàÐÍ
+                    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
                     if (pChildElement is BookmarkStart || pChildElement is BookmarkEnd)
                     {
 
@@ -81,16 +81,16 @@ namespace MiniSoftware.Extensions
         }
 
         /// <summary>
-        /// ÕûÀí×Ö·û´®µ½Á¬Ðø×Ö·û´®¿éÖÐ
+        /// ï¿½ï¿½ï¿½ï¿½ï¿½Ö·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         /// </summary>
-        /// <param name="texts">Á¬Ðø×Ö·û´®¿é</param>
-        /// <param name="text">´ýÕûÀí×Ö·û´®</param>
+        /// <param name="texts">ï¿½ï¿½ï¿½ï¿½ï¿½Ö·ï¿½ï¿½ï¿½ï¿½ï¿½</param>
+        /// <param name="text">ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö·ï¿½ï¿½ï¿½</param>
         internal static void TrimStringToInContinuousString(this IEnumerable<Text> texts, string text)
         {
             /*
-            //¼ÙÈç¿éÎª£º[A][BC][DE][FG][H]
-            //¼ÙÈçÌæ»»£º[AB][E][GH]
-            //ÓÅ»¯¿éÎª£º[AB][C][DE][FGH][]
+            //ï¿½ï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½[A][BC][DE][FG][H]
+            //ï¿½ï¿½ï¿½ï¿½ï¿½æ»»ï¿½ï¿½[AB][E][GH]
+            //ï¿½Å»ï¿½ï¿½ï¿½Îªï¿½ï¿½[AB][C][DE][FGH][]
              */
 
             var allTxtx = string.Concat(texts.SelectMany(o => o.Text));
