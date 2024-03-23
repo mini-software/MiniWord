@@ -95,7 +95,7 @@ namespace MiniSoftware
 
                                 foreach (Dictionary<string, object> es in list)
                                 {
-                                    var dic = es.ToDictionary(key => $"{listKey}.{key}", item=>item.Value);
+                                    var dic = es.ToDictionary(e => $"{listKey}.{e.Key}", e => e.Value);
                                     var newTr = tr.CloneNode(true);
                                     ReplaceStatements(newTr, tags: dic);
                                     

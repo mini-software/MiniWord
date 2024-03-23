@@ -3,6 +3,7 @@ namespace MiniSoftware
     using DocumentFormat.OpenXml.Office2013.Excel;
     using MiniSoftware.Extensions;
     using MiniSoftware.Utility;
+    using System;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Dynamic;
@@ -47,14 +48,14 @@ namespace MiniSoftware
 
         public static async Task SaveAsByTemplateAsync(string path, string templatePath, object value,CancellationToken token = default(CancellationToken))
         {
-            using (var stream = FileHelper.CreateAsync(path))
-                await SaveAsByTemplateImplAsync(await stream, await GetByteAsync(templatePath), value.ToDictionary(),token);
+            using (var stream = new FileStream(path, FileMode.Create, FileAccess.ReadWrite, FileShare.None, 4096, true))
+                await SaveAsByTemplateImplAsync(stream, await GetByteAsync(templatePath), value.ToDictionary(),token);
         }
 
         public static async Task SaveAsByTemplateAsync(string path, byte[] templateBytes, object value,CancellationToken token = default(CancellationToken))
         {
-            using (var stream = FileHelper.CreateAsync(path))
-                await SaveAsByTemplateImplAsync(await stream, templateBytes, value.ToDictionary(),token);
+            using (var stream = new FileStream(path, FileMode.Create, FileAccess.ReadWrite, FileShare.None, 4096, true))
+                await SaveAsByTemplateImplAsync(stream, templateBytes, value.ToDictionary(),token);
         }
     }
 }
