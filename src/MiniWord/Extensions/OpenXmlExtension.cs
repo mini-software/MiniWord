@@ -1,4 +1,4 @@
-namespace MiniSoftware.Extensions
+﻿namespace MiniSoftware.Extensions
 {
     using DocumentFormat.OpenXml.Wordprocessing;
     using System;
@@ -12,10 +12,10 @@ namespace MiniSoftware.Extensions
     internal static class OpenXmlExtension
     {
         /// <summary>
-        /// �߼��������õ���������������ַ���
+        /// 高级搜索：得到段落里面的连续字符串
         /// </summary>
-        /// <param name="paragraph">����</param>
-        /// <returns>Item1�������ı���Item2���飻Item3�����ı�</returns>
+        /// <param name="paragraph">段落</param>
+        /// <returns>Item1：连续文本；Item2：块；Item3：块文本</returns>
         internal static List<Tuple<string, List<Run>, List<Text>>> GetContinuousString(this Paragraph paragraph)
         {
             List<Tuple<string, List<Run>, List<Text>>> tuples = new List<Tuple<string, List<Run>, List<Text>>>();
@@ -26,13 +26,13 @@ namespace MiniSoftware.Extensions
             var runs = new List<Run>();
             var texts = new List<Text>();
 
-            //���䣺�����Ӽ�
+            //段落：所有子级
             foreach (var pChildElement in paragraph.ChildElements)
             {
-                //��
+                //块
                 if (pChildElement is Run run)
                 {
-                    //�ı���
+                    //文本块
                     if (run.IsText())
                     {
                         var text = run.GetFirstChild<Text>();
@@ -50,10 +50,10 @@ namespace MiniSoftware.Extensions
                         texts = new List<Text>();
                     }
                 }
-                //��ʽ����ǩ...
+                //公式，书签...
                 else
                 {
-                    //����������
+                    //跳过的类型
                     if (pChildElement is BookmarkStart || pChildElement is BookmarkEnd)
                     {
 
@@ -81,16 +81,16 @@ namespace MiniSoftware.Extensions
         }
 
         /// <summary>
-        /// �����ַ����������ַ�������
+        /// 整理字符串到连续字符串块中
         /// </summary>
-        /// <param name="texts">�����ַ�����</param>
-        /// <param name="text">�������ַ���</param>
+        /// <param name="texts">连续字符串块</param>
+        /// <param name="text">待整理字符串</param>
         internal static void TrimStringToInContinuousString(this IEnumerable<Text> texts, string text)
         {
             /*
-            //�����Ϊ��[A][BC][DE][FG][H]
-            //�����滻��[AB][E][GH]
-            //�Ż���Ϊ��[AB][C][DE][FGH][]
+            //假如块为：[A][BC][DE][FG][H]
+            //假如替换：[AB][E][GH]
+            //优化块为：[AB][C][DE][FGH][]
              */
 
             var allTxtx = string.Concat(texts.SelectMany(o => o.Text));
