@@ -4,6 +4,7 @@
     using System.ComponentModel;
     using System.Dynamic;
     using System.IO;
+    using System.Threading.Tasks;
 
     internal static partial class Helpers
     {
