@@ -153,6 +153,8 @@ namespace MiniWordTests
             Assert.Contains("Points are greater than 100", docXml);
             Assert.Contains("CreateDate is not less than 2021", docXml);
             Assert.DoesNotContain("CreateDate is not greater than 2021", docXml);
+            Assert.Contains("Foo is undefined", docXml);
+            Assert.Contains("Bar is undefined", docXml);
         }
         
         [Fact]
