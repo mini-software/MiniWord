@@ -233,8 +233,9 @@ namespace MiniSoftware
             var tagValueEvaluation = EvaluateValue(tagValue);
             
             switch (tagValueEvaluation)
-                {
-                    case double dtg when double.TryParse(value, out var doubleNumber):
+            {
+                case double dtg:
+                    if(double.TryParse(value, out var doubleNumber)) {
                         switch (comparisonOperator)
                         {
                             case "==":
@@ -256,9 +257,14 @@ namespace MiniSoftware
                                 checkStatement = dtg <= doubleNumber;
                                 break;
                         }
+                    } else {
+                        checkStatement = comparisonOperator == "!=";                            
+                    }
 
-                        break;
-                    case int itg when int.TryParse(value, out var intNumber):
+                    break;
+                case int itg:
+                    if(int.TryParse(value, out var intNumber))
+                    {
                         switch (comparisonOperator)
                         {
                             case "==":
@@ -280,9 +286,14 @@ namespace MiniSoftware
                                 checkStatement = itg <= intNumber;
                                 break;
                         }
+                    } else {
+                        checkStatement = comparisonOperator == "!=";                            
+                    }
 
-                        break;
-                    case DateTime dttg when DateTime.TryParse(value, out var date):
+                    break;
+                case DateTime dttg:
+                    if(DateTime.TryParse(value, out var date))
+                    {
                         switch (comparisonOperator)
                         {
                             case "==":
@@ -304,18 +315,22 @@ namespace MiniSoftware
                                 checkStatement = dttg <= date;
                                 break;
                         }
+                    } else {
+                        checkStatement = comparisonOperator == "!=";
+                    }
 
-                        break;
-                    case string stg:
-                        switch (comparisonOperator)
-                        {
-                            case "==":
-                                checkStatement = stg == value;
-                                break;
-                            case "!=":
-                                checkStatement = stg != value;
-                                break;
-                        }
+                    break;
+                case string stg:
+                    switch (comparisonOperator)
+                    {
+                        case "==":
+                            checkStatement = stg == value;
+                            break;
+                        case "!=":
+                            checkStatement = stg != value;
+                            break;
+                    }
+
                     break;
                 case bool btg when bool.TryParse(value, out var boolean):
                     switch (comparisonOperator)
@@ -327,7 +342,7 @@ namespace MiniSoftware
                             checkStatement = btg == boolean;
                             break;
                     }
-
+                    
                     break;
             }
 

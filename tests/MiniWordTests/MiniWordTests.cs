@@ -144,6 +144,7 @@ namespace MiniWordTests
                 ["VIP"] = true,
                 ["Points"] = 123,
                 ["APP"] = "Demo APP",
+                ["NullVal"] = null,
             };
             MiniWord.SaveAsByTemplate(path, templatePath, value);
             //Console.WriteLine(path);
@@ -153,6 +154,9 @@ namespace MiniWordTests
             Assert.Contains("Points are greater than 100", docXml);
             Assert.Contains("CreateDate is not less than 2021", docXml);
             Assert.DoesNotContain("CreateDate is not greater than 2021", docXml);
+            Assert.Contains("CreateDate is not equal to MiniSofteware", docXml);
+            Assert.Contains("CreateDate is not NULL", docXml);
+            Assert.Contains("NullVal is NULL", docXml);
         }
         
         [Fact]
