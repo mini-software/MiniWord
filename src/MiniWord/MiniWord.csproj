@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<TargetFrameworks>net45;netstandard2.0;net6.0;net7.0</TargetFrameworks>
+		<TargetFrameworks>net45;netstandard2.0;net6.0;net7.0;net8.0</TargetFrameworks>
 		<Version>0.7.1</Version>
 	</PropertyGroup>
 	<PropertyGroup>
@@ -11,7 +11,7 @@
 		<Description>.NET Word(docx) exporting template engine without COM+ and interop (support Linux and Mac)
 		</Description>
 		<Authors>LIN,WEI-HAN, eynarhaji</Authors>
-		<PackageId>MiniWord</PackageId>
+		<PackageId>CronosCore.MiniWord</PackageId>
 		<Copyright>LIN,WEI-HAN, 2022 onwards</Copyright>
 		<NeutralLanguage>en</NeutralLanguage>
 		<license>https://raw.githubusercontent.com/mini-software/MiniWord/main/LICENSE</license>
