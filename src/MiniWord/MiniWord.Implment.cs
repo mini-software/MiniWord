@@ -526,7 +526,7 @@ namespace MiniSoftware
 
                 var statement = paragraphs[ifIndex].InnerText.Split(' ');
 
-                var tagValue = tags[statement[1]] ?? "NULL";
+                var tagValue = tags.ContainsKey(statement[1]) ? tags[statement[1]] ?? "NULL" : "{UNDEFINED}";
 
                 var checkStatement = statement.Length == 4 ? EvaluateStatement(tagValue.ToString(), statement[2], statement[3]) : !bool.Parse(tagValue.ToString());
 
@@ -557,6 +557,9 @@ namespace MiniSoftware
                 var ifEndIndex = text.IndexOf(")if", ifIndex, StringComparison.Ordinal);
                             
                 var statement = text.Substring(ifIndex + ifStartTag.Length, ifEndIndex - (ifIndex + ifStartTag.Length)).Split(',');
+
+                if(Regex.IsMatch(statement[0], "^{{.*}}$"))
+                    statement[0] = "{UNDEFINED}";
                             
                 var checkStatement = EvaluateStatement(statement[0], statement[1], statement[2]);
 
