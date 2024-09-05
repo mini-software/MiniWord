@@ -510,6 +510,7 @@ namespace MiniSoftware
 
         private static void ReplaceStatements(OpenXmlElement xmlElement, Dictionary<string, object> tags)
         {
+            var descendants = xmlElement.Descendants().ToList();
             var paragraphs = xmlElement.Descendants<Paragraph>().ToList();
 
             while (paragraphs.Any(s => s.InnerText.Contains("@if")))
@@ -525,10 +526,14 @@ namespace MiniSoftware
 
                 if (!checkStatement)
                 {
-                    for (int i = ifIndex + 1; i <= endIfFinalIndex - 1; i++)
+                    var paragraphIfIndex = descendants.FindIndex(a => a == paragraphs[ifIndex]);
+                    var paragraphEndIfIndex = descendants.FindIndex(a => a == paragraphs[endIfFinalIndex]);
+
+                    for (int i = paragraphIfIndex + 1; i <= paragraphEndIfIndex - 1; i++)
                     {
-                        paragraphs[i].Remove();
+                        descendants[i].Remove();
                     }
+
                 }
 
                 paragraphs[ifIndex].Remove();
