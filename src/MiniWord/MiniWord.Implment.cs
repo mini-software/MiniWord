@@ -445,16 +445,16 @@
                                 var key = isFullMatch ? tag.Key : partMatch.Groups[1].Value;
                                 var value = isFullMatch ? tag.Value : GetObjVal(tags, key);
 
-                                if (tag.Value is string[] || tag.Value is IList<string> || tag.Value is List<string>)
+                                if (value is string[] || value is IList<string> || value is List<string>)
                                 {
-                                    var vs = tag.Value as IEnumerable;
+                                    var vs = value as IEnumerable;
                                     var currentT = t;
                                     var isFirst = true;
                                     foreach (var v in vs)
                                     {
                                         var newT = t.CloneNode(true) as Text;
                                         // todo
-                                        newT.Text = t.Text.Replace($"{{{{{tag.Key}}}}}", v?.ToString());
+                                        newT.Text = t.Text.Replace($"{{{{{key}}}}}", v?.ToString());
                                         if (isFirst)
                                             isFirst = false;
                                         else
@@ -465,7 +465,8 @@
                                     }
                                     t.Remove();
                                 }
-                                else if (tag.Value is List<MiniWordForeach> vs)
+                                // todo 未验证嵌套对象的渲染
+                                else if (value is List<MiniWordForeach> vs)
                                 {
                                     var currentT = t;
                                     var generatedText = new Text();
@@ -478,6 +479,7 @@
 
                                         foreach (var vv in vs[i].Value)
                                         {
+                                            // todo tag,Key
                                             newT.Text = newT.Text.Replace("{{" + tag.Key + "." + vv.Key + "}}", vv.Value.ToString());
                                         }
 
@@ -501,20 +503,20 @@
                                     run.Append(generatedText);
                                     t.Remove();
                                 }
-                                else if (IsHyperLink(tag.Value))
+                                else if (IsHyperLink(value))
                                 {
-                                    AddHyperLink(docx, run, tag.Value);
+                                    AddHyperLink(docx, run, value);
                                     t.Remove();
                                 }
-                                else if (tag.Value is MiniWordColorText || tag.Value is MiniWordColorText[])
+                                else if (value is MiniWordColorText || value is MiniWordColorText[])
                                 {
-                                    if (tag.Value is MiniWordColorText)
+                                    if (value is MiniWordColorText)
                                     {
-                                        AddColorText(run, new[] { (MiniWordColorText)tag.Value });
+                                        AddColorText(run, new[] { (MiniWordColorText)value });
                                     }
                                     else
                                     {
-                                        AddColorText(run, (MiniWordColorText[])tag.Value);
+                                        AddColorText(run, (MiniWordColorText[])value);
                                     }
                                     t.Remove();
                                 }
@@ -544,7 +546,7 @@
                                 }
                                 else
                                 {
-                                    var newText = tag.Value is DateTime ? ((DateTime)value).ToString("yyyy-MM-dd HH:mm:ss") : value?.ToString();
+                                    var newText = value is DateTime ? ((DateTime)value).ToString("yyyy-MM-dd HH:mm:ss") : value?.ToString();
                                     t.Text = t.Text.Replace($"{{{{{key}}}}}", newText);
                                 }
                             }
