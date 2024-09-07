@@ -63,27 +63,54 @@ namespace MiniSoftware
                             .Cast<Match>().GroupBy(x => x.Value).Select(varGroup => varGroup.First().Value)).ToArray();
                         if (matchs.Length > 0)
                         {
-                            var listKeys = matchs.Select(s => s.Split('.')[0]).Distinct().ToArray();
+                            //var listKeys = matchs.Select(s => s.Split('.')[0]).Distinct().ToArray();
+                            //// TODO:
+                            //// not support > 2 list in same tr
+                            //if (listKeys.Length > 2)
+                            //    throw new NotSupportedException("MiniWord doesn't support more than 2 list in same row");
+                            //var listKey = listKeys[0];
+
+                            var listLevelKeys = matchs.Select(s => s.Substring(0, s.LastIndexOf('.'))).Distinct().ToArray();
                             // TODO:
                             // not support > 2 list in same tr
-                            if (listKeys.Length > 2)
+                            if (listLevelKeys.Length > 2)
                                 throw new NotSupportedException("MiniWord doesn't support more than 2 list in same row");
-                            var listKey = listKeys[0];
-                            if (tags.ContainsKey(listKey) && tags[listKey] is IEnumerable)
+
+                            var tagObj = GetObjVal(tags, listLevelKeys[0]);
+
+                            if (tagObj != null && tagObj is IEnumerable)
                             {
                                 var attributeKey = matchs[0].Split('.')[0];
-                                var list = tags[listKey] as IEnumerable;
+                                var list = tagObj as IEnumerable;
 
-                                foreach (Dictionary<string, object> es in list)
+                                foreach (var item in list)
                                 {
                                     var dic = new Dictionary<string, object>(); //TODO: optimize
 
+
                                     var newTr = tr.CloneNode(true);
-                                    foreach (var e in es)
+                                    if (item is IDictionary)
                                     {
-                                        var dicKey = $"{listKey}.{e.Key}";
-                                        dic.Add(dicKey, e.Value);
+                                        var es = (Dictionary<string, object>) item;
+                                        foreach (var e in es)
+                                        {
+                                            var dicKey = $"{listLevelKeys[0]}.{e.Key}";
+                                            dic.Add(dicKey, e.Value);
+                                        }
                                     }
+                                    // 支持Obj.A.B.C...
+                                    else
+                                    {
+                                        var props = item.GetType().GetProperties();
+                                        foreach (var p in props)
+                                        {
+                                            var dicKey = $"{listLevelKeys[0]}.{p.Name}";
+                                            dic.Add(dicKey, p.GetValue(item));
+                                        }
+                                    }
+
+
+                                    
 
                                     ReplaceStatements(newTr, tags: dic);
 
@@ -109,6 +136,52 @@ namespace MiniSoftware
             ReplaceStatements(xmlElement, tags);
 
             ReplaceText(xmlElement, docx, tags);
+        }
+
+
+        /// <summary>
+        /// 获取Obj对象指定的值
+        /// </summary>
+        /// <param name="objSource">数据源</param>
+        /// <param name="propNames">属性名，如“A.B”</param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        private static object GetObjVal(object objSource, string propNames)
+        {
+            return GetObjVal(objSource, propNames.Split('.'));
+        }
+
+        /// <summary>
+        /// 获取Obj对象指定的值
+        /// </summary>
+        /// <param name="objSource">数据源</param>
+        /// <param name="propNames">属性名，如“A.B”即[0]A,[1]B</param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        private static object GetObjVal(object objSource, string[] propNames)
+        {
+            var nextPropNames = propNames.Skip(1).ToArray();
+            if (objSource is IDictionary)
+            {
+                var dict = (IDictionary)objSource;
+                if (dict.Contains(propNames[0]))
+                {
+                    var val = dict[propNames[0]];
+                    if(propNames.Length >1)
+                        return GetObjVal(dict[propNames[0]], nextPropNames);
+                    else return val;
+                }
+                return null;
+            }
+            var prop1 = objSource.GetType().GetProperty(propNames[0]);
+            if (prop1 == null)
+                return null;
+
+            var prop1Val = prop1.GetValue(objSource);
+            // 如果propNames只有一级，则直接返回对应的值
+            if (propNames.Length == 1)
+                return prop1Val;
+            return GetObjVal(prop1Val, nextPropNames);
         }
 
         private static void AvoidSplitTagText(OpenXmlElement xmlElement)
