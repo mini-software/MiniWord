@@ -1,4 +1,4 @@
-namespace MiniSoftware
+﻿namespace MiniSoftware
 {
     using DocumentFormat.OpenXml;
     using DocumentFormat.OpenXml.Packaging;
@@ -423,9 +423,12 @@ namespace MiniSoftware
                     {
                         foreach (var tag in tags)
                         {
-                            var isMatch = t.Text.Contains($"{{{{{tag.Key}}}}}");
+                            // 完全匹配
+                            var isFullMatch = t.Text.Contains($"{{{{{tag.Key}}}}}");
+                            // 层级匹配，如{{A.B.C.D}}
+                            var partMatch = new Regex($".*{{{{({tag.Key}(\\.\\w+)+)}}}}.*").Match(t.Text);
 
-                            if (!isMatch && tag.Value is List<MiniWordForeach> forTags)
+                            if (!isFullMatch && tag.Value is List<MiniWordForeach> forTags)
                             {
                                 if (forTags.Any(forTag => forTag.Value.Keys.Any(dictKey =>
                                 {
@@ -433,11 +436,11 @@ namespace MiniSoftware
                                     return t.Text.Contains(innerTag);
                                 })))
                                 {
-                                    isMatch = true;
+                                    isFullMatch = true;
                                 }
                             }
 
-                            if (isMatch)
+                            if (isFullMatch || partMatch.Success)
                             {
                                 if (tag.Value is string[] || tag.Value is IList<string> || tag.Value is List<string>)
                                 {
@@ -447,6 +450,7 @@ namespace MiniSoftware
                                     foreach (var v in vs)
                                     {
                                         var newT = t.CloneNode(true) as Text;
+                                        // todo
                                         newT.Text = t.Text.Replace($"{{{{{tag.Key}}}}}", v?.ToString());
                                         if (isFirst)
                                             isFirst = false;
@@ -537,19 +541,13 @@ namespace MiniSoftware
                                 }
                                 else
                                 {
-                                    var newText = string.Empty;
-                                    if (tag.Value is DateTime)
-                                    {
-                                        newText = ((DateTime)tag.Value).ToString("yyyy-MM-dd HH:mm:ss");
-                                    }
-                                    else
-                                    {
-                                        newText = tag.Value?.ToString();
-                                    }
-
-                                    t.Text = t.Text.Replace($"{{{{{tag.Key}}}}}", newText);
+                                    var k = isFullMatch ? tag.Key : partMatch.Groups[1].Value;
+                                    var v = isFullMatch ? tag.Value : GetObjVal(tags, k);
+                                    var newText = tag.Value is DateTime ? ((DateTime)v).ToString("yyyy-MM-dd HH:mm:ss") : v?.ToString();
+                                    t.Text = t.Text.Replace($"{{{{{k}}}}}", newText);
                                 }
                             }
+
                         }
 
                         t.Text = EvaluateIfStatement(t.Text);
