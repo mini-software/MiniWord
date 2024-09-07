@@ -442,6 +442,9 @@
 
                             if (isFullMatch || partMatch.Success)
                             {
+                                var key = isFullMatch ? tag.Key : partMatch.Groups[1].Value;
+                                var value = isFullMatch ? tag.Value : GetObjVal(tags, key);
+
                                 if (tag.Value is string[] || tag.Value is IList<string> || tag.Value is List<string>)
                                 {
                                     var vs = tag.Value as IEnumerable;
@@ -498,9 +501,26 @@
                                     run.Append(generatedText);
                                     t.Remove();
                                 }
-                                else if (tag.Value is MiniWordPicture)
+                                else if (IsHyperLink(tag.Value))
                                 {
-                                    var pic = (MiniWordPicture)tag.Value;
+                                    AddHyperLink(docx, run, tag.Value);
+                                    t.Remove();
+                                }
+                                else if (tag.Value is MiniWordColorText || tag.Value is MiniWordColorText[])
+                                {
+                                    if (tag.Value is MiniWordColorText)
+                                    {
+                                        AddColorText(run, new[] { (MiniWordColorText)tag.Value });
+                                    }
+                                    else
+                                    {
+                                        AddColorText(run, (MiniWordColorText[])tag.Value);
+                                    }
+                                    t.Remove();
+                                }
+                                else if (value is MiniWordPicture)
+                                {
+                                    var pic = (MiniWordPicture)value;
                                     byte[] l_Data = null;
                                     if (pic.Path != null)
                                     {
@@ -522,29 +542,10 @@
                                     }
                                     t.Remove();
                                 }
-                                else if (IsHyperLink(tag.Value))
-                                {
-                                    AddHyperLink(docx, run, tag.Value);
-                                    t.Remove();
-                                }
-                                else if (tag.Value is MiniWordColorText || tag.Value is MiniWordColorText[])
-                                {
-                                    if (tag.Value is MiniWordColorText)
-                                    {
-                                        AddColorText(run, new[] { (MiniWordColorText)tag.Value });
-                                    }
-                                    else
-                                    {
-                                        AddColorText(run, (MiniWordColorText[])tag.Value);
-                                    }
-                                    t.Remove();
-                                }
                                 else
                                 {
-                                    var k = isFullMatch ? tag.Key : partMatch.Groups[1].Value;
-                                    var v = isFullMatch ? tag.Value : GetObjVal(tags, k);
-                                    var newText = tag.Value is DateTime ? ((DateTime)v).ToString("yyyy-MM-dd HH:mm:ss") : v?.ToString();
-                                    t.Text = t.Text.Replace($"{{{{{k}}}}}", newText);
+                                    var newText = tag.Value is DateTime ? ((DateTime)value).ToString("yyyy-MM-dd HH:mm:ss") : value?.ToString();
+                                    t.Text = t.Text.Replace($"{{{{{key}}}}}", newText);
                                 }
                             }
 
