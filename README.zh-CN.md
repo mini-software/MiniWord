@@ -273,6 +273,39 @@ MiniWord.SaveAsByTemplate(path, templatePath, value);
 
 ![after_if](https://user-images.githubusercontent.com/38832863/220125435-72ea24b4-2412-45de-961a-ad4b2134417b.PNG)
 
+### 循环
+
+ `@foreach` 和 `@endforeach` tags .
+
+##### Example
+
+```csharp
+var value = new  
+{
+    LoopData = new List<object>()
+    {
+        new {
+            Type="类型A",
+            Items = new List<object>() {new {Name = "A-1"}, new {Name = "A-2"},}
+        },
+        new
+        {
+            Type="类型B",
+            Items = new List<object>() {new {Name = "B-1"}, new {Name = "B-2"}, new {Name = "B-3"},}
+        },
+    }
+};
+MiniWord.SaveAsByTemplate(path, templatePath, value);
+```
+
+##### Template
+
+![1](https://github.com/user-attachments/assets/5d32241d-3977-46e7-b3de-cae130e5a653)
+
+##### Result
+
+![2](https://github.com/user-attachments/assets/69daa15e-4864-483e-b132-d8e867b6d1d1)
+
 ### 多彩字体
 
 ##### 代码例子
