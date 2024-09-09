@@ -17,6 +17,7 @@
     using PIC = DocumentFormat.OpenXml.Drawing.Pictures;
     using System.Xml;
     using System.Xml.Linq;
+    using DocumentFormat.OpenXml.Drawing.Charts;
 
     public static partial class MiniWord
     {
@@ -633,60 +634,69 @@
             // 1. 先获取Foreach的元素
             var beginKey = "@foreach";
             var endKey = "@endforeach";
+
             var betweenEles = GetBetweenElements(xmlElement, beginKey, endKey, false);
-            if(betweenEles?.Any() != true) return;
-
-            var beginParagraph =
-                xmlElement.Descendants<Paragraph>().FirstOrDefault(p => p.InnerText.Contains(beginKey));
-            var endParagraph =
-                xmlElement.Descendants<Paragraph>().FirstOrDefault(p => p.InnerText.Contains(endKey));
-            // 获取需循环的数据key
-            var match = new Regex(@".*{{(\w+(\.\w+)*)}}.*").Match(beginParagraph.InnerText);
-            if(!match.Success) throw new Exception($"@Foreach循环未找到对应数据");
-            var foreachDataKey = match.Groups[1].Value;
-
-            // 删除关键字文本行
-            beginParagraph?.Remove();
-            endParagraph?.Remove();
-            // 循环体最后一个元素，用于新元素插入定位
-            var lastEleInLoop = betweenEles.LastOrDefault();
-            var copyLoopEles = betweenEles.Select(e => e.CloneNode(true)).ToList();
-            // 需要循环的数据
-            var foreachList = GetObjVal(data, foreachDataKey);
-            if (foreachList is IList list)
+            while (betweenEles?.Any() == true)
             {
-                var loopEles = new List<OpenXmlElement>();
-                for (var i = 0; i < list.Count; i++)
+                var beginParagraph =
+                    xmlElement.Descendants<Paragraph>().FirstOrDefault(p => p.InnerText.Contains(beginKey));
+                var endParagraph =
+                    xmlElement.Descendants<Paragraph>().FirstOrDefault(p => p.InnerText.Contains(endKey));
+                // 获取需循环的数据key
+                var match = new Regex(@".*{{(\w+(\.\w+)*)}}.*").Match(beginParagraph.InnerText);
+                if (!match.Success) throw new Exception($"@Foreach循环未找到对应数据");
+                var foreachDataKey = match.Groups[1].Value;
+
+                // 删除关键字文本行
+                beginParagraph?.Remove();
+                endParagraph?.Remove();
+                // 循环体最后一个元素，用于新元素插入定位
+                var lastEleInLoop = betweenEles.LastOrDefault();
+                var copyLoopEles = betweenEles.Select(e => e.CloneNode(true)).ToList();
+                // 需要循环的数据
+                var foreachList = GetObjVal(data, foreachDataKey);
+                if (foreachList is IList list)
                 {
-                    var item = list[i];
-                    var foreachDataDict = item.Obj2Dictionary();
-                    // 2. 渲染替换属性值{{}}，插入循环元素，再替换……
-                    // 2.1 替换属性值
-                    if (i == 0)
-                        loopEles = new List<OpenXmlElement>(betweenEles);
-                    foreach (var ele in loopEles)
+                    var loopEles = new List<OpenXmlElement>();
+                    for (var i = 0; i < list.Count; i++)
                     {
-                        if (ele is Table table)
-                            GenerateTable(table, docx, foreachDataDict);
-                        else if (ele is Paragraph p)
+                        var item = list[i];
+                        var foreachDataDict = item.Obj2Dictionary();
+                        // 2. 渲染替换属性值{{}}，插入循环元素，再替换……
+                        // 2.1 替换属性值
+                        if (i == 0)
+                            loopEles = new List<OpenXmlElement>(betweenEles);
+                        foreach (var ele in loopEles)
                         {
-                            ReplaceText(p, docx, foreachDataDict);
+                            if (ele is Table table)
+                                GenerateTable(table, docx, foreachDataDict);
+                            else if (ele is Paragraph p)
+                            {
+                                ReplaceText(p, docx, foreachDataDict);
+                            }
                         }
-                    }
-                    // 2.2 新增一个循环体元素
-                    if(list.Count - 1 > i)
-                    {
-                        loopEles.Clear();
-                        foreach (var ele in copyLoopEles)
+                        // @if代码块替换
+                        ReplaceIfStatements(xmlElement, loopEles, foreachDataDict);
+
+                        // 2.2 新增一个循环体元素
+                        if (list.Count - 1 > i)
                         {
-                            var newEle = ele.CloneNode(true);
-                            xmlElement.InsertAfter(newEle, lastEleInLoop);
-                            lastEleInLoop = newEle;
-                            loopEles.Add(newEle);
+                            loopEles.Clear();
+                            foreach (var ele in copyLoopEles)
+                            {
+                                var newEle = ele.CloneNode(true);
+                                xmlElement.InsertAfter(newEle, lastEleInLoop);
+                                lastEleInLoop = newEle;
+                                loopEles.Add(newEle);
+                            }
                         }
                     }
                 }
+
+                betweenEles = GetBetweenElements(xmlElement, beginKey, endKey, false);
             }
+            
+            
         }
 
         /// <summary>
@@ -745,40 +755,56 @@
             return result;
         }
 
-
-        private static void ReplaceIfStatements(OpenXmlElement xmlElement, Dictionary<string, object> tags)
+        /// <summary>
+        /// @if处理逻辑
+        /// </summary>
+        /// <param name="rootXmlElement">根元素</param>
+        /// <param name="elementList">包含@if-@end的元素集合</param>
+        /// <param name="tags"></param>
+        private static void ReplaceIfStatements(OpenXmlElement rootXmlElement, List<OpenXmlElement> elementList, Dictionary<string, object> tags)
         {
-            var descendants = xmlElement.Descendants().ToList();
-            var paragraphs = xmlElement.Descendants<Paragraph>().ToList();
-
+            var paragraphs = elementList.Where(e=>e is Paragraph).ToList();
             while (paragraphs.Any(s => s.InnerText.Contains("@if")))
             {
-                var ifIndex = paragraphs.FindIndex(0, s => s.InnerText.Contains("@if"));
-                var endIfFinalIndex = paragraphs.FindIndex(ifIndex, s => s.InnerText.Contains("@endif"));
+                var ifP = paragraphs.First( s => s.InnerText.Contains("@if"));
+                var endIfP = paragraphs.First( s => s.InnerText.Contains("@endif"));
 
-                var statement = paragraphs[ifIndex].InnerText.Split(' ');
+                var statement = ifP.InnerText.Split(' ');
 
-                var tagValue = tags[statement[1]] ?? "NULL";
+                //var tagValue = tags[statement[1]] ?? "NULL";
+                var tagValue1 = GetObjVal(tags, statement[1]) ?? "NULL";
+                var tagValue2 = GetObjVal(tags, statement[3]) ?? statement[3];
 
-                var checkStatement = statement.Length == 4 ? EvaluateStatement(tagValue.ToString(), statement[2], statement[3]) : !bool.Parse(tagValue.ToString());
+                var checkStatement = statement.Length == 4 ? EvaluateStatement(tagValue1.ToString(), statement[2], tagValue2.ToString()) : !bool.Parse(tagValue1.ToString());
 
                 if (!checkStatement)
                 {
-                    var paragraphIfIndex = descendants.FindIndex(a => a == paragraphs[ifIndex]);
-                    var paragraphEndIfIndex = descendants.FindIndex(a => a == paragraphs[endIfFinalIndex]);
+                    var paragraphIfIndex = elementList.FindIndex(a => a == ifP);
+                    var paragraphEndIfIndex = elementList.FindIndex(a => a == endIfP);
 
                     for (int i = paragraphIfIndex + 1; i <= paragraphEndIfIndex - 1; i++)
                     {
-                        descendants[i].Remove();
+                        rootXmlElement.RemoveChild(elementList[i]);
                     }
-
                 }
 
-                paragraphs[ifIndex].Remove();
-                paragraphs[endIfFinalIndex].Remove();
-
-                paragraphs = xmlElement.Descendants<Paragraph>().ToList();
+                rootXmlElement.RemoveChild(ifP);
+                rootXmlElement.RemoveChild(endIfP);
+                paragraphs.Remove(ifP);
+                paragraphs.Remove(endIfP);
             }
+        }
+
+        /// <summary>
+        /// @if处理逻辑
+        /// </summary>
+        /// <param name="xmlElement">@if-endif的父元素</param>
+        /// <param name="tags"></param>
+        private static void ReplaceIfStatements(OpenXmlElement xmlElement, Dictionary<string, object> tags)
+        {
+            var descendants = xmlElement.Descendants().ToList();
+
+            ReplaceIfStatements(xmlElement,descendants, tags);
         }
 
         private static string EvaluateIfStatement(string text)
