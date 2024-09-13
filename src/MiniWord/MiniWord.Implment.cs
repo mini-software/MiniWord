@@ -124,7 +124,7 @@
                                 foreach (var e in es)
                                 {
                                     var dicKey = $"{listLevelKeys[0]}.{e.Key}";
-                                    dic.Add(dicKey, e.Value);
+                                    dic[dicKey] = e.Value;
                                 }
                             }
                             // 支持Obj.A.B.C...
@@ -134,7 +134,7 @@
                                 foreach (var p in props)
                                 {
                                     var dicKey = $"{listLevelKeys[0]}.{p.Name}";
-                                    dic.Add(dicKey, p.GetValue(item));
+                                    dic[dicKey] = p.GetValue(item);
                                 }
                             }
 
@@ -156,13 +156,24 @@
                     }
                     else
                     {
-                        
+                        var dic = new Dictionary<string, object>(); //TODO: optimize
+
+                        var props = tagObj.GetType().GetProperties();
+                        foreach (var p in props)
+                        {
+                            var dicKey = $"{listLevelKeys[0]}.{p.Name}";
+                            dic[dicKey] = p.GetValue(tagObj);
+                        }
+
+                        ReplaceIfStatements(tr, tags: tagObj.ToDictionary());
+
+                        ReplaceText(tr, docx, tags: dic);
                     }
                 }
                 else
                 {
                     var matchTxtProp = new Regex(@"(?<={{).*?\.?.*?(?=}})").Match(innerText);
-                    if(!matchTxtProp.Success) return;
+                    if(!matchTxtProp.Success) continue;
 
                     ReplaceText(tr, docx, tags);
                 }
