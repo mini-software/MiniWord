@@ -672,7 +672,7 @@
                     for (var i = 0; i < list.Count; i++)
                     {
                         var item = list[i];
-                        var foreachDataDict = item.Obj2Dictionary();
+                        var foreachDataDict = item.ToDictionary();
                         // 2. 渲染替换属性值{{}}，插入循环元素，再替换……
                         // 2.1 替换属性值
                         if (i == 0)
@@ -709,34 +709,7 @@
             
             
         }
-
-        /// <summary>
-        /// 将实体对象转为字典格式
-        /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
-        private static Dictionary<string, object> Obj2Dictionary(this object obj)
-        {
-            var result = new Dictionary<string, object>();
-            if(obj == null) return null;
-            if (obj is IDictionary d)
-            {
-                foreach (object key in d.Keys)
-                {
-                    result.Add(key.ToString(), d[key]);
-                }
-            }
-            else
-            {
-                var props = obj.GetType().GetProperties();
-                foreach (var p in props)
-                {
-                    result.Add(p.Name,p.GetValue(obj));
-                }
-            }
-            return result;
-        }
-
+        
         /// <summary>
         /// 获取关键词之间的元素
         /// </summary>
