@@ -795,12 +795,13 @@
 
                     for (int i = paragraphIfIndex + 1; i <= paragraphEndIfIndex - 1; i++)
                     {
-                        rootXmlElement.RemoveChild(elementList[i]);
+                        if(rootXmlElement.ChildElements.Any(c=>c == elementList[i])) rootXmlElement.RemoveChild(elementList[i]);
                     }
                 }
-
-                rootXmlElement.RemoveChild(ifP);
-                rootXmlElement.RemoveChild(endIfP);
+                if(rootXmlElement.ChildElements.Any(c => c == ifP))
+                    rootXmlElement.RemoveChild(ifP);
+                if (rootXmlElement.ChildElements.Any(c => c == endIfP))
+                    rootXmlElement.RemoveChild(endIfP);
                 paragraphs.Remove(ifP);
                 paragraphs.Remove(endIfP);
             }
