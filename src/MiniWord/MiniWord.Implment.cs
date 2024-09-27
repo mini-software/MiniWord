@@ -666,7 +666,8 @@
                 var copyLoopEles = betweenEles.Select(e => e.CloneNode(true)).ToList();
                 // 需要循环的数据
                 var foreachList = GetObjVal(data, foreachDataKey);
-                if (foreachList is IList list)
+
+                if (foreachList is IList list && list.Count > 0)
                 {
                     var loopEles = new List<OpenXmlElement>();
                     for (var i = 0; i < list.Count; i++)
@@ -701,6 +702,14 @@
                                 loopEles.Add(newEle);
                             }
                         }
+                    }
+                }
+                else
+                {
+                    // 如果没有数据，删除循环元素
+                    foreach (var ele in betweenEles)
+                    {
+                        ele.Remove();
                     }
                 }
 
