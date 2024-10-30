@@ -202,6 +202,8 @@
         /// <exception cref="Exception"></exception>
         private static object GetObjVal(object objSource, string[] propNames)
         {
+            if(objSource == null) return null;
+
             var nextPropNames = propNames.Skip(1).ToArray();
             if (objSource is IDictionary)
             {
