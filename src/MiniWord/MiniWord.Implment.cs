@@ -779,15 +779,17 @@
 
                     for (int i = paragraphIfIndex + 1; i <= paragraphEndIfIndex - 1; i++)
                     {
-                        if(rootXmlElement.ChildElements.Any(c=>c == elementList[i])) rootXmlElement.RemoveChild(elementList[i]);
+                        elementList[i].Remove();
                     }
                 }
-                if(rootXmlElement.ChildElements.Any(c => c == ifP))
-                    rootXmlElement.RemoveChild(ifP);
-                if (rootXmlElement.ChildElements.Any(c => c == endIfP))
-                    rootXmlElement.RemoveChild(endIfP);
+                // 从paragraphs中移除，防止死循环
                 paragraphs.Remove(ifP);
                 paragraphs.Remove(endIfP);
+                // 从doc元素移除
+                if (ifP.Parent != null)
+                    ifP.Remove();
+                if (endIfP.Parent != null)
+                    endIfP.Remove();
             }
         }
 
