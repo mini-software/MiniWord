@@ -238,7 +238,7 @@
             foreach (var text in texts)
             {
                 var clear = false;
-                if (text.InnerText.StartsWith("{"))
+                if (text.InnerText.TrimStart().StartsWith("{"))
                 {
                     needAppend = true;
                 }
@@ -247,7 +247,7 @@
                     sb.Append(text.InnerText);
                     pool.Add(text);
 
-                    var s = sb.ToString(); //TODO:
+                    var s = sb.ToString().TrimStart(); //TODO:
                                            // TODO: check tag exist
                                            // TODO: record tag text if without tag then system need to clear them
                                            // TODO: every {{tag}} one <t>for them</t> and add text before first text and copy first one and remove {{, tagname, }}
