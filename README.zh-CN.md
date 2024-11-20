@@ -384,6 +384,17 @@ var value = new
 MiniWord.SaveAsByTemplate(path, templatePath, value);
 ```
 
+### 浮动图像
+
+可以通过MiniWordPicture扩展参数配置图片悬浮环绕在文字上或文字下
+`MiniWordPicture` 扩展参数。
+* WrappingType： MiniWordPictureWrappingType.Anchor 浮动图像
+* HorizontalPositionOffset: 设置图片相对于锚点的水平偏移量(以像素为单位)
+* VerticalPositionOffset：设置图片相对于锚点的垂直偏移量（以像素为单位）
+* BehindDoc: 控制图片是否显示在文档文字的后方
+* AllowOverlap: 控制图片是否允许与其他图片或对象重叠
+
+
 ## 例子
 
 
