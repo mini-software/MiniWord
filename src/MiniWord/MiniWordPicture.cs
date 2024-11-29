@@ -5,10 +5,22 @@
     using System;
     using System.Collections.Generic;
 
+    public enum MiniWordPictureWrappingType
+    {
+        Inline,
+        Anchor
+    }
+    
     public class MiniWordPicture
     {
+        
+        public MiniWordPictureWrappingType WrappingType { get; set; } = MiniWordPictureWrappingType.Inline;
 
-
+        public bool BehindDoc { get; set; } = false;
+        public bool AllowOverlap { get; set; } = false;
+        public long HorizontalPositionOffset { get; set; } = 0;
+        public long VerticalPositionOffset { get; set; } = 0;
+        
         public string Path { get; set; }
         private string _extension;
         public string Extension

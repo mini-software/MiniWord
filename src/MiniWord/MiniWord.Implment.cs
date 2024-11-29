@@ -40,11 +40,15 @@
                     docx.MainDocumentPart.Document.Body.Generate(docx, value);
                     docx.Save();
                 }
+
                 bytes = ms.ToArray();
             }
+
             stream.Write(bytes, 0, bytes.Length);
         }
-        private static void Generate(this OpenXmlElement xmlElement, WordprocessingDocument docx, Dictionary<string, object> tags)
+
+        private static void Generate(this OpenXmlElement xmlElement, WordprocessingDocument docx,
+            Dictionary<string, object> tags)
         {
             // avoid {{tag}} like <t>{</t><t>{</t> 
             //AvoidSplitTagText(xmlElement);
@@ -52,7 +56,7 @@
             AvoidSplitTagText(xmlElement);
 
             // @foreach循环体
-            ReplaceForeachStatements(xmlElement,docx,tags);
+            ReplaceForeachStatements(xmlElement, docx, tags);
 
             //Tables
             // 忽略table中没有占位符“{{}}”的表格
@@ -60,7 +64,7 @@
             {
                 foreach (var table in tables)
                 {
-                    GenerateTable(table,docx,tags);
+                    GenerateTable(table, docx, tags);
                 }
             }
 
@@ -105,7 +109,7 @@
 
                     var tagObj = GetObjVal(tags, listLevelKeys[0]);
 
-                    if(tagObj == null) continue;
+                    if (tagObj == null) continue;
 
                     if (tagObj is IEnumerable)
                     {
@@ -152,6 +156,7 @@
                                 table.Append(newTr);
                             }
                         }
+
                         tr.Remove();
                     }
                     else
@@ -173,7 +178,7 @@
                 else
                 {
                     var matchTxtProp = new Regex(@"(?<={{).*?\.?.*?(?=}})").Match(innerText);
-                    if(!matchTxtProp.Success) continue;
+                    if (!matchTxtProp.Success) continue;
 
                     ReplaceText(tr, docx, tags);
                 }
@@ -202,7 +207,7 @@
         /// <exception cref="Exception"></exception>
         private static object GetObjVal(object objSource, string[] propNames)
         {
-            if(objSource == null) return null;
+            if (objSource == null) return null;
 
             var nextPropNames = propNames.Skip(1).ToArray();
             if (objSource is IDictionary)
@@ -211,12 +216,14 @@
                 if (dict.Contains(propNames[0]))
                 {
                     var val = dict[propNames[0]];
-                    if(propNames.Length >1)
+                    if (propNames.Length > 1)
                         return GetObjVal(dict[propNames[0]], nextPropNames);
                     else return val;
                 }
+
                 return null;
             }
+
             // todo objSource = list
             var prop1 = objSource.GetType().GetProperty(propNames[0]);
             if (prop1 == null)
@@ -242,15 +249,16 @@
                 {
                     needAppend = true;
                 }
+
                 if (needAppend)
                 {
                     sb.Append(text.InnerText);
                     pool.Add(text);
 
                     var s = sb.ToString().TrimStart(); //TODO:
-                                           // TODO: check tag exist
-                                           // TODO: record tag text if without tag then system need to clear them
-                                           // TODO: every {{tag}} one <t>for them</t> and add text before first text and copy first one and remove {{, tagname, }}
+                    // TODO: check tag exist
+                    // TODO: record tag text if without tag then system need to clear them
+                    // TODO: every {{tag}} one <t>for them</t> and add text before first text and copy first one and remove {{, tagname, }}
 
                     const string foreachTag = "{{foreach";
                     const string endForeachTag = "endforeach}}";
@@ -278,6 +286,7 @@
                                 t.Text = "";
                             }
                         }
+
                         clear = true;
                     }
                 }
@@ -321,6 +330,7 @@
                                 keys.Add("{{" + item.Key + "." + item3 + "}}");
                             }
                         }
+
                         break;
                     }
                 }
@@ -329,6 +339,7 @@
                     keys.Add("{{" + item.Key + "}}");
                 }
             }
+
             return keys;
         }
 
@@ -422,6 +433,7 @@
                             checkStatement = stg != value;
                             break;
                     }
+
                     break;
                 case bool btg when bool.TryParse(value, out var boolean):
                     switch (comparisonOperator)
@@ -479,10 +491,10 @@
                         if (!isFullMatch && tag.Value is List<MiniWordForeach> forTags)
                         {
                             if (forTags.Any(forTag => forTag.Value.Keys.Any(dictKey =>
-                            {
-                                var innerTag = "{{" + tag.Key + "." + dictKey + "}}";
-                                return t.Text.Contains(innerTag);
-                            })))
+                                {
+                                    var innerTag = "{{" + tag.Key + "." + dictKey + "}}";
+                                    return t.Text.Contains(innerTag);
+                                })))
                             {
                                 isFullMatch = true;
                             }
@@ -511,6 +523,7 @@
                                     run.Append(newT);
                                     currentT = newT;
                                 }
+
                                 t.Remove();
                             }
                             // todo 未验证嵌套对象的渲染
@@ -528,7 +541,8 @@
                                     foreach (var vv in vs[i].Value)
                                     {
                                         // todo tag,Key
-                                        newT.Text = newT.Text.Replace("{{" + tag.Key + "." + vv.Key + "}}", vv.Value.ToString());
+                                        newT.Text = newT.Text.Replace("{{" + tag.Key + "." + vv.Key + "}}",
+                                            vv.Value.ToString());
                                     }
 
                                     newT.Text = EvaluateIfStatement(newT.Text);
@@ -566,6 +580,7 @@
                                 {
                                     AddColorText(run, (MiniWordColorText[])value);
                                 }
+
                                 t.Remove();
                             }
                             else if (value is MiniWordPicture)
@@ -576,6 +591,7 @@
                                 {
                                     l_Data = File.ReadAllBytes(pic.Path);
                                 }
+
                                 if (pic.Bytes != null)
                                 {
                                     l_Data = pic.Bytes;
@@ -587,18 +603,27 @@
                                 using (var stream = new MemoryStream(l_Data))
                                 {
                                     imagePart.FeedData(stream);
-                                    AddPicture(run, mainPart.GetIdOfPart(imagePart), pic);
-
+                                    if (pic.WrappingType == MiniWordPictureWrappingType.Anchor)
+                                    {
+                                        AddPictureAnchor(run, mainPart.GetIdOfPart(imagePart), pic);
+                                    }
+                                    else
+                                    {
+                                        AddPicture(run, mainPart.GetIdOfPart(imagePart), pic);
+                                    }
+                                    
                                 }
+
                                 t.Remove();
                             }
                             else
                             {
-                                var newText = value is DateTime ? ((DateTime)value).ToString("yyyy-MM-dd HH:mm:ss") : value?.ToString();
+                                var newText = value is DateTime
+                                    ? ((DateTime)value).ToString("yyyy-MM-dd HH:mm:ss")
+                                    : value?.ToString();
                                 t.Text = t.Text.Replace($"{{{{{key}}}}}", newText);
                             }
                         }
-
                     }
 
                     t.Text = EvaluateIfStatement(t.Text);
@@ -606,7 +631,8 @@
                     // add breakline
                     {
                         var newText = t.Text;
-                        var splits = Regex.Split(newText, "(<[a-zA-Z/].*?>|\n|\r\n)").Where(o => o != "\n" && o != "\r\n");
+                        var splits = Regex.Split(newText, "(<[a-zA-Z/].*?>|\n|\r\n)")
+                            .Where(o => o != "\n" && o != "\r\n");
                         var currentT = t;
                         var isFirst = true;
                         if (splits.Count() > 1)
@@ -622,6 +648,7 @@
                                 run.Append(newT);
                                 currentT = newT;
                             }
+
                             t.Remove();
                         }
                     }
@@ -629,12 +656,13 @@
             }
         }
 
-        private static void ReplaceText(OpenXmlElement xmlElement, WordprocessingDocument docx, Dictionary<string, object> tags)
+        private static void ReplaceText(OpenXmlElement xmlElement, WordprocessingDocument docx,
+            Dictionary<string, object> tags)
         {
             var paragraphs = xmlElement.Descendants<Paragraph>().ToArray();
             foreach (var p in paragraphs)
             {
-                ReplaceText(p,docx,tags);
+                ReplaceText(p, docx, tags);
             }
         }
 
@@ -642,7 +670,8 @@
         /// @foreach元素复制及填充
         /// </summary>
         /// <param name="xmlElement"></param>
-        private static void ReplaceForeachStatements(OpenXmlElement xmlElement,WordprocessingDocument docx,Dictionary<string,object> data)
+        private static void ReplaceForeachStatements(OpenXmlElement xmlElement, WordprocessingDocument docx,
+            Dictionary<string, object> data)
         {
             // 1. 先获取Foreach的元素
             var beginKey = "@foreach";
@@ -689,6 +718,7 @@
                                 ReplaceText(p, docx, foreachDataDict);
                             }
                         }
+
                         // @if代码块替换
                         ReplaceIfStatements(xmlElement, loopEles, foreachDataDict);
 
@@ -717,10 +747,8 @@
 
                 betweenEles = GetBetweenElements(xmlElement, beginKey, endKey, false);
             }
-            
-            
         }
-        
+
         /// <summary>
         /// 获取关键词之间的元素
         /// </summary>
@@ -729,7 +757,8 @@
         /// <param name="endKey"></param>
         /// <param name="isCopyEle">是否克隆元素对象。true：返回克隆元素；false：返回原始元素</param>
         /// <returns></returns>
-        private static List<OpenXmlElement> GetBetweenElements(OpenXmlElement sourceElement,string beginKey,string endKey,bool isCopyEle = true)
+        private static List<OpenXmlElement> GetBetweenElements(OpenXmlElement sourceElement, string beginKey,
+            string endKey, bool isCopyEle = true)
         {
             var beginParagraph =
                 sourceElement.Descendants<Paragraph>().FirstOrDefault(p => p.InnerText.Contains(beginKey));
@@ -747,6 +776,7 @@
                     return result;
                 }
             }
+
             return result;
         }
 
@@ -756,13 +786,14 @@
         /// <param name="rootXmlElement">根元素</param>
         /// <param name="elementList">包含@if-@end的元素集合</param>
         /// <param name="tags"></param>
-        private static void ReplaceIfStatements(OpenXmlElement rootXmlElement, List<OpenXmlElement> elementList, Dictionary<string, object> tags)
+        private static void ReplaceIfStatements(OpenXmlElement rootXmlElement, List<OpenXmlElement> elementList,
+            Dictionary<string, object> tags)
         {
-            var paragraphs = elementList.Where(e=>e is Paragraph).ToList();
+            var paragraphs = elementList.Where(e => e is Paragraph).ToList();
             while (paragraphs.Any(s => s.InnerText.Contains("@if")))
             {
-                var ifP = paragraphs.First( s => s.InnerText.Contains("@if"));
-                var endIfP = paragraphs.First( s => s.InnerText.Contains("@endif"));
+                var ifP = paragraphs.First(s => s.InnerText.Contains("@if"));
+                var endIfP = paragraphs.First(s => s.InnerText.Contains("@endif"));
 
                 var statement = ifP.InnerText.Split(' ');
 
@@ -770,7 +801,9 @@
                 var tagValue1 = GetObjVal(tags, statement[1]) ?? "NULL";
                 var tagValue2 = GetObjVal(tags, statement[3]) ?? statement[3];
 
-                var checkStatement = statement.Length == 4 ? EvaluateStatement(tagValue1.ToString(), statement[2], tagValue2.ToString()) : !bool.Parse(tagValue1.ToString());
+                var checkStatement = statement.Length == 4
+                    ? EvaluateStatement(tagValue1.ToString(), statement[2], tagValue2.ToString())
+                    : !bool.Parse(tagValue1.ToString());
 
                 if (!checkStatement)
                 {
@@ -782,6 +815,7 @@
                         elementList[i].Remove();
                     }
                 }
+
                 // 从paragraphs中移除，防止死循环
                 paragraphs.Remove(ifP);
                 paragraphs.Remove(endIfP);
@@ -802,7 +836,7 @@
         {
             var descendants = xmlElement.Descendants().ToList();
 
-            ReplaceIfStatements(xmlElement,descendants, tags);
+            ReplaceIfStatements(xmlElement, descendants, tags);
         }
 
         private static string EvaluateIfStatement(string text)
@@ -816,7 +850,8 @@
                 var ifIndex = text.IndexOf(ifStartTag, StringComparison.Ordinal);
                 var ifEndIndex = text.IndexOf(")if", ifIndex, StringComparison.Ordinal);
 
-                var statement = text.Substring(ifIndex + ifStartTag.Length, ifEndIndex - (ifIndex + ifStartTag.Length)).Split(',');
+                var statement = text.Substring(ifIndex + ifStartTag.Length, ifEndIndex - (ifIndex + ifStartTag.Length))
+                    .Split(',');
 
                 var checkStatement = EvaluateStatement(statement[0], statement[1], statement[2]);
 
@@ -839,7 +874,7 @@
         private static bool IsHyperLink(object value)
         {
             return value is MiniWordHyperLink ||
-                    value is IEnumerable<MiniWordHyperLink>;
+                   value is IEnumerable<MiniWordHyperLink>;
         }
 
         private static void AddHyperLink(WordprocessingDocument docx, Run run, object value)
@@ -872,7 +907,7 @@
                     new Underline { Val = linkInfo.UnderLineValue },
                     new Color { ThemeColor = ThemeColorValues.Hyperlink }),
                 new Text(linkInfo.Text)
-                )
+            )
             {
                 DocLocation = linkInfo.Url,
                 Id = hr.Id,
@@ -880,6 +915,7 @@
             };
             return xmlHyperLink;
         }
+
         private static void AddColorText(Run run, MiniWordColorText[] miniWordColorTextArray)
         {
             RunProperties runPro = null;
@@ -895,73 +931,198 @@
                 run.Append(text);
             }
         }
+
         private static void AddPicture(OpenXmlElement appendElement, string relationshipId, MiniWordPicture pic)
         {
             // Define the reference of the image.
             var element =
-                 new Drawing(
-                     new DW.Inline(
-                         new DW.Extent() { Cx = pic.Cx, Cy = pic.Cy },
-                         new DW.EffectExtent()
-                         {
-                             LeftEdge = 0L,
-                             TopEdge = 0L,
-                             RightEdge = 0L,
-                             BottomEdge = 0L
-                         },
-                         new DW.DocProperties()
-                         {
-                             Id = (UInt32Value)1U,
-                             Name = $"Picture {Guid.NewGuid().ToString()}"
-                         },
-                         new DW.NonVisualGraphicFrameDrawingProperties(
-                             new A.GraphicFrameLocks() { NoChangeAspect = true }),
-                         new A.Graphic(
-                             new A.GraphicData(
-                                 new PIC.Picture(
-                                     new PIC.NonVisualPictureProperties(
-                                         new PIC.NonVisualDrawingProperties()
-                                         {
-                                             Id = (UInt32Value)0U,
-                                             Name = $"Image {Guid.NewGuid().ToString()}.{pic.Extension}"
-                                         },
-                                         new PIC.NonVisualPictureDrawingProperties()),
-                                     new PIC.BlipFill(
-                                         new A.Blip(
-                                             new A.BlipExtensionList(
-                                                 new A.BlipExtension()
-                                                 {
-                                                     Uri =
-                                                        $"{{{Guid.NewGuid().ToString("n")}}}"
-                                                 })
-                                         )
-                                         {
-                                             Embed = relationshipId,
-                                             CompressionState =
-                                             A.BlipCompressionValues.Print
-                                         },
-                                         new A.Stretch(
-                                             new A.FillRectangle())),
-                                     new PIC.ShapeProperties(
-                                         new A.Transform2D(
-                                             new A.Offset() { X = 0L, Y = 0L },
-                                             new A.Extents() { Cx = pic.Cx, Cy = pic.Cy }),
-                                         new A.PresetGeometry(
-                                             new A.AdjustValueList()
-                                         )
-                                         { Preset = A.ShapeTypeValues.Rectangle }))
-                             )
-                             { Uri = "http://schemas.openxmlformats.org/drawingml/2006/picture" })
-                     )
-                     {
-                         DistanceFromTop = (UInt32Value)0U,
-                         DistanceFromBottom = (UInt32Value)0U,
-                         DistanceFromLeft = (UInt32Value)0U,
-                         DistanceFromRight = (UInt32Value)0U,
-                         EditId = "50D07946"
-                     });
+                new Drawing(
+                    new DW.Inline(
+                        new DW.Extent() { Cx = pic.Cx, Cy = pic.Cy },
+                        new DW.EffectExtent()
+                        {
+                            LeftEdge = 0L,
+                            TopEdge = 0L,
+                            RightEdge = 0L,
+                            BottomEdge = 0L
+                        },
+                        new DW.DocProperties()
+                        {
+                            Id = (UInt32Value)1U,
+                            Name = $"Picture {Guid.NewGuid().ToString()}"
+                        },
+                        new DW.NonVisualGraphicFrameDrawingProperties(
+                            new A.GraphicFrameLocks() { NoChangeAspect = true }),
+                        new A.Graphic(
+                            new A.GraphicData(
+                                    new PIC.Picture(
+                                        new PIC.NonVisualPictureProperties(
+                                            new PIC.NonVisualDrawingProperties()
+                                            {
+                                                Id = (UInt32Value)0U,
+                                                Name = $"Image {Guid.NewGuid().ToString()}.{pic.Extension}"
+                                            },
+                                            new PIC.NonVisualPictureDrawingProperties()),
+                                        new PIC.BlipFill(
+                                            new A.Blip(
+                                                new A.BlipExtensionList(
+                                                    new A.BlipExtension()
+                                                    {
+                                                        Uri =
+                                                            $"{{{Guid.NewGuid().ToString("n")}}}"
+                                                    })
+                                            )
+                                            {
+                                                Embed = relationshipId,
+                                                CompressionState =
+                                                    A.BlipCompressionValues.Print
+                                            },
+                                            new A.Stretch(
+                                                new A.FillRectangle())),
+                                        new PIC.ShapeProperties(
+                                            new A.Transform2D(
+                                                new A.Offset() { X = 0L, Y = 0L },
+                                                new A.Extents() { Cx = pic.Cx, Cy = pic.Cy }),
+                                            new A.PresetGeometry(
+                                                    new A.AdjustValueList()
+                                                )
+                                                { Preset = A.ShapeTypeValues.Rectangle }))
+                                )
+                                { Uri = "http://schemas.openxmlformats.org/drawingml/2006/picture" })
+                    )
+                    {
+                        DistanceFromTop = (UInt32Value)0U,
+                        DistanceFromBottom = (UInt32Value)0U,
+                        DistanceFromLeft = (UInt32Value)0U,
+                        DistanceFromRight = (UInt32Value)0U,
+                        EditId = "50D07946"
+                    });
             appendElement.Append((element));
         }
+
+        private static void AddPictureAnchor(OpenXmlElement appendElement, string relationshipId, MiniWordPicture pic)
+        {
+            Drawing drawing13 = new Drawing();
+
+            DW.Anchor anchor3 = new DW.Anchor()
+            {
+                DistanceFromTop = (UInt32Value)0U, DistanceFromBottom = (UInt32Value)0U,
+                DistanceFromLeft = (UInt32Value)114300U, DistanceFromRight = (UInt32Value)114300U,
+                SimplePos = false, RelativeHeight = (UInt32Value)0U, BehindDoc = pic.BehindDoc, Locked = false,
+                LayoutInCell = true, AllowOverlap = pic.AllowOverlap, EditId = "1EACBECC", AnchorId = "5AF073F3"
+            };
+            DW.SimplePosition simplePosition3 = new DW.SimplePosition() { X = 0L, Y = 0L };
+
+            DW.HorizontalPosition horizontalPosition3 = new DW.HorizontalPosition()
+                { RelativeFrom = DW.HorizontalRelativePositionValues.Column };
+            DW.PositionOffset positionOffset5 = new DW.PositionOffset();
+            positionOffset5.Text = $"{pic.HorizontalPositionOffset * 9525}";
+
+            horizontalPosition3.Append(positionOffset5);
+
+            DW.VerticalPosition verticalPosition3 = new DW.VerticalPosition()
+                { RelativeFrom = DW.VerticalRelativePositionValues.Paragraph };
+            DW.PositionOffset positionOffset6 = new DW.PositionOffset();
+            positionOffset6.Text = $"{pic.VerticalPositionOffset * 9525}";
+
+            verticalPosition3.Append(positionOffset6);
+            DW.Extent extent13 = new DW.Extent() { Cx = pic.Cx, Cy = pic.Cy };
+
+
+            DW.EffectExtent effectExtent13 = new DW.EffectExtent()
+                { LeftEdge = 0L, TopEdge = 0L, RightEdge = 0L, BottomEdge = 0L };
+            DW.WrapNone wrapNone3 = new DW.WrapNone();
+
+
+            DW.DocProperties docProperties13 = new DW.DocProperties()
+                { Id = (UInt32Value)774829591U, Name = $"Picture {Guid.NewGuid().ToString()}" };
+
+            DW.NonVisualGraphicFrameDrawingProperties nonVisualGraphicFrameDrawingProperties13 =
+                new DW.NonVisualGraphicFrameDrawingProperties();
+
+            A.GraphicFrameLocks graphicFrameLocks13 = new A.GraphicFrameLocks() { NoChangeAspect = true };
+            graphicFrameLocks13.AddNamespaceDeclaration("a",
+                "http://schemas.openxmlformats.org/drawingml/2006/main");
+
+            nonVisualGraphicFrameDrawingProperties13.Append(graphicFrameLocks13);
+
+            A.Graphic graphic13 = new A.Graphic();
+            graphic13.AddNamespaceDeclaration("a", "http://schemas.openxmlformats.org/drawingml/2006/main");
+
+            A.GraphicData graphicData13 = new A.GraphicData()
+                { Uri = "http://schemas.openxmlformats.org/drawingml/2006/picture" };
+
+            PIC.Picture picture13 = new PIC.Picture();
+            picture13.AddNamespaceDeclaration("pic", "http://schemas.openxmlformats.org/drawingml/2006/picture");
+
+            PIC.NonVisualPictureProperties nonVisualPictureProperties13 = new PIC.NonVisualPictureProperties();
+            PIC.NonVisualDrawingProperties nonVisualDrawingProperties13 = new PIC.NonVisualDrawingProperties()
+                { Id = (UInt32Value)0U, Name = $"Image {Guid.NewGuid().ToString()}.{pic.Extension}" };
+            PIC.NonVisualPictureDrawingProperties nonVisualPictureDrawingProperties13 =
+                new PIC.NonVisualPictureDrawingProperties();
+
+            nonVisualPictureProperties13.Append(nonVisualDrawingProperties13);
+            nonVisualPictureProperties13.Append(nonVisualPictureDrawingProperties13);
+
+            PIC.BlipFill blipFill13 = new PIC.BlipFill();
+
+            A.Blip blip13 = new A.Blip()
+                { Embed = relationshipId, CompressionState = A.BlipCompressionValues.Print };
+
+            A.BlipExtensionList blipExtensionList11 = new A.BlipExtensionList();
+            A.BlipExtension blipExtension11 = new A.BlipExtension() { Uri = $"{{{Guid.NewGuid().ToString("n")}}}" };
+
+            blipExtensionList11.Append(blipExtension11);
+
+            blip13.Append(blipExtensionList11);
+
+            A.Stretch stretch13 = new A.Stretch();
+            A.FillRectangle fillRectangle13 = new A.FillRectangle();
+
+            stretch13.Append(fillRectangle13);
+
+            blipFill13.Append(blip13);
+            blipFill13.Append(stretch13);
+
+            PIC.ShapeProperties shapeProperties13 = new PIC.ShapeProperties();
+
+            A.Transform2D transform2D13 = new A.Transform2D();
+            A.Offset offset13 = new A.Offset() { X = 0L, Y = 0L };
+            A.Extents extents13 = new A.Extents() { Cx = pic.Cx, Cy = pic.Cy };
+
+            transform2D13.Append(offset13);
+            transform2D13.Append(extents13);
+
+            A.PresetGeometry presetGeometry13 = new A.PresetGeometry() { Preset = A.ShapeTypeValues.Rectangle };
+            A.AdjustValueList adjustValueList13 = new A.AdjustValueList();
+
+            presetGeometry13.Append(adjustValueList13);
+
+            shapeProperties13.Append(transform2D13);
+            shapeProperties13.Append(presetGeometry13);
+
+            picture13.Append(nonVisualPictureProperties13);
+            picture13.Append(blipFill13);
+            picture13.Append(shapeProperties13);
+
+            graphicData13.Append(picture13);
+
+            graphic13.Append(graphicData13);
+
+            anchor3.Append(simplePosition3);
+            anchor3.Append(horizontalPosition3);
+            anchor3.Append(verticalPosition3);
+            anchor3.Append(extent13);
+            anchor3.Append(effectExtent13);
+            anchor3.Append(wrapNone3);
+            anchor3.Append(docProperties13);
+            anchor3.Append(nonVisualGraphicFrameDrawingProperties13);
+            anchor3.Append(graphic13);
+
+            drawing13.Append(anchor3);
+            appendElement.Append((drawing13));
+        }
+
         private static byte[] GetBytes(string path)
         {
             using (var st = Helpers.OpenSharedRead(path))
