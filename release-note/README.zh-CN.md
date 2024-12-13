@@ -22,6 +22,21 @@
 
 ---
 
+
+
+### 0.9.0
+- [New] Support async (@isdaniel)
+- [New] Support new OpenXml to solve the problem of line wrapping to multiple lines #68 (via @ping9719)
+- [New] Add support to conditional check for undefined tags #75 (via @bprucha)
+- [New] Fix when a Split Tag Text element Inner Text start with " {" instead of "{" (via @hieplenet)
+- [New] Extension: floating image, you can configure the image to float on the text (via @dessli)
+- [New] Extension: Table supports Obj.objA.List.Prop1 rendering (via wangx036)
+- [New] Extension: Common types support multi-level attribute rendering, such as {{Obj.A.B.C}} (via wangx036)
+- [New] @foreach (via wangx036)
+- [Bug] Fixed the problem that fonts with color, underline and other styles are normal in office, but not visible after opening with WPS (via @haozekang)
+- [Bug] Remove all elements between @if~@endif, not paragraph (via wangx036)
+- [Bug] Fix build, Fix tests, Update openxml (via @masterworgen)
+
 ### 0.8.0
 
 - [New] 支持 new OpenXml to solve the problem of line wrapping to multiple lines #68 (via @ping9719)
