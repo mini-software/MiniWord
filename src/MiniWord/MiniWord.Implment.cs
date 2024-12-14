@@ -25,37 +25,16 @@ namespace MiniSoftware
     {
         private static void SaveAsByTemplateImpl(Stream stream, byte[] template, Dictionary<string, object> data)
         {
-            var value = data; //TODO: support dynamic and poco value
-            byte[] bytes = null;
-            using (var ms = new MemoryStream())
-            {
-                ms.Write(template, 0, template.Length);
-                ms.Position = 0;
-                using (var docx = WordprocessingDocument.Open(ms, true))
-                {
-                    var hc = docx.MainDocumentPart.HeaderParts.Count();
-                    var fc = docx.MainDocumentPart.FooterParts.Count();
-                    for (int i = 0; i < hc; i++)
-                        docx.MainDocumentPart.HeaderParts.ElementAt(i).Header.Generate(docx, value);
-                    for (int i = 0; i < fc; i++)
-                        docx.MainDocumentPart.FooterParts.ElementAt(i).Footer.Generate(docx, value);
-                    docx.MainDocumentPart.Document.Body.Generate(docx, value);
-                    docx.Save();
-                }
-
-                bytes = ms.ToArray();
-            }
-
-            stream.Write(bytes, 0, bytes.Length);
+            SaveAsByTemplateImplAsync(stream,template,data).GetAwaiter().GetResult();
         }
 
-        private static async Task SaveAsByTemplateImplAsync(Stream stream, byte[] template, Dictionary<string, object> data, CancellationToken token)
+        private static async Task SaveAsByTemplateImplAsync(Stream stream, byte[] template, Dictionary<string, object> data, CancellationToken token = default(CancellationToken))
         {
             var value = data; //TODO: support dynamic and poco value
             byte[] bytes = null;
             using (var ms = new MemoryStream())
             {
-                await ms.WriteAsync(template, 0, template.Length).ConfigureAwait(false);
+                await ms.WriteAsync(template, 0, template.Length, token).ConfigureAwait(false);
                 ms.Position = 0;
                 using (var docx = WordprocessingDocument.Open(ms, true))
                 {
@@ -72,7 +51,7 @@ namespace MiniSoftware
                 bytes = ms.ToArray();
             }
 
-            await stream.WriteAsync(bytes, 0, bytes.Length).ConfigureAwait(false);
+            await stream.WriteAsync(bytes, 0, bytes.Length, token).ConfigureAwait(false);
         }
 
 
@@ -241,13 +220,14 @@ namespace MiniSoftware
             var nextPropNames = propNames.Skip(1).ToArray();
             if (objSource is IDictionary)
             {
-                var dict = (IDictionary)objSource;
+                var dict = objSource as IDictionary;
                 if (dict.Contains(propNames[0]))
                 {
                     var val = dict[propNames[0]];
                     if (propNames.Length > 1)
                         return GetObjVal(dict[propNames[0]], nextPropNames);
-                    else return val;
+                    else
+                        return val;
                 }
 
                 return null;
@@ -1157,12 +1137,13 @@ namespace MiniSoftware
             return GetByteAsync(path).GetAwaiter().GetResult();
         }
 
-        private static async Task<byte[]> GetByteAsync(string path)
+        private static async Task<byte[]> GetByteAsync(string path, CancellationToken token = default(CancellationToken))
         {
             using (var st = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite, 4096, true))
             using (var ms = new MemoryStream())
             {
-                await st.CopyToAsync(ms).ConfigureAwait(false);
+                //use default size 81920
+                await st.CopyToAsync(ms, 81920, token).ConfigureAwait(false);
                 return ms.ToArray();
             }
         }
