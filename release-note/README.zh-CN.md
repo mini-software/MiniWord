@@ -24,8 +24,9 @@
 
 
 
-### 0.9.1
+### 0.9.1-0.9.2
 - [Bug] Fix async (via @isdaniel)
+- [Bug] Fix openxml version
 
 ### 0.9.0
 - [New] Support async (@isdaniel)
