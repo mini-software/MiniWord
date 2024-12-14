@@ -22,7 +22,8 @@
 
 ---
 
-
+### 0.9.1
+- [Bug] Fix async (via @isdaniel)
 
 ### 0.9.0
 - [New] Support async (@isdaniel)

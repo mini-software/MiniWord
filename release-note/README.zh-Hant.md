@@ -23,6 +23,9 @@
 ---
 
 
+### 0.9.1
+- [Bug] Fix async (via @isdaniel)
+
 ### 0.9.0
 - [New] Support async (@isdaniel)
 - [New] Support new OpenXml to solve the problem of line wrapping to multiple lines #68 (via @ping9719)
