@@ -114,7 +114,7 @@ namespace MiniWordTests
                     }
                 }
             };
-            MiniWord.SaveAsByTemplate(path, templatePath, value);
+            await MiniWord.SaveAsByTemplateAsync(path, templatePath, value);
             //System.Diagnostics.Process.Start("explorer.exe", path);
             var xml = Helpers.GetZipFileContent(path, "word/document.xml");
             Assert.Contains(@"Discussion requirement part2 and development", xml);
@@ -146,7 +146,7 @@ namespace MiniWordTests
                 ["Points"] = 123,
                 ["APP"] = "Demo APP",
             };
-            MiniWord.SaveAsByTemplate(path, templatePath, value);
+            await MiniWord.SaveAsByTemplateAsync(path, templatePath, value);
             //Console.WriteLine(path);
             var docXml = Helpers.GetZipFileContent(path, "word/document.xml");
             Assert.Contains("First if chosen: MiniSofteware", docXml);
@@ -261,7 +261,7 @@ namespace MiniWordTests
                     }
                 }
             };
-            MiniWord.SaveAsByTemplate(path, templatePath, value);
+            await MiniWord.SaveAsByTemplateAsync(path, templatePath, value);
             //System.Diagnostics.Process.Start("explorer.exe", path);
             var xml = Helpers.GetZipFileContent(path, "word/document.xml");
             Assert.Contains(@"Discussion requirement part2 and development", xml);

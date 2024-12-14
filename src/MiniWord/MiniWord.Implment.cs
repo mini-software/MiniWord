@@ -1,4 +1,4 @@
-﻿namespace MiniSoftware
+namespace MiniSoftware
 {
     using DocumentFormat.OpenXml;
     using DocumentFormat.OpenXml.Packaging;
@@ -18,16 +18,23 @@
     using System.Xml;
     using System.Xml.Linq;
     using DocumentFormat.OpenXml.Drawing.Charts;
+    using System.Threading.Tasks;
+    using System.Threading;
 
     public static partial class MiniWord
     {
         private static void SaveAsByTemplateImpl(Stream stream, byte[] template, Dictionary<string, object> data)
         {
+            SaveAsByTemplateImplAsync(stream,template,data).GetAwaiter().GetResult();
+        }
+
+        private static async Task SaveAsByTemplateImplAsync(Stream stream, byte[] template, Dictionary<string, object> data, CancellationToken token = default(CancellationToken))
+        {
             var value = data; //TODO: support dynamic and poco value
             byte[] bytes = null;
             using (var ms = new MemoryStream())
             {
-                ms.Write(template, 0, template.Length);
+                await ms.WriteAsync(template, 0, template.Length, token).ConfigureAwait(false);
                 ms.Position = 0;
                 using (var docx = WordprocessingDocument.Open(ms, true))
                 {
@@ -44,8 +51,9 @@
                 bytes = ms.ToArray();
             }
 
-            stream.Write(bytes, 0, bytes.Length);
+            await stream.WriteAsync(bytes, 0, bytes.Length, token).ConfigureAwait(false);
         }
+
 
         private static void Generate(this OpenXmlElement xmlElement, WordprocessingDocument docx,
             Dictionary<string, object> tags)
@@ -212,13 +220,14 @@
             var nextPropNames = propNames.Skip(1).ToArray();
             if (objSource is IDictionary)
             {
-                var dict = (IDictionary)objSource;
+                var dict = objSource as IDictionary;
                 if (dict.Contains(propNames[0]))
                 {
                     var val = dict[propNames[0]];
                     if (propNames.Length > 1)
                         return GetObjVal(dict[propNames[0]], nextPropNames);
-                    else return val;
+                    else
+                        return val;
                 }
 
                 return null;
@@ -1125,10 +1134,16 @@
 
         private static byte[] GetBytes(string path)
         {
-            using (var st = Helpers.OpenSharedRead(path))
+            return GetByteAsync(path).GetAwaiter().GetResult();
+        }
+
+        private static async Task<byte[]> GetByteAsync(string path, CancellationToken token = default(CancellationToken))
+        {
+            using (var st = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite, 4096, true))
             using (var ms = new MemoryStream())
             {
-                st.CopyTo(ms);
+                //use default size 81920
+                await st.CopyToAsync(ms, 81920, token).ConfigureAwait(false);
                 return ms.ToArray();
             }
         }

@@ -43,7 +43,7 @@ namespace MiniWordTests
                         }
                     }
                 };
-                MiniWord.SaveAsByTemplate(path, templatePath, value);
+                await MiniWord.SaveAsByTemplateAsync(path, templatePath, value);
                 // TODO: waiting solution
                 //var xml = Helpers.GetZipFileContent(path, "word/document.xml");
                 //Assert.Contains(@"MiniWord", xml);
@@ -60,7 +60,7 @@ namespace MiniWordTests
                 {
                     ["title"] = "Hello MiniWord",
                 };
-                MiniWord.SaveAsByTemplate(path, templatePath, value);
+                await MiniWord.SaveAsByTemplateAsync(path, templatePath, value);
                 var xml = Helpers.GetZipFileContent(path, "word/document.xml");
                 Assert.Contains(@"MiniWord", xml);
             }
@@ -81,7 +81,7 @@ namespace MiniWordTests
                     ["Content"] = "Test",
                     ["Content2"] = "Test2",
                 };
-                MiniWord.SaveAsByTemplate(path, templatePath, value);
+                await MiniWord.SaveAsByTemplateAsync(path, templatePath, value);
                 var xml = Helpers.GetZipFileContent(path, "word/document.xml");
                 Assert.Contains(@"Test", xml);
                 Assert.Contains(@"Test2", xml);
@@ -103,7 +103,7 @@ namespace MiniWordTests
                         Text = "Test2!!"
                     },
                 };
-                MiniWord.SaveAsByTemplate(path, templatePath, value);
+                await MiniWord.SaveAsByTemplateAsync(path, templatePath, value);
                 var xml = Helpers.GetZipFileContent(path, "word/document.xml");
                 Assert.Contains(@"Test", xml);
                 Assert.Contains(@"Test2", xml);
@@ -116,7 +116,7 @@ namespace MiniWordTests
             var outputPath = PathHelper.GetTempFilePath();
             var templatePath = PathHelper.GetFile("TestDemo04.docx");
             var value = new Dictionary<string, object>() { ["title"] = "Hello MiniWord" };
-            MiniWord.SaveAsByTemplate(outputPath, templatePath, value);
+            await MiniWord.SaveAsByTemplateAsync(outputPath, templatePath, value);
         }
 
         [Fact]
@@ -125,7 +125,7 @@ namespace MiniWordTests
             var outputPath = PathHelper.GetTempFilePath();
             var templatePath = PathHelper.GetFile("TestDemo04.docx");
             var value = new { title = "Hello MiniWord" };
-            MiniWord.SaveAsByTemplate(outputPath, templatePath, value);
+            await MiniWord.SaveAsByTemplateAsync(outputPath, templatePath, value);
         }
 
 
@@ -150,7 +150,7 @@ namespace MiniWordTests
                         new Dictionary<string, object> {{ "name", "Keaton" },{ "department", "IT" } }
                     }
                 };
-                MiniWord.SaveAsByTemplate(path, templatePath, value);
+                await MiniWord.SaveAsByTemplateAsync(path, templatePath, value);
                 var xml = Helpers.GetZipFileContent(path, "word/document.xml");
                 Assert.Contains(@"<w:t>Keaton", xml);
                 Assert.Contains(@"<w:t>Eric", xml);
@@ -174,7 +174,7 @@ namespace MiniWordTests
                         new {name="Keaton",department="IT" },
                     },
                 };
-                MiniWord.SaveAsByTemplate(path, templatePath, value);
+                await MiniWord.SaveAsByTemplateAsync(path, templatePath, value);
                 var xml = Helpers.GetZipFileContent(path, "word/document.xml");
                 Assert.Contains(@"<w:t>Keaton", xml);
                 Assert.Contains(@"<w:t>Eric", xml);
@@ -198,7 +198,7 @@ namespace MiniWordTests
                         new User (){ name="Keaton",department="IT"},
                     },
                 };
-                MiniWord.SaveAsByTemplate(path, templatePath, value);
+                await MiniWord.SaveAsByTemplateAsync(path, templatePath, value);
                 var xml = Helpers.GetZipFileContent(path, "word/document.xml");
                 Assert.Contains(@"<w:t>Keaton", xml);
                 Assert.Contains(@"<w:t>Eric", xml);
@@ -219,7 +219,7 @@ namespace MiniWordTests
                 ["Content"] = "Test",
                 ["Content2"] = "Test2",
             };
-            MiniWord.SaveAsByTemplate(path, templatePath, value);
+            await MiniWord.SaveAsByTemplateAsync(path, templatePath, value);
             var xml = Helpers.GetZipFileContent(path, "word/document.xml");
             Assert.Contains(@"<w:t>Test", xml);
             Assert.Contains(@"<w:t>Test2", xml);
@@ -239,7 +239,7 @@ namespace MiniWordTests
                 Content = "Test",
                 Content2 = "Test2",
             };
-            MiniWord.SaveAsByTemplate(path, templatePath, value);
+            await MiniWord.SaveAsByTemplateAsync(path, templatePath, value);
             var xml = Helpers.GetZipFileContent(path, "word/document.xml");
             Assert.Contains(@"<w:t>Test", xml);
             Assert.Contains(@"<w:t>Test2", xml);
@@ -275,7 +275,7 @@ namespace MiniWordTests
                     },
                 }
             };
-            MiniWord.SaveAsByTemplate(path, templatePath, value);
+            await MiniWord.SaveAsByTemplateAsync(path, templatePath, value);
             //System.Diagnostics.Process.Start("explorer.exe", path);
             var xml = Helpers.GetZipFileContent(path, "word/document.xml");
             Assert.Contains(@"Discussion requirement part2 and development", xml);
@@ -311,7 +311,7 @@ namespace MiniWordTests
                     },
                 }
             };
-            MiniWord.SaveAsByTemplate(path, templatePath, value);
+            await MiniWord.SaveAsByTemplateAsync(path, templatePath, value);
             //System.Diagnostics.Process.Start("explorer.exe", path);
             var xml = Helpers.GetZipFileContent(path, "word/document.xml");
             Assert.Contains(@"Discussion requirement part2 and development", xml);
@@ -333,7 +333,7 @@ namespace MiniWordTests
                 ["Approved"] = true,
                 ["Total_Amount"] = 123456,
             };
-            MiniWord.SaveAsByTemplate(path, templatePath, value);
+            await MiniWord.SaveAsByTemplateAsync(path, templatePath, value);
         }
 
 
@@ -352,7 +352,7 @@ namespace MiniWordTests
                 Approved = true,
                 Total_Amount = 123456,
             };
-            MiniWord.SaveAsByTemplate(path, templatePath, value);
+            await MiniWord.SaveAsByTemplateAsync(path, templatePath, value);
         }
 
         /// <summary>
@@ -372,7 +372,7 @@ namespace MiniWordTests
                 ["Points"] = 123,
                 ["APP"] = "Demo APP\n",
             };
-            MiniWord.SaveAsByTemplate(path, templatePath, value);
+            await MiniWord.SaveAsByTemplateAsync(path, templatePath, value);
             var xml = Helpers.GetZipFileContent(path, "word/document.xml");
             Assert.Contains(@"<w:t>MiniSofteware", xml);
             Assert.Contains(@"<w:br />", xml);
@@ -395,7 +395,7 @@ namespace MiniWordTests
             value.Points = 123;
             value.APP = "Demo APP\n";
 
-            MiniWord.SaveAsByTemplate(path, templatePath, value);
+            await MiniWord.SaveAsByTemplateAsync(path, templatePath, value);
             var xml = Helpers.GetZipFileContent(path, "word/document.xml");
             Assert.Contains(@"<w:t>MiniSofteware", xml);
             Assert.Contains(@"<w:br />", xml);
@@ -420,7 +420,7 @@ namespace MiniWordTests
                 APP = "Demo APP\n",
             };
 
-            MiniWord.SaveAsByTemplate(path, templatePath, value);
+            await MiniWord.SaveAsByTemplateAsync(path, templatePath, value);
             var xml = Helpers.GetZipFileContent(path, "word/document.xml");
             Assert.Contains(@"<w:t>MiniSofteware", xml);
             Assert.Contains(@"<w:br />", xml);
@@ -469,7 +469,7 @@ ever since the 1500s, when an unknown printer took.
 ",
                 ["Image"] = new MiniWordPicture() { Path = PathHelper.GetFile("demo01.png"), Width = 160, Height = 90 },
             };
-            MiniWord.SaveAsByTemplate(path, templatePath, value);
+            await MiniWord.SaveAsByTemplateAsync(path, templatePath, value);
             //System.Diagnostics.Process.Start("explorer.exe", path);
         }
 
@@ -515,7 +515,7 @@ ever since the 1500s, when an unknown printer took.
     ever since the 1500s, when an unknown printer took.
     ";
             value.Image = new MiniWordPicture() { Path = PathHelper.GetFile("demo01.png"), Width = 160, Height = 90 };
-            MiniWord.SaveAsByTemplate(path, templatePath, value);
+            await MiniWord.SaveAsByTemplateAsync(path, templatePath, value);
             //System.Diagnostics.Process.Start("explorer.exe", path);
         }
 
@@ -534,7 +534,7 @@ ever since the 1500s, when an unknown printer took.
                     ["managers"] = new[] { "Jack", "Alan" },
                     ["employees"] = new[] { "Mike", "Henry" },
                 };
-                MiniWord.SaveAsByTemplate(path, templatePath, value);
+                await MiniWord.SaveAsByTemplateAsync(path, templatePath, value);
                 var xml = Helpers.GetZipFileContent(path, "word/document.xml");
                 Assert.Contains("Jack", xml);
             }
@@ -546,7 +546,7 @@ ever since the 1500s, when an unknown printer took.
                     ["managers"] = new List<string> { "Jack", "Alan" },
                     ["employees"] = new List<string> { "Mike", "Henry" },
                 };
-                MiniWord.SaveAsByTemplate(path, templatePath, value);
+                await MiniWord.SaveAsByTemplateAsync(path, templatePath, value);
                 var xml = Helpers.GetZipFileContent(path, "word/document.xml");
                 Assert.Contains("Jack", xml);
             }
@@ -567,7 +567,7 @@ ever since the 1500s, when an unknown printer took.
             //        managers = new[] { "Jack", "Alan" },
             //        employees = new[] { "Mike", "Henry" },
             //    };
-            //    MiniWord.SaveAsByTemplate(path, templatePath, value);
+            //    await MiniWord.SaveAsByTemplateAsync(path, templatePath, value);
             //    var xml = Helpers.GetZipFileContent(path, "word/document.xml");
             //    Assert.Contains("Jack", xml);
             //}
@@ -579,7 +579,7 @@ ever since the 1500s, when an unknown printer took.
                     managers = new List<string> { "Jack", "Alan" },
                     employees = new List<string> { "Mike", "Henry" },
                 };
-                MiniWord.SaveAsByTemplate(path, templatePath, value);
+                await MiniWord.SaveAsByTemplateAsync(path, templatePath, value);
                 var xml = Helpers.GetZipFileContent(path, "word/document.xml");
                 Assert.Contains("Jack", xml);
             }
@@ -598,7 +598,7 @@ ever since the 1500s, when an unknown printer took.
             {
                 ["Logo"] = new MiniWordPicture() { Path = PathHelper.GetFile("DemoLogo.png"), Width = 180, Height = 180 }
             };
-            MiniWord.SaveAsByTemplate(path, templatePath, value);
+            await MiniWord.SaveAsByTemplateAsync(path, templatePath, value);
             var xml = Helpers.GetZipFileContent(path, "word/document.xml");
             Assert.Contains("<w:drawing>", xml);
         }
@@ -624,7 +624,7 @@ ever since the 1500s, when an unknown printer took.
                 ["Points"] = 123,
                 ["APP"] = "Demo APP",
             };
-            MiniWord.SaveAsByTemplate(path, templatePath, value);
+            await MiniWord.SaveAsByTemplateAsync(path, templatePath, value);
             //Console.WriteLine(path);
             var xml = Helpers.GetZipFileContent(path, "word/document.xml");
             Assert.DoesNotContain("Jack Demo APP Account Data", xml);
@@ -656,7 +656,7 @@ ever since the 1500s, when an unknown printer took.
                 ["Points"] = 123,
                 ["APP"] = "Demo APP",
             };
-            MiniWord.SaveAsByTemplate(path, templatePath, value);
+            await MiniWord.SaveAsByTemplateAsync(path, templatePath, value);
             //Console.WriteLine(path);
             var docXml = Helpers.GetZipFileContent(path, "word/document.xml");
             Assert.DoesNotContain("Jack Demo APP Account Data", docXml);
@@ -692,7 +692,7 @@ ever since the 1500s, when an unknown printer took.
                 ["Points"] = 123,
                 ["APP"] = "Demo APP",
             };
-            MiniWord.SaveAsByTemplate(path, templatePath, value);
+            await MiniWord.SaveAsByTemplateAsync(path, templatePath, value);
 
             var docXml = Helpers.GetZipFileContent(path, "word/document.xml");
             Assert.DoesNotContain("Jack Demo APP Account Data", docXml);
@@ -728,7 +728,7 @@ ever since the 1500s, when an unknown printer took.
                 ["Points"] = 123,
                 ["APP"] = "Demo APP",
             };
-            MiniWord.SaveAsByTemplate(path, templatePath, value);
+            await MiniWord.SaveAsByTemplateAsync(path, templatePath, value);
 
             var docXml = Helpers.GetZipFileContent(path, "word/document.xml");
             Assert.DoesNotContain("Jack Demo APP Account Data", docXml);
@@ -762,7 +762,7 @@ ever since the 1500s, when an unknown printer took.
                 Points = 123,
                 APP = "Demo APP",
             };
-            MiniWord.SaveAsByTemplate(path, templatePath, value);
+            await MiniWord.SaveAsByTemplateAsync(path, templatePath, value);
             //Console.WriteLine(path);
             var xml = Helpers.GetZipFileContent(path, "word/document.xml");
             Assert.DoesNotContain("Jack Demo APP Account Data", xml);
@@ -788,7 +788,7 @@ ever since the 1500s, when an unknown printer took.
                 ["Points"] = 123,
                 ["APP"] = "Demo APP",
             };
-            MiniWord.SaveAsByTemplate(path, templatePath, value);
+            await MiniWord.SaveAsByTemplateAsync(path, templatePath, value);
         }
 
         /// <summary>
@@ -808,7 +808,7 @@ ever since the 1500s, when an unknown printer took.
                 Points = 123,
                 APP = "Demo APP",
             };
-            MiniWord.SaveAsByTemplate(path, templatePath, value);
+            await MiniWord.SaveAsByTemplateAsync(path, templatePath, value);
         }
         [Fact]
         public async Task TestColor()
@@ -830,7 +830,7 @@ ever since the 1500s, when an unknown printer took.
                 Points = 123,
                 APP = "Demo APP",
             };
-            MiniWord.SaveAsByTemplate(path, templatePath, value);
+            await MiniWord.SaveAsByTemplateAsync(path, templatePath, value);
         }
 
         [Fact]
@@ -855,7 +855,7 @@ ever since the 1500s, when an unknown printer took.
                 Points = 123,
                 APP = "Demo APP",
             };
-            MiniWord.SaveAsByTemplate(path, templatePath, value);
+            await MiniWord.SaveAsByTemplateAsync(path, templatePath, value);
         }
 
 

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using DocumentFormat.OpenXml.Office2010.ExcelAc;
 using MiniSoftware;
@@ -153,8 +153,6 @@ namespace MiniWordTests
             Assert.Contains("Points are greater than 100", docXml);
             Assert.Contains("CreateDate is not less than 2021", docXml);
             Assert.DoesNotContain("CreateDate is not greater than 2021", docXml);
-            //Assert.Contains("Foo is undefined", docXml); //TODO: Not working
-            //Assert.Contains("Bar is undefined", docXml); //TODO: Not working
         }
         
         [Fact]

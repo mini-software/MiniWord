@@ -1,7 +1,16 @@
 namespace MiniSoftware
 {
+    using DocumentFormat.OpenXml.Office2013.Excel;
     using MiniSoftware.Extensions;
+    using MiniSoftware.Utility;
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel;
+    using System.Dynamic;
     using System.IO;
+    using System.Linq.Expressions;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     public static partial class MiniWord
     {
@@ -25,6 +34,28 @@ namespace MiniSoftware
         public static void SaveAsByTemplate(this Stream stream, byte[] templateBytes, object value)
         {
             SaveAsByTemplateImpl(stream, templateBytes, value.ToDictionary());
+        }
+
+        public static async Task SaveAsByTemplateAsync(this Stream stream, byte[] templateBytes, object value,CancellationToken token = default(CancellationToken))
+        {
+            await SaveAsByTemplateImplAsync(stream, templateBytes, value.ToDictionary(),token).ConfigureAwait(false);
+        }
+
+        public static async Task SaveAsByTemplateAsync(this Stream stream, string templatePath, object value,CancellationToken token = default(CancellationToken))
+        {
+            await SaveAsByTemplateImplAsync(stream, await GetByteAsync(templatePath), value.ToDictionary(),token).ConfigureAwait(false);
+        }
+
+        public static async Task SaveAsByTemplateAsync(string path, string templatePath, object value,CancellationToken token = default(CancellationToken))
+        {
+            using (var stream = new FileStream(path, FileMode.Create, FileAccess.ReadWrite, FileShare.None, 4096, true))
+                await SaveAsByTemplateImplAsync(stream, await GetByteAsync(templatePath), value.ToDictionary(),token);
+        }
+
+        public static async Task SaveAsByTemplateAsync(string path, byte[] templateBytes, object value,CancellationToken token = default(CancellationToken))
+        {
+            using (var stream = new FileStream(path, FileMode.Create, FileAccess.ReadWrite, FileShare.None, 4096, true))
+                await SaveAsByTemplateImplAsync(stream, templateBytes, value.ToDictionary(),token);
         }
     }
 }
