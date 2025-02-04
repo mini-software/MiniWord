@@ -263,14 +263,14 @@ namespace MiniWordTests
                         { "sDate",DateTime.Parse("2022-09-08 08:30:00")},
                         { "eDate",DateTime.Parse("2022-09-08 15:00:00")},
                         { "How","Discussion requirement part1"},
-                        { "Photo",new MiniWordPicture() { Path = PathHelper.GetFile("DemoExpenseMeeting02.png"), Width = 160, Height = 90 }},
+                        { "Photo",new MiniWordPicture(PathHelper.GetFile("DemoExpenseMeeting02.png"), 160, 90)},
                     },
                     new Dictionary<string, object>
                     {
                         { "sDate",DateTime.Parse("2022-09-09 08:30:00")},
                         { "eDate",DateTime.Parse("2022-09-09 17:00:00")},
                         { "How","Discussion requirement part2 and development"},
-                        { "Photo",new MiniWordPicture() { Path = PathHelper.GetFile("DemoExpenseMeeting01.png"), Width = 160, Height = 90 }},
+                        { "Photo",new MiniWordPicture(PathHelper.GetFile("DemoExpenseMeeting01.png"), 160, 90)},
                     },
                 }
             };
@@ -299,14 +299,14 @@ namespace MiniWordTests
                         { "sDate",DateTime.Parse("2022-09-08 08:30:00")},
                         { "eDate",DateTime.Parse("2022-09-08 15:00:00")},
                         { "How","Discussion requirement part1"},
-                        { "Photo",new MiniWordPicture() { Path = PathHelper.GetFile("DemoExpenseMeeting02.png"), Width = 160, Height = 90 }},
+                        { "Photo",new MiniWordPicture(PathHelper.GetFile("DemoExpenseMeeting02.png"), 160, 90)},
                     },
                     new Dictionary<string, object>
                     {
                         { "sDate",DateTime.Parse("2022-09-09 08:30:00")},
                         { "eDate",DateTime.Parse("2022-09-09 17:00:00")},
                         { "How","Discussion requirement part2 and development"},
-                        { "Photo",new MiniWordPicture() { Path = PathHelper.GetFile("DemoExpenseMeeting01.png"), Width = 160, Height = 90 }},
+                        { "Photo",new MiniWordPicture(PathHelper.GetFile("DemoExpenseMeeting01.png"), 160, 90)},
                     },
                 }
             };
@@ -466,7 +466,7 @@ Apple OS Interface Limited | From Jan 2008 to Feb 2010
 Lorem Ipsum has been the industry's standard dummy text 
 ever since the 1500s, when an unknown printer took.
 ",
-                ["Image"] = new MiniWordPicture() { Path = PathHelper.GetFile("demo01.png"), Width = 160, Height = 90 },
+                ["Image"] = new MiniWordPicture(PathHelper.GetFile("demo01.png"), 160, 90),
             };
             MiniWord.SaveAsByTemplate(path, templatePath, value);
             //System.Diagnostics.Process.Start("explorer.exe", path);
@@ -513,7 +513,7 @@ ever since the 1500s, when an unknown printer took.
     Lorem Ipsum has been the industry's standard dummy text 
     ever since the 1500s, when an unknown printer took.
     ";
-            value.Image = new MiniWordPicture() { Path = PathHelper.GetFile("demo01.png"), Width = 160, Height = 90 };
+            value.Image = new MiniWordPicture(PathHelper.GetFile("demo01.png"), 160, 90);
             MiniWord.SaveAsByTemplate(path, templatePath, value);
             //System.Diagnostics.Process.Start("explorer.exe", path);
         }
@@ -595,7 +595,7 @@ ever since the 1500s, when an unknown printer took.
             var templatePath = PathHelper.GetFile("TestBasicImage.docx");
             var value = new Dictionary<string, object>()
             {
-                ["Logo"] = new MiniWordPicture() { Path = PathHelper.GetFile("DemoLogo.png"), Width = 180, Height = 180 }
+                ["Logo"] = new MiniWordPicture(PathHelper.GetFile("DemoLogo.png"), 180, 180)
             };
             MiniWord.SaveAsByTemplate(path, templatePath, value);
             var xml = Helpers.GetZipFileContent(path, "word/document.xml");
