@@ -1,7 +1,8 @@
 <div align="center">
-<p><a href="https://www.nuget.org/packages/MiniWord"><img src="https://img.shields.io/nuget/v/MiniWord.svg" alt="NuGet"></a>  <a href="https://www.nuget.org/packages/MiniWord"><img src="https://img.shields.io/nuget/dt/MiniWord.svg" alt=""></a>  
-<a href="https://github.com/mini-software/MiniWord" rel="nofollow"><img src="https://img.shields.io/github/stars/mini-software/MiniWord?logo=github" alt="GitHub stars"></a> 
+<p><a href="https://www.nuget.org/packages/MiniWord"><img src="https://img.shields.io/nuget/v/MiniWord.svg" alt="NuGet"></a>  <a href="https://www.nuget.org/packages/MiniWord"><img src="https://img.shields.io/nuget/dt/MiniWord.svg" alt=""></a>
+<a href="https://github.com/mini-software/MiniWord" rel="nofollow"><img src="https://img.shields.io/github/stars/mini-software/MiniWord?logo=github" alt="GitHub stars"></a>
 <a href="https://www.nuget.org/packages/MiniWord"><img src="https://img.shields.io/badge/.NET-%3E%3D%204.5-red.svg" alt="version"></a>
+<a href="https://deepwiki.com/mini-software/MiniWord"><img src="https://deepwiki.com/badge.svg" alt="Ask DeepWiki"></a>
 </p>
 </div>
 
@@ -29,7 +30,7 @@ MiniWord is an easy and effective .NET Word Template library.
 
 ## Getting Started
 
-### Installation 
+### Installation
 
 - nuget link : https://www.nuget.org/packages/MiniWord
 
@@ -94,7 +95,7 @@ MiniWord.SaveAsByTemplate(path, templatePath, value);
 
 ### Image
 
-Value type is `MiniWordPicture` 
+Value type is `MiniWordPicture`
 
 ##### Example
 
@@ -335,10 +336,10 @@ var value = new
 If value type is `MiniWordHyperLink` system will replace template string by hyperlink.
 
 * Url： HyperLink URI target path
-* Text：Description 
+* Text：Description
 
 ```csharp
-var value = new 
+var value = new
 {
     ["Name"] = new MiniWordHyperLink(){
         Url = "https://google.com",
