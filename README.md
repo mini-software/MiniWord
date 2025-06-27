@@ -1,3 +1,34 @@
+
+<div align="right">
+  <details>
+    <summary >🌐 Language</summary>
+    <div>
+      <div align="right">
+        <p><a href="https://openaitx.github.io/view.html?user=mini-software&project=MiniWord&lang=en">English</a></p>
+        <p><a href=" https://openaitx.github.io/view.html?user=mini-software&project=MiniWord&lang=zh-CN">简体中文</a></p>
+        <p><a href=" https://openaitx.github.io/view.html?user=mini-software&project=MiniWord&lang=zh-TW">繁體中文</a></p>
+        <p><a href=" https://openaitx.github.io/view.html?user=mini-software&project=MiniWord&lang=ja">日本語</a></p>
+        <p><a href=" https://openaitx.github.io/view.html?user=mini-software&project=MiniWord&lang=ko">한국어</a></p>
+        <p><a href=" https://openaitx.github.io/view.html?user=mini-software&project=MiniWord&lang=hi">हिन्दी</a></p>
+        <p><a href=" https://openaitx.github.io/view.html?user=mini-software&project=MiniWord&lang=th">ไทย</a></p>
+        <p><a href=" https://openaitx.github.io/view.html?user=mini-software&project=MiniWord&lang=fr">Français</a></p>
+        <p><a href=" https://openaitx.github.io/view.html?user=mini-software&project=MiniWord&lang=de">Deutsch</a></p>
+        <p><a href=" https://openaitx.github.io/view.html?user=mini-software&project=MiniWord&lang=es">Español</a></p>
+        <p><a href=" https://openaitx.github.io/view.html?user=mini-software&project=MiniWord&lang=it">Itapano</a></p>
+        <p><a href=" https://openaitx.github.io/view.html?user=mini-software&project=MiniWord&lang=ru">Русский</a></p>
+        <p><a href=" https://openaitx.github.io/view.html?user=mini-software&project=MiniWord&lang=pt">Português</a></p>
+        <p><a href=" https://openaitx.github.io/view.html?user=mini-software&project=MiniWord&lang=nl">Nederlands</a></p>
+        <p><a href=" https://openaitx.github.io/view.html?user=mini-software&project=MiniWord&lang=pl">Polski</a></p>
+        <p><a href=" https://openaitx.github.io/view.html?user=mini-software&project=MiniWord&lang=ar">العربية</a></p>
+        <p><a href=" https://openaitx.github.io/view.html?user=mini-software&project=MiniWord&lang=fa">فارسی</a></p>
+        <p><a href=" https://openaitx.github.io/view.html?user=mini-software&project=MiniWord&lang=tr">Türkçe</a></p>
+        <p><a href=" https://openaitx.github.io/view.html?user=mini-software&project=MiniWord&lang=vi">Tiếng Việt</a></p>
+        <p><a href=" https://openaitx.github.io/view.html?user=mini-software&project=MiniWord&lang=id">Bahasa Indonesia</a></p>
+      </div>
+    </div>
+  </details>
+</div>
+
 <div align="center">
 <p><a href="https://www.nuget.org/packages/MiniWord"><img src="https://img.shields.io/nuget/v/MiniWord.svg" alt="NuGet"></a>  <a href="https://www.nuget.org/packages/MiniWord"><img src="https://img.shields.io/nuget/dt/MiniWord.svg" alt=""></a>
 <a href="https://github.com/mini-software/MiniWord" rel="nofollow"><img src="https://img.shields.io/github/stars/mini-software/MiniWord?logo=github" alt="GitHub stars"></a>
