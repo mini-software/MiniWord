@@ -592,6 +592,13 @@ namespace MiniSoftware
 
                                 t.Remove();
                             }
+                            else if (value is MiniWordTableBorder tableBorder)
+                            {
+                                var parentTable = p.Ancestors<Table>().FirstOrDefault();
+                                if (parentTable != null)
+                                    ApplyTableBorder(parentTable, tableBorder);
+                                t.Text = t.Text.Replace($"{{{{{tag.Key}}}}}", "");
+                            }
                             else if (value is IEnumerable<MiniWordPicture> pictures)
                             {
                                 // 新增一个标签插入图片集合
@@ -1158,6 +1165,71 @@ namespace MiniSoftware
 
             drawing13.Append(anchor3);
             appendElement.Append((drawing13));
+        }
+
+        private static void ApplyTableBorder(Table table, MiniWordTableBorder border)
+        {
+            var tableProperties = table.GetFirstChild<TableProperties>();
+            if (tableProperties == null)
+            {
+                tableProperties = new TableProperties();
+                table.PrependChild(tableProperties);
+            }
+
+            tableProperties.GetFirstChild<TableBorders>()?.Remove();
+
+            var tableBorders = new TableBorders();
+            if (border.TopBorder != null)
+                tableBorders.AppendChild(new TopBorder
+                {
+                    Val = border.TopBorder.Style,
+                    Color = border.TopBorder.Color?.Replace("#", ""),
+                    Size = border.TopBorder.Size,
+                    Space = border.TopBorder.Space
+                });
+            if (border.BottomBorder != null)
+                tableBorders.AppendChild(new BottomBorder
+                {
+                    Val = border.BottomBorder.Style,
+                    Color = border.BottomBorder.Color?.Replace("#", ""),
+                    Size = border.BottomBorder.Size,
+                    Space = border.BottomBorder.Space
+                });
+            if (border.LeftBorder != null)
+                tableBorders.AppendChild(new LeftBorder
+                {
+                    Val = border.LeftBorder.Style,
+                    Color = border.LeftBorder.Color?.Replace("#", ""),
+                    Size = border.LeftBorder.Size,
+                    Space = border.LeftBorder.Space
+                });
+            if (border.RightBorder != null)
+                tableBorders.AppendChild(new RightBorder
+                {
+                    Val = border.RightBorder.Style,
+                    Color = border.RightBorder.Color?.Replace("#", ""),
+                    Size = border.RightBorder.Size,
+                    Space = border.RightBorder.Space
+                });
+            if (border.InsideHorizontalBorder != null)
+                tableBorders.AppendChild(new InsideHorizontalBorder
+                {
+                    Val = border.InsideHorizontalBorder.Style,
+                    Color = border.InsideHorizontalBorder.Color?.Replace("#", ""),
+                    Size = border.InsideHorizontalBorder.Size,
+                    Space = border.InsideHorizontalBorder.Space
+                });
+            if (border.InsideVerticalBorder != null)
+                tableBorders.AppendChild(new InsideVerticalBorder
+                {
+                    Val = border.InsideVerticalBorder.Style,
+                    Color = border.InsideVerticalBorder.Color?.Replace("#", ""),
+                    Size = border.InsideVerticalBorder.Size,
+                    Space = border.InsideVerticalBorder.Space
+                });
+
+            if (tableBorders.HasChildren)
+                tableProperties.Append(tableBorders);
         }
 
         private static byte[] GetBytes(string path)
