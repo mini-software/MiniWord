@@ -871,5 +871,61 @@ ever since the 1500s, when an unknown printer took.
             public string department { get; set; }
         }
         #endregion
+
+        [Fact]
+        public void TestTableBorder_AllBorders()
+        {
+            var path = PathHelper.GetTempFilePath();
+            var templatePath = PathHelper.GetTempFilePath();
+            TableBorderTestHelper.CreateTableBorderTemplate(templatePath);
+
+            var value = new Dictionary<string, object>
+            {
+                ["TableBorder"] = MiniWordTableBorder.Create("#000000", 6),
+                ["Items"] = new List<Dictionary<string, object>>
+                {
+                    new Dictionary<string, object> { { "Name", "Item1" }, { "Value", "10" } },
+                    new Dictionary<string, object> { { "Name", "Item2" }, { "Value", "20" } }
+                }
+            };
+
+            MiniWord.SaveAsByTemplate(path, templatePath, value);
+
+            var xml = Helpers.GetZipFileContent(path, "word/document.xml");
+            Assert.Contains("w:tblBorders", xml);
+            Assert.Contains("000000", xml);
+            Assert.Contains("Item1", xml);
+            Assert.Contains("Item2", xml);
+        }
+
+        [Fact]
+        public void TestTableBorder_CustomEdges()
+        {
+            var path = PathHelper.GetTempFilePath();
+            var templatePath = PathHelper.GetTempFilePath();
+            TableBorderTestHelper.CreateTableBorderTemplate(templatePath);
+
+            var value = new Dictionary<string, object>
+            {
+                ["TableBorder"] = new MiniWordTableBorder
+                {
+                    TopBorder = new MiniWordBorder { Style = BorderValues.Double, Color = "FF0000", Size = 8 },
+                    BottomBorder = new MiniWordBorder { Style = BorderValues.Double, Color = "FF0000", Size = 8 },
+                    LeftBorder = new MiniWordBorder { Style = BorderValues.Single, Color = "0000FF", Size = 4 },
+                    RightBorder = new MiniWordBorder { Style = BorderValues.Single, Color = "0000FF", Size = 4 },
+                },
+                ["Items"] = new List<Dictionary<string, object>>
+                {
+                    new Dictionary<string, object> { { "Name", "Alpha" }, { "Value", "1" } }
+                }
+            };
+
+            MiniWord.SaveAsByTemplate(path, templatePath, value);
+
+            var xml = Helpers.GetZipFileContent(path, "word/document.xml");
+            Assert.Contains("w:tblBorders", xml);
+            Assert.Contains("FF0000", xml);
+            Assert.Contains("0000FF", xml);
+        }
     }
 }
