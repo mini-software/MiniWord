@@ -1,10 +1,11 @@
 namespace MiniSoftware
 {
     using DocumentFormat.OpenXml;
+    using DocumentFormat.OpenXml.Drawing.Charts;
     using DocumentFormat.OpenXml.Packaging;
     using DocumentFormat.OpenXml.Wordprocessing;
     using Extensions;
-    using Utility;
+    using HtmlToOpenXml;
     using System;
     using System.Collections;
     using System.Collections.Generic;
@@ -12,14 +13,14 @@ namespace MiniSoftware
     using System.Linq;
     using System.Text;
     using System.Text.RegularExpressions;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using System.Xml;
+    using System.Xml.Linq;
+    using Utility;
     using A = DocumentFormat.OpenXml.Drawing;
     using DW = DocumentFormat.OpenXml.Drawing.Wordprocessing;
     using PIC = DocumentFormat.OpenXml.Drawing.Pictures;
-    using System.Xml;
-    using System.Xml.Linq;
-    using DocumentFormat.OpenXml.Drawing.Charts;
-    using System.Threading.Tasks;
-    using System.Threading;
 
     public static partial class MiniWord
     {
@@ -653,6 +654,16 @@ namespace MiniSoftware
 
                                 t.Remove();
                             }
+                            else if (value is MiniWordHtml html)
+                            {
+                                AddHtmls(docx, run, new[] { html });
+                                t.Remove();
+                            }
+                            else if (value is IEnumerable<MiniWordHtml> htmlList)
+                            {
+                                AddHtmls(docx, run, htmlList);
+                                t.Remove();
+                            }
                             else
                             {
                                 var newText = value is DateTime
@@ -1175,5 +1186,57 @@ namespace MiniSoftware
                 return ms.ToArray();
             }
         }
+
+        #region html支持
+
+        /// <summary>
+        /// 填充htmls
+        /// </summary>
+        /// <param name="run"></param>
+        /// <param name="miniWordHtmls"></param>
+        private static void AddHtmls(WordprocessingDocument docx, Run run, IEnumerable<MiniWordHtml> miniWordHtmls)
+        {
+            //找到当前顶级段落（body）添加,html中的表格不能直接放在run或者段落里
+            Paragraph topPara = FindTopPara(run);
+            if (topPara == null) return;
+            foreach (var miniWordHtml in miniWordHtmls)
+            {
+                try
+                {
+                    //实例化转换对象
+                    HtmlConverter converter = new HtmlConverter(docx.MainDocumentPart);
+                    //解析
+                    var paras = converter.Parse(miniWordHtml.HtmlText);
+                    //倒排插入（因为都是插入到标记位置后面所以需要倒排）
+                    for (var i = paras.Count - 1; i >= 0; i--)
+                    {
+                        var item = paras[i];
+                        topPara.Parent.InsertAfter(item, topPara);
+                    }
+                }
+                catch (Exception)
+                { }
+            }
+        }
+
+        /// <summary>
+        /// 找到当前顶级段落（body）添加
+        /// </summary>
+        /// <param name="run"></param>
+        /// <returns></returns>
+        private static Paragraph FindTopPara(Run run)
+        {
+            for (var pnode = run.Parent; pnode != null; pnode = pnode.Parent)
+            {
+                if (pnode is Paragraph para && pnode.Parent != null && pnode.Parent is Body)
+                {
+                    return para;
+                }
+            }
+            return null;
+        }
+
+        #endregion
+
     }
 }
