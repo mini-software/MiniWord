@@ -139,7 +139,7 @@ namespace MiniSoftware
                         foreach (var item in list)
                         {
                             var dic = new Dictionary<string, object>(); //TODO: optimize
-
+                             
                             var newTr = tr.CloneNode(true);
 
                             if (item is IDictionary)
