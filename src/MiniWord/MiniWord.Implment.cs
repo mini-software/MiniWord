@@ -25,7 +25,7 @@ namespace MiniSoftware
     {
         private static void SaveAsByTemplateImpl(Stream stream, byte[] template, Dictionary<string, object> data)
         {
-            SaveAsByTemplateImplAsync(stream,template,data).GetAwaiter().GetResult();
+            SaveAsByTemplateImplAsync(stream, template, data).GetAwaiter().GetResult();
         }
 
         private static async Task SaveAsByTemplateImplAsync(Stream stream, byte[] template, Dictionary<string, object> data, CancellationToken token = default(CancellationToken))
@@ -133,7 +133,8 @@ namespace MiniSoftware
                         int num = tr.Elements<TableCell>().Count();
                         int index = 0;
                         List<OpenXmlElement> elementList = new List<OpenXmlElement>();
-
+                        int totalCount = list.Cast<object>().Count();
+                        //int rowCount = (totalCount + num - 1) / (num == 0 ? 1 : num); // 计算总行数
 
                         foreach (var item in list)
                         {
@@ -171,7 +172,7 @@ namespace MiniSoftware
                                 if (newTable != null)
                                     elementList.Add(newTable.CloneNode(true));
 
-                                if (index > 0 && (index + 1) % num == 0 && elementList.Count > 0)
+                                if (index > 0 && ((index + 1) % num == 0 || (index == totalCount - 1)) && elementList.Count > 0)
                                 {
                                     var templateTr = tr.CloneNode(true);
                                     for (var i = 0; i < elementList.Count; i++)
@@ -687,7 +688,7 @@ namespace MiniSoftware
                                     {
                                         AddPicture(run, mainPart.GetIdOfPart(imagePart), pic);
                                     }
-                                    
+
                                 }
 
                                 t.Remove();
@@ -1062,9 +1063,9 @@ namespace MiniSoftware
                                             new A.PresetGeometry(
                                                     new A.AdjustValueList()
                                                 )
-                                                { Preset = A.ShapeTypeValues.Rectangle }))
+                                            { Preset = A.ShapeTypeValues.Rectangle }))
                                 )
-                                { Uri = "http://schemas.openxmlformats.org/drawingml/2006/picture" })
+                            { Uri = "http://schemas.openxmlformats.org/drawingml/2006/picture" })
                     )
                     {
                         DistanceFromTop = (UInt32Value)0U,
@@ -1082,22 +1083,30 @@ namespace MiniSoftware
 
             DW.Anchor anchor3 = new DW.Anchor()
             {
-                DistanceFromTop = (UInt32Value)0U, DistanceFromBottom = (UInt32Value)0U,
-                DistanceFromLeft = (UInt32Value)114300U, DistanceFromRight = (UInt32Value)114300U,
-                SimplePos = false, RelativeHeight = (UInt32Value)0U, BehindDoc = pic.BehindDoc, Locked = false,
-                LayoutInCell = true, AllowOverlap = pic.AllowOverlap, EditId = "1EACBECC", AnchorId = "5AF073F3"
+                DistanceFromTop = (UInt32Value)0U,
+                DistanceFromBottom = (UInt32Value)0U,
+                DistanceFromLeft = (UInt32Value)114300U,
+                DistanceFromRight = (UInt32Value)114300U,
+                SimplePos = false,
+                RelativeHeight = (UInt32Value)0U,
+                BehindDoc = pic.BehindDoc,
+                Locked = false,
+                LayoutInCell = true,
+                AllowOverlap = pic.AllowOverlap,
+                EditId = "1EACBECC",
+                AnchorId = "5AF073F3"
             };
             DW.SimplePosition simplePosition3 = new DW.SimplePosition() { X = 0L, Y = 0L };
 
             DW.HorizontalPosition horizontalPosition3 = new DW.HorizontalPosition()
-                { RelativeFrom = DW.HorizontalRelativePositionValues.Column };
+            { RelativeFrom = DW.HorizontalRelativePositionValues.Column };
             DW.PositionOffset positionOffset5 = new DW.PositionOffset();
             positionOffset5.Text = $"{pic.HorizontalPositionOffset * 9525}";
 
             horizontalPosition3.Append(positionOffset5);
 
             DW.VerticalPosition verticalPosition3 = new DW.VerticalPosition()
-                { RelativeFrom = DW.VerticalRelativePositionValues.Paragraph };
+            { RelativeFrom = DW.VerticalRelativePositionValues.Paragraph };
             DW.PositionOffset positionOffset6 = new DW.PositionOffset();
             positionOffset6.Text = $"{pic.VerticalPositionOffset * 9525}";
 
@@ -1106,12 +1115,12 @@ namespace MiniSoftware
 
 
             DW.EffectExtent effectExtent13 = new DW.EffectExtent()
-                { LeftEdge = 0L, TopEdge = 0L, RightEdge = 0L, BottomEdge = 0L };
+            { LeftEdge = 0L, TopEdge = 0L, RightEdge = 0L, BottomEdge = 0L };
             DW.WrapNone wrapNone3 = new DW.WrapNone();
 
 
             DW.DocProperties docProperties13 = new DW.DocProperties()
-                { Id = (UInt32Value)774829591U, Name = $"Picture {Guid.NewGuid().ToString()}" };
+            { Id = (UInt32Value)774829591U, Name = $"Picture {Guid.NewGuid().ToString()}" };
 
             DW.NonVisualGraphicFrameDrawingProperties nonVisualGraphicFrameDrawingProperties13 =
                 new DW.NonVisualGraphicFrameDrawingProperties();
@@ -1126,14 +1135,14 @@ namespace MiniSoftware
             graphic13.AddNamespaceDeclaration("a", "http://schemas.openxmlformats.org/drawingml/2006/main");
 
             A.GraphicData graphicData13 = new A.GraphicData()
-                { Uri = "http://schemas.openxmlformats.org/drawingml/2006/picture" };
+            { Uri = "http://schemas.openxmlformats.org/drawingml/2006/picture" };
 
             PIC.Picture picture13 = new PIC.Picture();
             picture13.AddNamespaceDeclaration("pic", "http://schemas.openxmlformats.org/drawingml/2006/picture");
 
             PIC.NonVisualPictureProperties nonVisualPictureProperties13 = new PIC.NonVisualPictureProperties();
             PIC.NonVisualDrawingProperties nonVisualDrawingProperties13 = new PIC.NonVisualDrawingProperties()
-                { Id = (UInt32Value)0U, Name = $"Image {Guid.NewGuid().ToString()}.{pic.Extension}" };
+            { Id = (UInt32Value)0U, Name = $"Image {Guid.NewGuid().ToString()}.{pic.Extension}" };
             PIC.NonVisualPictureDrawingProperties nonVisualPictureDrawingProperties13 =
                 new PIC.NonVisualPictureDrawingProperties();
 
@@ -1143,7 +1152,7 @@ namespace MiniSoftware
             PIC.BlipFill blipFill13 = new PIC.BlipFill();
 
             A.Blip blip13 = new A.Blip()
-                { Embed = relationshipId, CompressionState = A.BlipCompressionValues.Print };
+            { Embed = relationshipId, CompressionState = A.BlipCompressionValues.Print };
 
             A.BlipExtensionList blipExtensionList11 = new A.BlipExtensionList();
             A.BlipExtension blipExtension11 = new A.BlipExtension() { Uri = $"{{{Guid.NewGuid().ToString("n")}}}" };
