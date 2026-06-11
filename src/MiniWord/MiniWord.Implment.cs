@@ -264,7 +264,9 @@ namespace MiniSoftware
                     sb.Append(text.InnerText);
                     pool.Add(text);
 
-                    var s = sb.ToString().TrimStart(); //TODO:
+                    var rawText = sb.ToString();
+                    var s = rawText.TrimStart();
+
                     // TODO: check tag exist
                     // TODO: record tag text if without tag then system need to clear them
                     // TODO: every {{tag}} one <t>for them</t> and add text before first text and copy first one and remove {{, tagname, }}
@@ -288,7 +290,11 @@ namespace MiniSoftware
                         {
                             var first = pool.First();
                             var newText = first.Clone() as Text;
-                            newText.Text = s;
+                            newText.Text = rawText;                            
+                            if (char.IsWhiteSpace(rawText[0]) || char.IsWhiteSpace(rawText[rawText.Length - 1]))
+                            {
+                                newText.Space = SpaceProcessingModeValues.Preserve;
+                            }
                             first.Parent.InsertBefore(newText, first);
                             foreach (var t in pool)
                             {
